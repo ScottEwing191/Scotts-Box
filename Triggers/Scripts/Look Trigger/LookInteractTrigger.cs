@@ -6,12 +6,14 @@ using UnityEngine.InputSystem;
 namespace ScottEwing.Triggers{
     public class LookInteractTrigger : Trigger, ILookInteractable{
         [SerializeField] private InputActionProperty _inputActionReference;
-        [SerializeField] private float _maxInteractDistance = 1;
+        [SerializeField] protected float _maxInteractDistance = 1;
 
         private bool _isLookedAt;
         private bool _isLooking;
         [Description("Used to detect the first frame that this trigger was not looked at")]
         private bool _lookedThisFixedUpdate;
+
+        
 
         private void Update() {
             if (!_isLookedAt) return;
@@ -21,7 +23,14 @@ namespace ScottEwing.Triggers{
             }
         }
 
-        private void FixedUpdate() {
+        protected virtual void FixedUpdate() {
+            HandleFirstUpdateNotLookedAt();
+        }
+
+        /// <summary>
+        /// Determines if this fixed update was the first time the trigger was not looked and calls look exit if it was
+        /// </summary>
+        private void HandleFirstUpdateNotLookedAt() {
             if (!_isLooking && _lookedThisFixedUpdate) {
                 _isLooking = true;
             }
@@ -34,13 +43,14 @@ namespace ScottEwing.Triggers{
         }
 
         public void Look(Vector3 cameraPosition) {
+            if (!IsActivatable) return;
+
             _lookedThisFixedUpdate = true;
             if (!_isLookedAt && CanCameraActivateTrigger(cameraPosition)) {
-                _isLookedAt = true;
-                onTriggerEnter?.Invoke();
+                LookEnter();
             }
             else if (_isLookedAt && CanCameraActivateTrigger(cameraPosition)) {
-                onTriggerStay?.Invoke();
+                LookStay();
             }
             else if (_isLookedAt && !CanCameraActivateTrigger(cameraPosition)) {
                 LookExit();
@@ -54,7 +64,7 @@ namespace ScottEwing.Triggers{
         }
 
         public void LookStay() {
-            onTriggerEnter?.Invoke();
+            onTriggerStay?.Invoke();
         }
 
         public void LookExit() {
@@ -67,5 +77,11 @@ namespace ScottEwing.Triggers{
             if (Vector3.Distance(cameraPosition, transform.position) > _maxInteractDistance)  return false;
             return true;
         }
+
+
+        //-- Dont want base behaviour
+        protected override void OnTriggerEnter(Collider other) { }
+        protected override void OnTriggerStay(Collider other){ }
+        protected override void OnTriggerExit(Collider other){ }
     }
 }
