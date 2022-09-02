@@ -54,7 +54,7 @@ namespace ScottEwing.Triggers {
                 if (hit.transform.IsChildOf(target.transform)) {       // check if looking at the correct object
                     DoIsFirstTimeLookingAt();                   // check if this is the first frame the object is being looked at
                     if (UnityEngine.Input.GetButtonDown("Interact")) {
-                        onTriggered.Invoke();
+                        _onTriggered.Invoke();
                         //print("Selected");
                     }
                 }

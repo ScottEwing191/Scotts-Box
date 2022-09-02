@@ -2,41 +2,35 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
 
 namespace ScottEwing.Triggers {
-    public class InteractTrigger : Trigger {
-        private bool shouldCheckForInput = false;
+    public class InteractTrigger : Trigger , ITakesInput{
+        public InputActionProperty InputActionReference { get; set; }
+        public bool ShouldCheckInput { get; set; }
 
-        private void Update() {
-            if (shouldCheckForInput) {
-                if (UnityEngine.Input.GetButtonDown("Interact") && _isActivatable) {
-                    onTriggered.Invoke();
-                    if (_activateOnce) {
-                        Destroy(this.gameObject);
-                    }
-                }
+        private void Update() => GetInput();
+
+
+        public void GetInput() {
+            if (!IsActivatable) return;
+            if (!ShouldCheckInput) return;
+            if (InputActionReference.action == null) return;
+            if (InputActionReference.action.ReadValue<float>() > 0) {
+                Triggered();
             }
         }
-        protected override void OnTriggerEnter(Collider other) {               // display the interact text
-            if (other.CompareTag(_triggeredByTag)) {
-                shouldCheckForInput = true;
-                print("Enter Trigger");
-
-                base.OnTriggerEnter(other);
-            }
+        protected override void OnTriggerEnter(Collider other) {
+            if (!other.CompareTag(_triggeredByTag)) return;
+            ShouldCheckInput = true;
+            base.OnTriggerEnter(other);
         }
 
-        protected override void OnTriggerStay(Collider other) {
-            base.OnTriggerStay(other);
-        }
-
-        protected override void OnTriggerExit(Collider other) {                // clear the interact text
-            if (other.CompareTag(_triggeredByTag)) {
-                shouldCheckForInput = false;
-                print("Exit Trigger");
-                base.OnTriggerExit(other);
-            }
+        protected override void OnTriggerExit(Collider other) {
+            if (!other.CompareTag(_triggeredByTag)) return;
+            ShouldCheckInput = false;
+            base.OnTriggerExit(other);
         }
     } 
 }

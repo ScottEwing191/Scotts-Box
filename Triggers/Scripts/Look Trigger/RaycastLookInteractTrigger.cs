@@ -13,7 +13,7 @@ namespace ScottEwing.Triggers{
     
     public class RaycastLookInteractTrigger : LookInteractTrigger, ISphereCastInteractor{
         [Tooltip("The game object that need to be looked at. Default is the game object this is attached to. If different, default and _lookTarget should be under same parent (untested)")]
-        [SerializeField] private Transform _lookTarget;
+        //[SerializeField] private Transform _lookTarget;
 
         [field: SerializeField] public float SphereCastRadius { get; set; } = 0.1f;
         [field: SerializeField] public LayerMask CollisionLayers { get; set; } = ~0;
@@ -25,7 +25,7 @@ namespace ScottEwing.Triggers{
         private bool _performSphereCast;
 
         private void Awake() {
-            _lookTarget ??= gameObject.transform;
+            //_lookTarget ??= gameObject.transform;
         }
 
         private void Start() {
@@ -51,7 +51,7 @@ namespace ScottEwing.Triggers{
         private void DoRaycast() {
             if (!_performSphereCast) return;
             if (!Physics.SphereCast(CurrentSource.position, SphereCastRadius, CurrentSource.forward, out RaycastHit hit, _maxInteractDistance, CollisionLayers.value, TriggerInteraction)) return;
-            if (!hit.transform.IsChildOf(_lookTarget)) return;
+            if (!hit.transform.IsChildOf(gameObject.transform)) return;
             Look(CurrentSource.position);
         }
 
@@ -59,9 +59,6 @@ namespace ScottEwing.Triggers{
             if (other.CompareTag(_triggeredByTag)) {
                 _performSphereCast = true;
             }
-        }
-
-        protected override void OnTriggerStay(Collider other) {
         }
 
         protected override void OnTriggerExit(Collider other) {

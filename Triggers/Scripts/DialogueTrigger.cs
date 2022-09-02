@@ -18,11 +18,8 @@ namespace ScottEwing.Triggers {
 
         private void Update() {
             if (shouldCheckForInput) {
-                if (UnityEngine.Input.GetButtonDown("Interact") && _isActivatable) {
-                    onTriggered.Invoke();
-                    if (_activateOnce) {
-                        Destroy(this.gameObject);
-                    }
+                if (UnityEngine.Input.GetButtonDown("Interact") && IsActivatable) {
+                    Triggered();
                 }
             }
         }

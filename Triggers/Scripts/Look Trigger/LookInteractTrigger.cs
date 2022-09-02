@@ -4,27 +4,34 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace ScottEwing.Triggers{
-    public class LookInteractTrigger : Trigger, ILookInteractable{
-        [SerializeField] private InputActionProperty _inputActionReference;
+    public class LookInteractTrigger : Trigger, ILookInteractable, ITakesInput{
+        [field:SerializeField] public InputActionProperty InputActionReference { get; set; }
         [SerializeField] protected float _maxInteractDistance = 1;
 
-        private bool _isLookedAt;
+        public bool ShouldCheckInput { get; set; }
+
         private bool _isLooking;
         [Description("Used to detect the first frame that this trigger was not looked at")]
         private bool _lookedThisFixedUpdate;
 
+        #region Unity Methods
+
+        private void Update() => GetInput();
+        protected virtual void FixedUpdate() => HandleFirstUpdateNotLookedAt();
+        //-- Dont want base behaviour
+        protected override void OnTriggerEnter(Collider other) { }
+        protected override void OnTriggerStay(Collider other){ }
+        protected override void OnTriggerExit(Collider other){ }
+
+        #endregion
         
-
-        private void Update() {
-            if (!_isLookedAt) return;
-            if (_inputActionReference.action == null) return;
-            if (_inputActionReference.action.ReadValue<float>() > 0) {
-                onTriggered.Invoke();
+        public void GetInput() {
+            if (!IsActivatable) return;
+            if (!ShouldCheckInput) return;
+            if (InputActionReference.action == null) return;
+            if (InputActionReference.action.ReadValue<float>() > 0) {
+                Triggered();
             }
-        }
-
-        protected virtual void FixedUpdate() {
-            HandleFirstUpdateNotLookedAt();
         }
 
         /// <summary>
@@ -34,43 +41,41 @@ namespace ScottEwing.Triggers{
             if (!_isLooking && _lookedThisFixedUpdate) {
                 _isLooking = true;
             }
-
             if (_isLooking && !_lookedThisFixedUpdate) {
                 _isLooking = false;
                 LookExit();
             }
-            _lookedThisFixedUpdate = false;
+            _lookedThisFixedUpdate = false;     // reset this for next fram
         }
 
         public void Look(Vector3 cameraPosition) {
             if (!IsActivatable) return;
-
             _lookedThisFixedUpdate = true;
-            if (!_isLookedAt && CanCameraActivateTrigger(cameraPosition)) {
+            if (!ShouldCheckInput && CanCameraActivateTrigger(cameraPosition)) {
                 LookEnter();
             }
-            else if (_isLookedAt && CanCameraActivateTrigger(cameraPosition)) {
+            else if (ShouldCheckInput && CanCameraActivateTrigger(cameraPosition)) {
                 LookStay();
             }
-            else if (_isLookedAt && !CanCameraActivateTrigger(cameraPosition)) {
+            else if (ShouldCheckInput && !CanCameraActivateTrigger(cameraPosition)) {
                 LookExit();
             }
         }
 
         public void LookEnter() {
-            if (_isLookedAt) return;
-            _isLookedAt = true;
-            onTriggerEnter?.Invoke();
+            if (ShouldCheckInput) return;
+            ShouldCheckInput = true;
+            _onTriggerEnter?.Invoke();
         }
 
         public void LookStay() {
-            onTriggerStay?.Invoke();
+            _onTriggerStay?.Invoke();
         }
 
         public void LookExit() {
-            if (!_isLookedAt) return;
-            _isLookedAt = false;
-            onTriggerExit?.Invoke();
+            if (!ShouldCheckInput) return;
+            ShouldCheckInput = false;
+            _onTriggerExit?.Invoke();
         }
 
         private bool CanCameraActivateTrigger(Vector3 cameraPosition) {
@@ -79,9 +84,8 @@ namespace ScottEwing.Triggers{
         }
 
 
-        //-- Dont want base behaviour
-        protected override void OnTriggerEnter(Collider other) { }
-        protected override void OnTriggerStay(Collider other){ }
-        protected override void OnTriggerExit(Collider other){ }
+        
+        
+        
     }
 }

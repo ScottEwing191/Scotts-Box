@@ -1,42 +1,89 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections;
+using UnityEngine;
 using UnityEngine.Events;
+#if ODIN_INSPECTOR
+using Sirenix.OdinInspector;
+#endif
 
-namespace ScottEwing.Triggers {
-    public abstract class Trigger : MonoBehaviour {
-        [SerializeField] protected bool _activateOnce = true;
-        [SerializeField] protected bool _isActivatable = true;
 
-        [SerializeField] protected string _triggeredByTag = "Player";
-
-        [SerializeField] protected UnityEvent onTriggered;
-        [SerializeField] protected UnityEvent onTriggerEnter;
-        [SerializeField] protected UnityEvent onTriggerStay;
-        [SerializeField] protected UnityEvent onTriggerExit;
-        
-        public bool IsActivatable {
-            get { return _isActivatable; }
-            set { _isActivatable = value; }
+namespace ScottEwing.Triggers{
+    public abstract class Trigger : MonoBehaviour{
+        private enum TriggeredType{
+            DestroyOnTriggered,
+            DisableOnTriggered,
+            CooldownOnTriggered
         }
 
-        private void OnEnable() => onTriggered.AddListener(DestroyOnTriggered);
+        [SerializeField] protected string _triggeredByTag = "Player";
+        [SerializeField] private TriggeredType _triggeredType = TriggeredType.DestroyOnTriggered;
+#if ODIN_INSPECTOR
+        [ShowIf("_triggeredType", TriggeredType.CooldownOnTriggered)]
+#endif
+        [SerializeField] private float _cooldownTime = 2.0f;
 
-        private void OnDisable() => onTriggered.AddListener(DestroyOnTriggered);
+        [SerializeField] protected bool _activateOnce = true;
+        [field: SerializeField] protected bool IsActivatable { get; set; } = true;
 
-        private void DestroyOnTriggered() {
+        [SerializeField] protected UnityEvent _onTriggered;
+        [SerializeField] protected UnityEvent _onTriggerEnter;
+        [SerializeField] protected UnityEvent _onTriggerStay;
+        [SerializeField] protected UnityEvent _onTriggerExit;
+
+        private Coroutine _cooldownRoutine;
+
+        //private void OnEnable() => _onTriggered.AddListener(DestroyOnTriggered);
+        //private void OnDisable() => _onTriggered.AddListener(DestroyOnTriggered);
+        protected virtual void OnTriggerEnter(Collider other) => _onTriggerEnter?.Invoke();
+        protected virtual void OnTriggerStay(Collider other) => _onTriggerStay?.Invoke();
+        protected virtual void OnTriggerExit(Collider other) => _onTriggerExit?.Invoke();
+
+        /*private void DestroyOnTriggered() {
             if (_activateOnce) {
                 Destroy(this.gameObject);
             }
+        }*/
+
+
+        protected void Triggered() {
+            if (!gameObject.activeSelf || !gameObject.activeInHierarchy) return;
+            if (!IsActivatable) return; 
+            
+            _onTriggered.Invoke();
+            switch (_triggeredType) {
+                case TriggeredType.DestroyOnTriggered:
+                    Destroy(gameObject);
+                    break;
+                case TriggeredType.DisableOnTriggered:
+                    DisableTriggerObject();
+                    break;
+                case TriggeredType.CooldownOnTriggered:
+                    StartCooldown();
+                    break;
+            }
         }
 
-        protected virtual void OnTriggerEnter(Collider other) => onTriggerEnter?.Invoke();
-        protected virtual void OnTriggerStay(Collider other) => onTriggerStay?.Invoke();
-        protected virtual void OnTriggerExit(Collider other) => onTriggerExit?.Invoke();
+        public void StartCooldown() {
+            _cooldownRoutine = StartCoroutine(Cooldown());
 
-        /// <summary>
-        /// Disables the Game object the trigger is attached to
-        /// </summary>
+            IEnumerator Cooldown() {
+                IsActivatable = false;
+                yield return new WaitForSeconds(_cooldownTime);
+                _cooldownRoutine = null;
+                IsActivatable = true;
+            }
+        }
+
+        public void CancelCooldown() {
+            if (_cooldownRoutine == null) return;
+            StopCoroutine(_cooldownRoutine);
+            IsActivatable = true;
+        }
+
+        
+        
         public void DisableTriggerObject() {
             gameObject.SetActive(false);
         }
-    } 
+    }
 }
