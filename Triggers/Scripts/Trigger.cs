@@ -12,7 +12,8 @@ namespace ScottEwing.Triggers{
         private enum TriggeredType{
             DestroyOnTriggered,
             DisableOnTriggered,
-            CooldownOnTriggered
+            CooldownOnTriggered,
+            RemainActive
         }
 
         [SerializeField] protected string _triggeredByTag = "Player";
@@ -22,9 +23,9 @@ namespace ScottEwing.Triggers{
 #endif
         [SerializeField] private float _cooldownTime = 2.0f;
 
-        [SerializeField] protected bool _activateOnce = true;
         [field: SerializeField] protected bool IsActivatable { get; set; } = true;
 
+        [SerializeField] private bool _invokeOnTriggerExitWhenTriggered = false;
         [SerializeField] protected UnityEvent _onTriggered;
         [SerializeField] protected UnityEvent _onTriggerEnter;
         [SerializeField] protected UnityEvent _onTriggerStay;
@@ -32,23 +33,22 @@ namespace ScottEwing.Triggers{
 
         private Coroutine _cooldownRoutine;
 
-        //private void OnEnable() => _onTriggered.AddListener(DestroyOnTriggered);
-        //private void OnDisable() => _onTriggered.AddListener(DestroyOnTriggered);
-        protected virtual void OnTriggerEnter(Collider other) => _onTriggerEnter?.Invoke();
-        protected virtual void OnTriggerStay(Collider other) => _onTriggerStay?.Invoke();
-        protected virtual void OnTriggerExit(Collider other) => _onTriggerExit?.Invoke();
+        protected virtual void OnTriggerEnter(Collider other) => InvokeOnTriggerEnter();
+        protected virtual void OnTriggerStay(Collider other) => InvokeOnTriggerStay();
+        protected virtual void OnTriggerExit(Collider other) => InvokeOnTriggerExit();
 
-        /*private void DestroyOnTriggered() {
-            if (_activateOnce) {
-                Destroy(this.gameObject);
-            }
-        }*/
 
+        protected virtual void InvokeOnTriggerEnter() => _onTriggerEnter?.Invoke();
+        protected virtual void InvokeOnTriggerStay() => _onTriggerStay?.Invoke();
+        protected virtual void InvokeOnTriggerExit() => _onTriggerExit?.Invoke();
+
+
+        
 
         protected void Triggered() {
             if (!gameObject.activeSelf || !gameObject.activeInHierarchy) return;
-            if (!IsActivatable) return; 
-            
+            if (!IsActivatable) return;
+
             _onTriggered.Invoke();
             switch (_triggeredType) {
                 case TriggeredType.DestroyOnTriggered:
@@ -60,6 +60,10 @@ namespace ScottEwing.Triggers{
                 case TriggeredType.CooldownOnTriggered:
                     StartCooldown();
                     break;
+            }
+
+            if (_invokeOnTriggerExitWhenTriggered) {
+                InvokeOnTriggerExit();
             }
         }
 
@@ -80,8 +84,7 @@ namespace ScottEwing.Triggers{
             IsActivatable = true;
         }
 
-        
-        
+
         public void DisableTriggerObject() {
             gameObject.SetActive(false);
         }

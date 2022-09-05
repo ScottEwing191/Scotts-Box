@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -29,7 +28,7 @@ namespace ScottEwing.Triggers{
             if (!IsActivatable) return;
             if (!ShouldCheckInput) return;
             if (InputActionReference.action == null) return;
-            if (InputActionReference.action.ReadValue<float>() > 0) {
+            if (InputActionReference.action.triggered) {
                 Triggered();
             }
         }
@@ -43,49 +42,36 @@ namespace ScottEwing.Triggers{
             }
             if (_isLooking && !_lookedThisFixedUpdate) {
                 _isLooking = false;
-                LookExit();
+                InvokeOnTriggerExit();
             }
-            _lookedThisFixedUpdate = false;     // reset this for next fram
+            _lookedThisFixedUpdate = false;     // reset this for next frame
         }
 
         public void Look(Vector3 cameraPosition) {
-            if (!IsActivatable) return;
             _lookedThisFixedUpdate = true;
-            if (!ShouldCheckInput && CanCameraActivateTrigger(cameraPosition)) {
-                LookEnter();
-            }
-            else if (ShouldCheckInput && CanCameraActivateTrigger(cameraPosition)) {
-                LookStay();
-            }
-            else if (ShouldCheckInput && !CanCameraActivateTrigger(cameraPosition)) {
-                LookExit();
-            }
+            if (!IsActivatable) return;
+            if (!ShouldCheckInput && CanCameraActivateTrigger(cameraPosition))
+                InvokeOnTriggerEnter();
+            else if (ShouldCheckInput && CanCameraActivateTrigger(cameraPosition))
+                InvokeOnTriggerStay();
+            else if (ShouldCheckInput && !CanCameraActivateTrigger(cameraPosition)) InvokeOnTriggerExit();
         }
 
-        public void LookEnter() {
+        protected override void InvokeOnTriggerEnter() {
             if (ShouldCheckInput) return;
             ShouldCheckInput = true;
-            _onTriggerEnter?.Invoke();
+            base.InvokeOnTriggerEnter();
         }
-
-        public void LookStay() {
-            _onTriggerStay?.Invoke();
-        }
-
-        public void LookExit() {
+        
+        protected override void InvokeOnTriggerExit() {
             if (!ShouldCheckInput) return;
             ShouldCheckInput = false;
-            _onTriggerExit?.Invoke();
+            base.InvokeOnTriggerExit();
         }
 
         private bool CanCameraActivateTrigger(Vector3 cameraPosition) {
             if (Vector3.Distance(cameraPosition, transform.position) > _maxInteractDistance)  return false;
             return true;
         }
-
-
-        
-        
-        
     }
 }

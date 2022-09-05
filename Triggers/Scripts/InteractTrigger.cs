@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 
 namespace ScottEwing.Triggers {
     public class InteractTrigger : Trigger , ITakesInput{
-        public InputActionProperty InputActionReference { get; set; }
+        [field: SerializeField] public InputActionProperty InputActionReference { get; set; }
         public bool ShouldCheckInput { get; set; }
 
         private void Update() => GetInput();
@@ -17,7 +17,7 @@ namespace ScottEwing.Triggers {
             if (!IsActivatable) return;
             if (!ShouldCheckInput) return;
             if (InputActionReference.action == null) return;
-            if (InputActionReference.action.ReadValue<float>() > 0) {
+            if (InputActionReference.action.triggered) {
                 Triggered();
             }
         }

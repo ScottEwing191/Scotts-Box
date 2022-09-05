@@ -1,48 +1,32 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using ScottEwing.Triggers;
-using Unity.VisualScripting;
 using UnityEngine;
+#if ODIN_INSPECTOR
+using Sirenix.OdinInspector;
+#endif
 
 namespace ScottEwing.Triggers{
     public enum CastSourceType{
         UseMainCameraTransform,
-        UseAssignedTransform
+        AssignSourceTransform
     }
     
     public class RaycastLookInteractTrigger : LookInteractTrigger, ISphereCastInteractor{
-        [Tooltip("The game object that need to be looked at. Default is the game object this is attached to. If different, default and _lookTarget should be under same parent (untested)")]
-        //[SerializeField] private Transform _lookTarget;
+        [Tooltip("The game object that need to be looked at. Default is the game object this is attached to. If different, default and _lookTarget should be under same parent")]
+        [SerializeField] private Transform _lookTarget = null;
 
         [field: SerializeField] public float SphereCastRadius { get; set; } = 0.1f;
         [field: SerializeField] public LayerMask CollisionLayers { get; set; } = ~0;
         [field: SerializeField] public QueryTriggerInteraction TriggerInteraction { get; set; } = QueryTriggerInteraction.Ignore;
-        [field: SerializeField] public CastSourceType CastSourceType { get; set; } = CastSourceType.UseMainCameraTransform;
-        [field: SerializeField] public Transform AssignedSource { get; set; }
-        public Transform CurrentSource { get; set; }
-
+        [SerializeField] private LookSource _source = new LookSource();
+        
         private bool _performSphereCast;
-
-        private void Awake() {
-            //_lookTarget ??= gameObject.transform;
-        }
-
+        
         private void Start() {
-            switch (CastSourceType) {
-                case CastSourceType.UseMainCameraTransform:
-                    if (Camera.main) {
-                        CurrentSource = Camera.main.transform;
-                    }
-                    break;
-                case CastSourceType.UseAssignedTransform:
-                    CurrentSource = AssignedSource;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+            if (_lookTarget == null) {
+                _lookTarget = gameObject.transform;
             }
         }
-
+        
         protected override void FixedUpdate() {
             DoRaycast();
             base.FixedUpdate();
@@ -50,9 +34,9 @@ namespace ScottEwing.Triggers{
 
         private void DoRaycast() {
             if (!_performSphereCast) return;
-            if (!Physics.SphereCast(CurrentSource.position, SphereCastRadius, CurrentSource.forward, out RaycastHit hit, _maxInteractDistance, CollisionLayers.value, TriggerInteraction)) return;
-            if (!hit.transform.IsChildOf(gameObject.transform)) return;
-            Look(CurrentSource.position);
+            if (!Physics.SphereCast(_source.CurrentSource.position, SphereCastRadius, _source.CurrentSource.forward, out RaycastHit hit, _maxInteractDistance, CollisionLayers.value, TriggerInteraction)) return;
+            if (!hit.transform.IsChildOf(_lookTarget)) return;
+            Look(_source.CurrentSource.position);
         }
 
         protected override void OnTriggerEnter(Collider other) {
@@ -66,7 +50,5 @@ namespace ScottEwing.Triggers{
                 _performSphereCast = false;
             }
         }
-
-        
     }
 }

@@ -133,7 +133,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 4524062125400729697}
         m_TargetAssemblyTypeName: ScottEwing.Triggers.LookInteractTriggerDemo, Assembly-CSharp
-        m_MethodName: LookTriggered
+        m_MethodName: Triggered
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -148,7 +148,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 4524062125400729697}
         m_TargetAssemblyTypeName: ScottEwing.Triggers.LookInteractTriggerDemo, Assembly-CSharp
-        m_MethodName: LookEnter
+        m_MethodName: TriggerEnter
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -163,7 +163,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 4524062125400729697}
         m_TargetAssemblyTypeName: ScottEwing.Triggers.LookInteractTriggerDemo, Assembly-CSharp
-        m_MethodName: LookStay
+        m_MethodName: TriggerStay
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -178,7 +178,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 4524062125400729697}
         m_TargetAssemblyTypeName: ScottEwing.Triggers.LookInteractTriggerDemo, Assembly-CSharp
-        m_MethodName: LookExit
+        m_MethodName: TriggerExit
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

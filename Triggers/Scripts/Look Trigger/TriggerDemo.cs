@@ -2,23 +2,23 @@ using ScottEwing.Triggers;
 using UnityEngine;
 
 namespace ScottEwing.Triggers{
-    public class LookInteractTriggerDemo : MonoBehaviour{
+    public class TriggerDemo : MonoBehaviour{
         public void Look(Vector3 cameraPosition) {
         }
 
-        public void LookEnter() {
+        public void TriggerEnter() {
             print(gameObject.name + ": Look Enter");
         }
 
-        public void LookStay() {
+        public void TriggerStay() {
             print(gameObject.name + ": Look Stay");
         }
 
-        public void LookExit() {
+        public void TriggerExit() {
             print(gameObject.name + ": Look Exit");
         }
 
-        public void LookTriggered() {
+        public void Triggered() {
             print(gameObject.name + ": Look Triggered");
         }
     }
