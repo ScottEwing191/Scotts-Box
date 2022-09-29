@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ScottEwing.Triggers{
     public interface ILookInteractable{
-        void Look(Vector3 cameraPosition);
+        Trigger.TriggerState Look(Vector3 cameraPosition);
         
     }
 

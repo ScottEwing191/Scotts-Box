@@ -47,26 +47,33 @@ namespace ScottEwing.Triggers{
             _lookedThisFixedUpdate = false;     // reset this for next frame
         }
 
-        public void Look(Vector3 cameraPosition) {
+        public TriggerState Look(Vector3 cameraPosition) {
             _lookedThisFixedUpdate = true;
-            if (!IsActivatable) return;
+            if (!IsActivatable) return TriggerState.None;
             if (!ShouldCheckInput && CanCameraActivateTrigger(cameraPosition))
                 InvokeOnTriggerEnter();
             else if (ShouldCheckInput && CanCameraActivateTrigger(cameraPosition))
                 InvokeOnTriggerStay();
             else if (ShouldCheckInput && !CanCameraActivateTrigger(cameraPosition)) InvokeOnTriggerExit();
+            return TriggerState.None;
         }
 
-        protected override void InvokeOnTriggerEnter() {
-            if (ShouldCheckInput) return;
+        protected override TriggerState InvokeOnTriggerEnter() {
+            if (ShouldCheckInput) {
+                Debug.Log("Need to confirm that the return is correct");
+                return TriggerState.None;
+            }
             ShouldCheckInput = true;
-            base.InvokeOnTriggerEnter();
+            return base.InvokeOnTriggerEnter();
         }
         
-        protected override void InvokeOnTriggerExit() {
-            if (!ShouldCheckInput) return;
+        protected override TriggerState InvokeOnTriggerExit() {
+            if (!ShouldCheckInput) {
+                Debug.Log("Need to confirm that the return is correct");
+                return TriggerState.None;
+            }
             ShouldCheckInput = false;
-            base.InvokeOnTriggerExit();
+            return base.InvokeOnTriggerExit();
         }
 
         private bool CanCameraActivateTrigger(Vector3 cameraPosition) {

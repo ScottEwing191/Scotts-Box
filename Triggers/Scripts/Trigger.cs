@@ -16,6 +16,16 @@ namespace ScottEwing.Triggers{
             RemainActive
         }
 
+        /// <summary>
+        /// States are anly valid for the frame they are received
+        /// </summary>
+        public enum TriggerState{
+            Enter,
+            Stay,
+            Exit,
+            None
+        }
+
         [SerializeField] protected string _triggeredByTag = "Player";
         [SerializeField] private TriggeredType _triggeredType = TriggeredType.DestroyOnTriggered;
 #if ODIN_INSPECTOR
@@ -38,12 +48,21 @@ namespace ScottEwing.Triggers{
         protected virtual void OnTriggerExit(Collider other) => InvokeOnTriggerExit();
 
 
-        protected virtual void InvokeOnTriggerEnter() => _onTriggerEnter?.Invoke();
-        protected virtual void InvokeOnTriggerStay() => _onTriggerStay?.Invoke();
-        protected virtual void InvokeOnTriggerExit() => _onTriggerExit?.Invoke();
+        protected virtual TriggerState InvokeOnTriggerEnter() {
+            _onTriggerEnter?.Invoke();
+            return TriggerState.Enter;
+        }
 
+        protected virtual TriggerState InvokeOnTriggerStay() {
+            _onTriggerStay?.Invoke();
+            return TriggerState.Stay;
+        }
 
-        
+        protected virtual TriggerState InvokeOnTriggerExit() {
+            _onTriggerExit?.Invoke();
+            return TriggerState.Exit;
+        }
+
 
         protected void Triggered() {
             if (!gameObject.activeSelf || !gameObject.activeInHierarchy) return;
