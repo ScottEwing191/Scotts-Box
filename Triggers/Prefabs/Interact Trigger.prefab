@@ -28,6 +28,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -57,20 +58,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 783b8359e6d504d43b44a2280b9fed6e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  activateOnce: 1
-  isActivatable: 1
-  onTriggerMethod:
+  _triggeredByTag: Player
+  _triggeredType: 0
+  _cooldownTime: 2
+  <IsActivatable>k__BackingField: 1
+  _invokeOnTriggerExitWhenTriggered: 0
+  _onTriggered:
     m_PersistentCalls:
       m_Calls: []
-  onTriggerEnter:
+  _onTriggerEnter:
     m_PersistentCalls:
       m_Calls: []
-  onTriggerStay:
+  _onTriggerStay:
     m_PersistentCalls:
       m_Calls: []
-  onTriggerExit:
+  _onTriggerExit:
     m_PersistentCalls:
       m_Calls: []
-  triggeredByTag: Player
-  interactKey: E
-  interactTextArray: []
+  <InputActionReference>k__BackingField:
+    m_UseReference: 0
+    m_Action:
+      m_Name: Input Action Reference
+      m_Type: 0
+      m_ExpectedControlType: 
+      m_Id: 4f1b4858-54f7-4a5e-911a-804903f1fac5
+      m_Processors: 
+      m_Interactions: 
+      m_SingletonActionBindings: []
+      m_Flags: 0
+    m_Reference: {fileID: 0}

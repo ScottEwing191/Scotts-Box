@@ -54,7 +54,8 @@ namespace ScottEwing.Triggers{
                 InvokeOnTriggerEnter();
             else if (ShouldCheckInput && CanCameraActivateTrigger(cameraPosition))
                 InvokeOnTriggerStay();
-            else if (ShouldCheckInput && !CanCameraActivateTrigger(cameraPosition)) InvokeOnTriggerExit();
+            else if (ShouldCheckInput && !CanCameraActivateTrigger(cameraPosition)) 
+                InvokeOnTriggerExit();
             return TriggerState.None;
         }
 
