@@ -1,3 +1,6 @@
+using System;
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -18,8 +21,22 @@ namespace ScottEwing.Input.DynamicInputIcons{
         }
 
         private void Start() {
-            if (_playerInput.devices.Count == 0)  return;
-            var controllerName = _playerInput.devices[0].name;
+            StartCoroutine(SetUpIconsAfterOneFrame());
+            _playerInput.onControlsChanged += SetUpIcons;
+        }
+
+        private void OnDestroy() {
+            _playerInput.onControlsChanged -= SetUpIcons;
+        }
+
+        private IEnumerator SetUpIconsAfterOneFrame() {
+            yield return null;
+            SetUpIcons(_playerInput);
+        }
+
+        private void SetUpIcons(PlayerInput playerInput) {
+            if (playerInput.devices.Count == 0) return;
+            var controllerName = playerInput.devices[0].name;
 
             if (InputSystem.IsFirstLayoutBasedOnSecond(controllerName, "DualShockGamepad")) {
                 _inputBindingMask = InputBinding.MaskByGroup("GamePad");
@@ -37,7 +54,7 @@ namespace ScottEwing.Input.DynamicInputIcons{
                 _inputBindingMask = InputBinding.MaskByGroup("GamePad");
                 _types = ControllerInputTypes.XboxController;
             }
-            
+
             foreach (var icon in GetComponentsInChildren<UiInputIcon>(true)) {
                 icon.SetImageSprite(_types, _inputBindingMask);
             }

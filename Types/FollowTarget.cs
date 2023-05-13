@@ -6,7 +6,6 @@ namespace ScottEwing{
     /// This class can be attached to a game object to make it follow a target game objects Position/Rotation.
     /// </summary>
     public class FollowTarget : MonoBehaviour{
-        private enum UpdateOptions{ Update, LateUpdate, FixedUpdate, NoFollow }
         private enum PositionOptions{ Position, XZPosition, YPosition, NoPosition }
         private enum RotationOptions{ Rotation, XZRotation, YRotation, NoRotation }
 
@@ -33,8 +32,10 @@ namespace ScottEwing{
             if (_parentPivot && transform.rotation!= Quaternion.identity) {
                 transform.RotateAround(_parentPivot.position, axis, -angle);
             }
-            _offsetPosition = transform.position - _positionTarget.position;
 
+            if (_positionTarget) {
+                _offsetPosition = transform.position - _positionTarget.position;
+            }
         }
 
         private void Update() {
@@ -53,18 +54,21 @@ namespace ScottEwing{
         }
 
         private void Follow() {
-            var newPosition = GetNewProvisionalPosition();
+            Vector3 newPosition;
             
             var thisTransform = transform;      // I think this is more efficient than repeatedly accessing transform
             switch (_positionOption) {
                 case PositionOptions.Position:
+                    newPosition = GetNewProvisionalPosition();
                     thisTransform.position = newPosition;
                     break;
                 case PositionOptions.XZPosition:
+                    newPosition = GetNewProvisionalPosition();
                     newPosition.y = transform.position.y;
                     thisTransform.position = newPosition;
                     break;
                 case PositionOptions.YPosition:
+                    newPosition = GetNewProvisionalPosition();
                     newPosition.x = thisTransform.position.x;
                     newPosition.z = thisTransform.position.z;
                     thisTransform.position = newPosition;

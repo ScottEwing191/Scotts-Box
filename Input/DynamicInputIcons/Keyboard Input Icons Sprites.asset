@@ -57,6 +57,13 @@ MonoBehaviour:
     - {fileID: 21300000, guid: 461b573649f071b45bbf92d5167b8858, type: 3}
     - {fileID: 21300000, guid: cde556b955c21c440a1390ef876a7804, type: 3}
     - {fileID: 21300000, guid: a1e7aad2fc140d34788879e01a7adf02, type: 3}
+    - {fileID: 21300000, guid: 124b2fff54a5e9d42ad26d15bc8c16c7, type: 3}
+    - {fileID: 21300000, guid: 26383f6d9abe6444f9de827ae2e093a3, type: 3}
+    - {fileID: 21300000, guid: eebc9cc52c36f41f2849d2325c077599, type: 3}
+    - {fileID: 21300000, guid: 747b433eff02d4ee3852e2a3080c89fe, type: 3}
+    - {fileID: 21300000, guid: f8e2ebaa0280d9c4897f14cc89e4271d, type: 3}
+    - {fileID: 21300000, guid: 70d70dd26e21ada42b37e71fe6a9e81c, type: 3}
+    - {fileID: 21300000, guid: 425e75735ffbfc447886aa4ffb1e4fcb, type: 3}
     SerializedBytesString: 
     Prefab: {fileID: 0}
     PrefabModificationsReferencedUnityObjects: []
@@ -75,7 +82,7 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 12
-      Data: 50
+      Data: 58
     - Name: 
       Entry: 7
       Data: 
@@ -673,6 +680,102 @@ MonoBehaviour:
     - Name: $v
       Entry: 10
       Data: 40
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: leftButton
+    - Name: $v
+      Entry: 10
+      Data: 41
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: rightButton
+    - Name: $v
+      Entry: 10
+      Data: 42
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: forwardButton
+    - Name: $v
+      Entry: 10
+      Data: 43
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: backButton
+    - Name: $v
+      Entry: 10
+      Data: 44
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: scroll
+    - Name: $v
+      Entry: 10
+      Data: 45
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: tab
+    - Name: $v
+      Entry: 10
+      Data: 46
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: delta
+    - Name: $v
+      Entry: 10
+      Data: 47
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 1
+      Data: shift
+    - Name: $v
+      Entry: 10
+      Data: 38
     - Name: 
       Entry: 8
       Data: 

@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.Events;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
 
@@ -22,13 +19,13 @@ namespace ScottEwing.Triggers {
             }
         }
         protected override void OnTriggerEnter(Collider other) {
-            if (!other.CompareTag(_triggeredByTag)) return;
+            if (!IsColliderValid(other)) return;
             ShouldCheckInput = true;
             base.OnTriggerEnter(other);
         }
 
         protected override void OnTriggerExit(Collider other) {
-            if (!other.CompareTag(_triggeredByTag)) return;
+            if (!IsColliderValid(other)) return;
             ShouldCheckInput = false;
             base.OnTriggerExit(other);
         }

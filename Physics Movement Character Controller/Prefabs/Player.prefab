@@ -112,18 +112,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 150
+  _onlyLimitControllerVelocity: 0
   maxVelocity: 9
   jumpHeight: 2
+  jumpInputDirectionScale: 0.1
   inAirDrag: 0.5
   inAirSpeed: 75
   groundCheckOffsetPercentage: 0.457
   hasAirControl: 1
-  isDEBUG: 0
+  _jumpLayers:
+    serializedVersion: 2
+    m_Bits: 1
   parallelToGroundTransform: {fileID: 0}
-  isLeaping: 0
   maxAngularVelocity: 100
-  isGrounded: 1
   defaultAirVelocityMagnitude: 3
+  _useBrake: 1
+  _brakeStrength: 50
+  _brakePhysicsMaterial: {fileID: 13400000, guid: 8e3f4f5859d5b2a4db5cccb1be6637f2,
+    type: 2}
+  _defaultBrakeStrength: 1
+  _defaultBrakePhysicsMaterial: {fileID: 0}
+  _brakeApplyTime: 0.5
+  isBrakeOn: 0
+  _groundedBufferSeconds: 0.075
+  <IsGrounded>k__BackingField: 1
 --- !u!54 &1497502481290919154
 Rigidbody:
   m_ObjectHideFlags: 0
