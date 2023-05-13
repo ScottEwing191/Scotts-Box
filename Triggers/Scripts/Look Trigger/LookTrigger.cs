@@ -1,8 +1,10 @@
 using System;
 using System.ComponentModel;
+#if ODIN_INSPECTOR
 using Sirenix.OdinInspector;
+#endif
 using UnityEngine;
-using UnityEngine.InputSystem;
+
 
 
 namespace ScottEwing.Triggers{
