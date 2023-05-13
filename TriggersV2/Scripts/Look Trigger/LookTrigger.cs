@@ -1,8 +1,5 @@
-using System;
 using System.ComponentModel;
-using Sirenix.OdinInspector;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 
 namespace ScottEwing.TriggersV2{

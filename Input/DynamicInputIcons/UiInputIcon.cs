@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+#if ODIN_INSPECTOR
 using Sirenix.OdinInspector;
+#endif
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -17,11 +19,14 @@ namespace ScottEwing.Input.DynamicInputIcons{
         [SerializeField] private bool _assignActionPerControlType;
 
 
-
+#if ODIN_INSPECTOR
         [HideIf("_assignActionPerControlType")]
+#endif
         [SerializeField] private InputActionReference _actionReference;
 
+#if ODIN_INSPECTOR
         [ShowIf("_assignActionPerControlType")]
+#endif
         [SerializeField] private List<KeyValuePair> _controlTypeActions = new List<KeyValuePair>();
         
         //public Dictionary<ControllerInputTypes, InputActionReference> controlTypeActions = new Dictionary<ControllerInputTypes, InputActionReference>();
@@ -36,7 +41,9 @@ namespace ScottEwing.Input.DynamicInputIcons{
         
         [Tooltip("This is the control type which will be used in the editor. Does not effect the icon used when the game is run")]
         [SerializeField] private ControllerInputTypes _editorType = ControllerInputTypes.KeyboardMouse;
+#if ODIN_INSPECTOR
         [Button(ButtonSizes.Small)]
+#endif
         private void SetIconInEditor() {
             _image ??= GetComponent<Image>();
             var inputBindingMask = _editorType switch {

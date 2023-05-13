@@ -1,7 +1,6 @@
 #if ODIN_INSPECTOR
 using Sirenix.OdinInspector;
 #endif
-using System;
 using UnityEngine;
 #if SE_EVENTSYSTEM
 using ScottEwing.EventSystem;
@@ -54,10 +53,9 @@ namespace ScottEwing.Checkpoints{
         public virtual void OnCheckpointReload(CheckpointReloadEvent obj) {
         }
 #else
-        protected virtual void Start() {
-            
-        }
+        protected virtual void Start() {}
 #endif
+
 
         public virtual void Save(CheckpointReachedData data) {
         } 

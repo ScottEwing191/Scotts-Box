@@ -1,12 +1,23 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+
+#if ODIN_INSPECTOR
 using Sirenix.OdinInspector;
+#endif
 
 namespace ScottEwing.Input.DynamicInputIcons{
+
     [CreateAssetMenu]
-    public class InputIconsSprites : SerializedScriptableObject{
+    public class InputIconsSprites 
+#if ODIN_INSPECTOR
+        : SerializedScriptableObject
+#endif
+    
+    {
+#if ODIN_INSPECTOR
         [DictionaryDrawerSettings(KeyLabel = "Input", ValueLabel = "Input Icon")]
+#endif
         public Dictionary<string, Sprite> InputIcons = new Dictionary<string, Sprite>() {
             {"buttonSouth", null},
             {"buttonNorth", null},

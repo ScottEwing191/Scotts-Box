@@ -1,9 +1,11 @@
 using System;
 using ScottEwing.ExtensionMethods;
 using ScottEwing.Triggers;
+#if ODIN_INSPECTOR
 using Sirenix.OdinInspector;
+#endif
 using UnityEngine;
-using UnityEngine.SceneManagement;
+
 
 namespace ScottEwing{
     [Serializable]
@@ -14,8 +16,9 @@ namespace ScottEwing{
         }
 
         [SerializeField] private CastType _castType = CastType.Raycast;
-
+#if ODIN_INSPECTOR
         [ShowIf("_castType", CastType.SphereCast)]
+#endif
         [SerializeField] private float _sphereCastRadius = 0.1f;
 
         [SerializeField] private float _castDistance = 30;
@@ -24,8 +27,9 @@ namespace ScottEwing{
         public LookSource Source => _source;
         [field: SerializeField] public LayerMask CollisionLayers { get; set; }
         [SerializeField] private bool _specifyTargetLayers = false;
-
+#if ODIN_INSPECTOR
         [field: ShowIf("_specifyTargetLayers", true)]
+#endif
         [field: SerializeField] public LayerMask TargetLayers { get; set; }
 
         [SerializeField] private QueryTriggerInteraction _triggerInteraction = QueryTriggerInteraction.UseGlobal;

@@ -38,22 +38,33 @@ namespace ScottEwing.TriggersV2{
         }
 
         [SerializeField]private TriggerType _triggerType = TriggerType.Base;
-        #if ODIN_INSPECTOR
+#if ODIN_INSPECTOR
         [ShowIf("_triggerType", TriggerType.Interact)]
-        #endif
-        
+#endif
         [SerializeField] private InteractTriggerData _interactTriggerData;
+#if ODIN_INSPECTOR
         [ShowIf("_triggerType", TriggerType.ToggleInteract)]
+#endif
         [SerializeField] private ToggleInteractTriggerData _toggleInteractTriggerData;
+#if ODIN_INSPECTOR
         [ShowIf("_triggerType", TriggerType.Checkpoint)]
+#endif
         [SerializeField] private CheckpointTouchTriggerData _checkpointTouchTriggerData;
+#if ODIN_INSPECTOR
         [ShowIf("_triggerType", TriggerType.Look)]
+#endif
         [SerializeField] private LookTriggerData _lookTriggerData;
+#if ODIN_INSPECTOR
         [ShowIf("_triggerType", TriggerType.LookInteract)]
+#endif
         [SerializeField] private LookInteractTriggerData _lookInteractTriggerData;
+#if ODIN_INSPECTOR
         [ShowIf("_triggerType", TriggerType.TimedStay)]
+#endif
         [SerializeField] private TimedStayTriggerData _timedStayTriggerData;
+#if ODIN_INSPECTOR
         [ShowIf("_triggerType", TriggerType.Counter)]
+#endif
         [SerializeField] private CounterTriggerData _counterTriggerData;
         
 
@@ -67,8 +78,9 @@ namespace ScottEwing.TriggersV2{
         [ShowIf("_triggeredBy", TriggeredBy.LayerMask)]
 #endif
         [SerializeField] private LayerMask _triggeredByMask;
-
+#if ODIN_INSPECTOR
         [ShowIf("_triggeredBy", TriggeredBy.Tag)]
+#endif
         [SerializeField] protected string _triggeredByTag = "Player";
         [SerializeField] private TriggeredBehaviour _triggeredBehaviour = TriggeredBehaviour.DestroyOnTriggered;
 #if ODIN_INSPECTOR

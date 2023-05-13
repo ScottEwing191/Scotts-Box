@@ -36,8 +36,9 @@ namespace ScottEwing.Triggers{
         [ShowIf("_triggeredBy", TriggeredBy.LayerMask)]
 #endif
         [SerializeField] private LayerMask _triggeredByMask;
-
+#if ODIN_INSPECTOR
         [ShowIf("_triggeredBy", TriggeredBy.Tag)]
+#endif
         [SerializeField] protected string _triggeredByTag = "Player";
         [SerializeField] private TriggeredType _triggeredType = TriggeredType.DestroyOnTriggered;
 #if ODIN_INSPECTOR
