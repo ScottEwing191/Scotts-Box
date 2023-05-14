@@ -1,12 +1,7 @@
 # Scotts-Box
  A collection of unity scripts and assets that can be used between projects
 
-Changes Made in Honours Project
-
-Removed Update Options into Its own file so that it can be used by the SphereCastInteractor
-
-In SphereCast Interactor And LookInteract Trigger added code so that sphere cast interactor can trigger the look interact trigger.
-Comment out the code becuse it was not need and untested
-
-Changed Input Handler so it works using unity events instead of bradcast.
-Added new base inputhandler to ScottEwing namspace
+# Adding This Repo as a submodule
+1. In GitHub desktop: Repository > Open In Command Prompt
+2. cd to location the submodule should be added i.e "cd Assets"
+3. git submodule add <url>
