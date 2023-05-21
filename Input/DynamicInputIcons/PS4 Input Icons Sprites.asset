@@ -288,3 +288,42 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+  InputIcons3:
+  - _input: buttonSouth
+    _inputIcon: {fileID: 21300000, guid: 88c88abb24cdd534db43cd0b27ec0e7c, type: 3}
+  - _input: buttonNorth
+    _inputIcon: {fileID: 21300000, guid: 6e5514a6b88174444a22fc025c1dbe65, type: 3}
+  - _input: buttonEast
+    _inputIcon: {fileID: 21300000, guid: 8c32729ca194d864bbdeb11809153c83, type: 3}
+  - _input: buttonWest
+    _inputIcon: {fileID: 21300000, guid: 9a57330d9814d8c4c8fcf31abf21926f, type: 3}
+  - _input: start
+    _inputIcon: {fileID: 21300000, guid: c0269ff5e5b4cc24f92b8c85eb99c56d, type: 3}
+  - _input: select
+    _inputIcon: {fileID: 21300000, guid: ce568c3d163e082469345e982c3d73c2, type: 3}
+  - _input: leftTrigger
+    _inputIcon: {fileID: 21300000, guid: 2e9690c0a9df7b74896f54e8efc595b8, type: 3}
+  - _input: rightTrigger
+    _inputIcon: {fileID: 21300000, guid: 16f69084ca66938478983a8359434462, type: 3}
+  - _input: leftShoulder
+    _inputIcon: {fileID: 21300000, guid: d5672d0b5d9c69641936ffa6de085cff, type: 3}
+  - _input: rightShoulder
+    _inputIcon: {fileID: 21300000, guid: 1c2246ad1694b1e499f4f4409c215a30, type: 3}
+  - _input: dpad
+    _inputIcon: {fileID: 21300000, guid: 0666cdf6464c6d445a3a7183f6747a87, type: 3}
+  - _input: dpad/up
+    _inputIcon: {fileID: 21300000, guid: 7fbbba02fedf961478dc3148b0241747, type: 3}
+  - _input: dpad/down
+    _inputIcon: {fileID: 21300000, guid: f2f388cc4e533d54db57136e4eac3c24, type: 3}
+  - _input: dpad/left
+    _inputIcon: {fileID: 21300000, guid: ed3f17a21a9bdd041ad92cfeaff39470, type: 3}
+  - _input: dpad/right
+    _inputIcon: {fileID: 21300000, guid: e0fbedac3e6c559418e672c9e84ad093, type: 3}
+  - _input: leftStick
+    _inputIcon: {fileID: 21300000, guid: 9e6a7c97676c65446b4ea460dc13204e, type: 3}
+  - _input: rightStick
+    _inputIcon: {fileID: 21300000, guid: 85935de47b2e0fc41848a6e93ae74b87, type: 3}
+  - _input: leftStickPress
+    _inputIcon: {fileID: 21300000, guid: 1ed2a3a6298ea0343bf9c8602cdd5a79, type: 3}
+  - _input: rightStickPress
+    _inputIcon: {fileID: 21300000, guid: b2c5a9664b35e8143bb561ec7321399c, type: 3}

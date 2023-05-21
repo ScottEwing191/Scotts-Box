@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ScottEwing.TriggersV2{
     public interface ITrigger{
-        public TriggerV2 TriggerV2 { get; set; }
+        public BaseTrigger Trigger { get; set; }
         //public void Triggered(GameObject other);
         public void Awake();
         public void Start();

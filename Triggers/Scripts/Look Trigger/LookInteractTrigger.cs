@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 
 namespace ScottEwing.Honours
 {
+    [AddComponentMenu("ScottEwing/Triggers/LookInteractTrigger(deprecated)")]
     public class LookInteractTrigger : LookTrigger, ITakesInput
     {
         [field:SerializeField] public InputActionProperty InputActionReference { get; set; }

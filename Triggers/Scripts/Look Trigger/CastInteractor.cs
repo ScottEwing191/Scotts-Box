@@ -1,6 +1,7 @@
 using UnityEngine;
 
 namespace ScottEwing.Triggers{
+    [AddComponentMenu("ScottEwing/CastInteractor(Old)")]
     public class CastInteractor : MonoBehaviour{
         [field: SerializeField] public RayCastHelper Caster { get; set; } = new RayCastHelper();
 

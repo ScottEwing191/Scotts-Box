@@ -3,6 +3,7 @@ using UnityEngine.Events;
 
 
 namespace ScottEwing.Triggers {
+    [AddComponentMenu("ScottEwing/Triggers/ToggleInteractTrigger(deprecated)")]
     public class ToggleInteractTrigger : InteractTrigger{
         [Tooltip("The Trigger has been toggled off")]
         [SerializeField] protected UnityEvent _onTriggeredOff;

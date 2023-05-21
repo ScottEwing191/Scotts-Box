@@ -11,15 +11,17 @@ using Sirenix.OdinInspector;
 // It must be called from a derived class. This is why this was an abstract class.
 // Will still keep non abstract but should be aware that trigger type will have no effect 
 namespace ScottEwing.Triggers{
-        /// <summary>
-        /// States are anly valid for the frame they are received
-        /// </summary>
-        public enum TriggerState{
-            Enter,
-            Stay,
-            Exit,
-            None
-        }
+    /// <summary>
+    /// States are anly valid for the frame they are received
+    /// </summary>
+    public enum TriggerState{
+        Enter,
+        Stay,
+        Exit,
+        None
+    }
+
+    [AddComponentMenu("ScottEwing/Triggers/Trigger(deprecated)")]
     public class Trigger : MonoBehaviour{
         private enum TriggeredType{
             DestroyOnTriggered,
@@ -28,8 +30,11 @@ namespace ScottEwing.Triggers{
             RemainActive,
             DisableTriggerComponent
         }
-        
-        private enum TriggeredBy{Tag,LayerMask}
+
+        private enum TriggeredBy{
+            Tag,
+            LayerMask
+        }
 
         [SerializeField] private TriggeredBy _triggeredBy = TriggeredBy.Tag;
 #if ODIN_INSPECTOR
@@ -40,6 +45,7 @@ namespace ScottEwing.Triggers{
         [ShowIf("_triggeredBy", TriggeredBy.Tag)]
 #endif
         [SerializeField] protected string _triggeredByTag = "Player";
+
         [SerializeField] private TriggeredType _triggeredType = TriggeredType.DestroyOnTriggered;
 #if ODIN_INSPECTOR
         [ShowIf("_triggeredType", TriggeredType.CooldownOnTriggered)]
@@ -47,13 +53,13 @@ namespace ScottEwing.Triggers{
         [SerializeField] private float _cooldownTime = 2.0f;
 
         [field: SerializeField] protected bool IsActivatable { get; set; } = true;
-        [SerializeField] protected bool isDebug;  
+        [SerializeField] protected bool isDebug;
         [SerializeField] private bool _invokeOnTriggerExitWhenTriggered = false;
         private Coroutine _cooldownRoutine;
         protected Collider currentCollider;
-        
+
         [SerializeField] protected UnityEvent _onTriggered;
-        
+
         //--Trigger Unity Events
         [Header("Trigger Events")]
         [SerializeField] private bool _useTriggerEvents = true;
@@ -87,8 +93,6 @@ namespace ScottEwing.Triggers{
         [ShowIf("_useCollisionEvents")]
 #endif
         [SerializeField] protected UnityEvent<Collision> _onCollisionExit;
-
-        
 
 
         #region On Trigger Events
@@ -140,7 +144,7 @@ namespace ScottEwing.Triggers{
         #region Invoke Trigger Unity EVents
 
         protected virtual TriggerState InvokeOnTriggerEnter(Collider other) {
-            if (isDebug) 
+            if (isDebug)
                 Debug.Log("OnTriggerEnter", this);
             _onTriggerEnter?.Invoke(other);
             currentCollider = other;
@@ -149,8 +153,8 @@ namespace ScottEwing.Triggers{
 
         protected virtual TriggerState InvokeOnTriggerStay(Collider other = null) {
             if (isDebug)
-                Debug.Log("OnTriggerStay", this);       
-            
+                Debug.Log("OnTriggerStay", this);
+
             _onTriggerStay?.Invoke(other);
             return TriggerState.Stay;
         }
@@ -160,21 +164,23 @@ namespace ScottEwing.Triggers{
         protected virtual TriggerState InvokeOnTriggerExit(Collider other) {
             if (isDebug)
                 Debug.Log("OnTriggerExit", this);
-            var collider = (other != null) ? other : currentCollider; 
+            var collider = (other != null) ? other : currentCollider;
             if (other == null) {
                 Debug.LogWarning("Trigger Exit: Other collider is null. Using collider saved from OnTriggerEnter" +
                                  "This may cause issues if interacting with multiple triggers at once");
             }
+
             _onTriggerExit?.Invoke(collider);
             currentCollider = null;
             return TriggerState.Exit;
         }
+
         #endregion
 
         #region Invoke Collision Unity Events
 
         protected virtual TriggerState InvokeOnCollisionEnter(Collision other) {
-            if (isDebug) 
+            if (isDebug)
                 Debug.Log("OnCollisionEnter", this);
             _onCollisionEnter?.Invoke(other);
             return TriggerState.Enter;
@@ -182,7 +188,7 @@ namespace ScottEwing.Triggers{
 
         protected virtual TriggerState InvokeOnCollisionStay(Collision other) {
             if (isDebug)
-                Debug.Log("OnCollisionStay", this);       
+                Debug.Log("OnCollisionStay", this);
             _onCollisionStay?.Invoke(other);
             return TriggerState.Stay;
         }
@@ -195,12 +201,12 @@ namespace ScottEwing.Triggers{
         }
 
         #endregion
-        
+
         protected virtual bool Triggered() {
             if (!gameObject.activeSelf || !gameObject.activeInHierarchy) return false;
             if (!IsActivatable) return false;
             if (isDebug)
-                Debug.Log("Triggered", this);       
+                Debug.Log("Triggered", this);
             _onTriggered.Invoke();
             switch (_triggeredType) {
                 case TriggeredType.DestroyOnTriggered:
@@ -251,17 +257,18 @@ namespace ScottEwing.Triggers{
             if (!IsActivatable) {
                 return false;
             }
+
             switch (_triggeredBy) {
                 case TriggeredBy.Tag:
                     return other.CompareTag(_triggeredByTag);
-                    
+
                 case TriggeredBy.LayerMask:
                     return _triggeredByMask.IsLayerInLayerMask(other.gameObject.layer);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
-        
+
         //--is invalid if collision events should not be used or if not colliding with object in layer mask or with target tag
         protected bool IsCollisionValid(Collision other) => _useCollisionEvents && IsColliderValid(other.collider);
     }

@@ -6,12 +6,12 @@ namespace ScottEwing.TriggersV2{
     public class CheckpointTouchTrigger : TouchTrigger{
         //[SerializeField] private CheckpointReachedReloadTrigger _checkpointReachedReload;
         private CheckpointTouchTriggerData _data;
-        public CheckpointTouchTrigger(TriggerV2 triggerV2, ITriggerData data = null) : base(triggerV2, data) {
+        public CheckpointTouchTrigger(BaseTrigger trigger, ITriggerData data = null) : base(trigger, data) {
             _data = (CheckpointTouchTriggerData)data;
         }
 
         public override void Awake() {
-            _data._checkpointReachedReload.Init(TriggerV2.transform);
+            _data._checkpointReachedReload.Init(Trigger.transform);
         }
 
         public override bool OnTriggerEnter(Collider other) {

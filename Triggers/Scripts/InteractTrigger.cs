@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 
 
 namespace ScottEwing.Triggers {
+    [AddComponentMenu("ScottEwing/Triggers/InteractTrigger(deprecated)")]
     public class InteractTrigger : Trigger , ITakesInput{
         [field: SerializeField] public InputActionProperty InputActionReference { get; set; }
         public bool ShouldCheckInput { get; set; }

@@ -5,6 +5,7 @@ using ScottEwing.Checkpoints;
 using UnityEngine;
 
 namespace ScottEwing.Triggers{
+    [AddComponentMenu("ScottEwing/Triggers/CheckpointTouchTrigger(deprecated)")]
     public class CheckpointTouchTrigger : TouchTrigger{
         [SerializeField] private CheckpointReachedReloadTrigger _checkpointReachedReload;
 

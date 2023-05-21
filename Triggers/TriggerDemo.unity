@@ -511,7 +511,7 @@ MonoBehaviour:
     _sphereCastRadius: 0.1
     _castDistance: 10
     _source:
-      <CastSourceType>k__BackingField: 0
+      <CastSource>k__BackingField: 0
       _sourceTransform: {fileID: 0}
     <CollisionLayers>k__BackingField:
       serializedVersion: 2
@@ -1274,6 +1274,11 @@ PrefabInstance:
     - target: {fileID: 9119273833649641, guid: d55d17f7b66748f4bbb3b04d96da803b, type: 3}
       propertyPath: m_Name
       value: Look Trigger (Local Cast)
+      objectReference: {fileID: 0}
+    - target: {fileID: 227846688876565034, guid: d55d17f7b66748f4bbb3b04d96da803b,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d55d17f7b66748f4bbb3b04d96da803b, type: 3}

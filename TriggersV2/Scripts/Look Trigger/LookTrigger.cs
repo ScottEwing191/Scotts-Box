@@ -7,33 +7,13 @@ namespace ScottEwing.TriggersV2{
     /// This class works in tandem with the CastInteractor. each frame cast interactor looks for ILookInteractable's (e.g., this class). If this class is found the Look method
     /// is called. The usual tag or layermask check is not performed when using this trigger
     /// </summary>
-    public class LookTrigger : BaseTrigger, ILookInteractable{
+    public class LookTrigger : BaseTriggerType, ILookInteractable{
         [Description("")]
         public enum CastType{
             GlobalCastInteractor,
             LocalRaycastHelper,
         }
-        /*[Serializable]
-        private struct LocalRaycastData{
-            [SerializeField] public RayCastHelper _castHelper;
-
-            [Tooltip("The game object that need to be looked at. Default is the game object this is attached to. If different, default and _lookTarget should be under same parent")]
-            [SerializeField] public Transform _lookTargetRoot;
-
-            [Description("Is true while inside collider with defined tag or layer mask")]
-            [HideInInspector] public bool _castForTrigger;
-        }
-
-
-
-        [SerializeField] private CastType _castType = CastType.GlobalCastInteractor;
-
-#if ODIN_INSPECTOR
-        [ShowIf("_castType", CastType.LocalRaycastHelper)]
-#endif
-        [SerializeField]
-        private LocalRaycastData _castData;*/
-
+        
         protected bool LookingAtTrigger { get; set; }
         private bool _isLooking;
 
@@ -42,14 +22,14 @@ namespace ScottEwing.TriggersV2{
 
         private LookTriggerData _data; 
 
-        public LookTrigger(TriggerV2 triggerV2, ITriggerData data = null) : base(triggerV2, data) {
+        public LookTrigger(BaseTrigger trigger, ITriggerData data = null) : base(trigger, data) {
             _data = (LookTriggerData)data;
         }
         #region Unity Methods
 
         public override void Start() {
             if (_data._castType == CastType.LocalRaycastHelper && _data._castData._lookTargetRoot == null) {
-                _data._castData._lookTargetRoot = TriggerV2.gameObject.transform;
+                _data._castData._lookTargetRoot = Trigger.gameObject.transform;
             }
         }
 
@@ -107,7 +87,7 @@ namespace ScottEwing.TriggersV2{
                 return TriggerState.None;
 
             _lookedThisFixedUpdate = true;
-            if (!TriggerV2.IsActivatable) return TriggerState.None;
+            if (!Trigger.IsActivatable) return TriggerState.None;
             if (!LookingAtTrigger) {
                 return LookEnter(other);
             }
@@ -126,11 +106,11 @@ namespace ScottEwing.TriggersV2{
             }
 
             LookingAtTrigger = true;
-            return TriggerV2.InvokeOnTriggerEnter(other);
+            return Trigger.InvokeOnTriggerEnter(other);
         }
 
         protected virtual TriggerState LookStay(Collider other) {
-            return TriggerV2.InvokeOnTriggerStay(other);
+            return Trigger.InvokeOnTriggerStay(other);
         }
 
         protected virtual TriggerState LookExit(Collider other) {
@@ -140,7 +120,7 @@ namespace ScottEwing.TriggersV2{
             }
 
             LookingAtTrigger = false;
-            return TriggerV2.InvokeOnTriggerExit(other);
+            return Trigger.InvokeOnTriggerExit(other);
         }
     }
 }

@@ -1,6 +1,7 @@
 using UnityEngine;
 
 namespace ScottEwing.Triggers{
+    [AddComponentMenu("ScottEwing/Triggers/AudioTouchTrigger(deprecated)")]
     public class AudioTouchTrigger : TouchTrigger{
         private AudioSource _audioSource;
         [SerializeField] private bool playOnTouch = true;

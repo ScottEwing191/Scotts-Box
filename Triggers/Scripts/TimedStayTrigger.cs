@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace ScottEwing.Triggers
 {
+    [AddComponentMenu("ScottEwing/Triggers/TimedStayTrigger(deprecated)")]
     /// <summary>
     /// This trigger will activate once a valid collider has been inside the trigger for a given period of timew
     /// </summary>

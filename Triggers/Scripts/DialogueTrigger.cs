@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 
 namespace ScottEwing.Triggers {
+    [AddComponentMenu("ScottEwing/Triggers/DialogueTrigger(deprecated)")]
     public class DialogueTrigger : Trigger {
 
 

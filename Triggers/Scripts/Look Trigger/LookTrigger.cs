@@ -6,8 +6,8 @@ using Sirenix.OdinInspector;
 using UnityEngine;
 
 
-
 namespace ScottEwing.Triggers{
+    [AddComponentMenu("ScottEwing/Triggers/LookTrigger(deprecated)")]
 
     /// <summary>
     /// This class works in tandem with the CastInteractor. each frame cast interactor looks for ILookInteractable's (e.g., this class). If this class is found the Look method

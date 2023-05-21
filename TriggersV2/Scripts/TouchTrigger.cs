@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
 
 namespace ScottEwing.TriggersV2{
-    public class TouchTrigger : BaseTrigger{
+    public class TouchTrigger : BaseTriggerType{
         
-        public TouchTrigger(TriggerV2 triggerV2, ITriggerData data = null) : base(triggerV2, data) {
+        public TouchTrigger(BaseTrigger trigger, ITriggerData data = null) : base(trigger, data) {
         }
         
         public override bool OnTriggerEnter(Collider other) {
-            Triggered();
+            Triggered(other.gameObject);
             return true;
         }
 

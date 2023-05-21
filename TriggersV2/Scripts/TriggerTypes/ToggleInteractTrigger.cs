@@ -16,7 +16,7 @@ namespace ScottEwing.TriggersV2{
 
         private ToggleInteractTriggerData _data;
 
-        public ToggleInteractTrigger(TriggerV2 triggerV2, ITriggerData data = null) : base(triggerV2, data) {
+        public ToggleInteractTrigger(BaseTrigger trigger, ITriggerData data = null) : base(trigger, data) {
             _data = (ToggleInteractTriggerData)data;
         }
 
@@ -54,10 +54,10 @@ namespace ScottEwing.TriggersV2{
         }
 
         private bool TriggerOff() {
-            if (!TriggerV2.gameObject.activeSelf || !TriggerV2.gameObject.activeInHierarchy) return false;
-            if (!TriggerV2.IsActivatable) return false;
-            if (TriggerV2.isDebug)
-                Debug.Log("Trigger Off", TriggerV2);
+            if (!Trigger.gameObject.activeSelf || !Trigger.gameObject.activeInHierarchy) return false;
+            if (!Trigger.IsActivatable) return false;
+            if (Trigger.isDebug)
+                Debug.Log("Trigger Off", Trigger);
             _triggerOn = false;
             _data._onTriggeredOff.Invoke();
             return true;

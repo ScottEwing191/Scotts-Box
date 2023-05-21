@@ -2,33 +2,31 @@ using System;
 using System.Collections.Generic;
 #if ODIN_INSPECTOR
 using Sirenix.OdinInspector;
+#else
+using NaughtyAttributes;
 #endif
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 namespace ScottEwing.Input.DynamicInputIcons{
-
-    [Serializable]
-    public class KeyValuePair{
-        public ControllerInputTypes _key;
-        public InputActionReference _value;
-    }
-    
     public class UiInputIcon : MonoBehaviour{
+        
+        [Serializable]
+        private class KeyValuePair{
+            public ControllerInputTypes _key;
+            public InputActionReference _value;
+        }
+
         [SerializeField] private bool _assignActionPerControlType;
 
 
-#if ODIN_INSPECTOR
         [HideIf("_assignActionPerControlType")]
-#endif
         [SerializeField] private InputActionReference _actionReference;
 
-#if ODIN_INSPECTOR
         [ShowIf("_assignActionPerControlType")]
-#endif
         [SerializeField] private List<KeyValuePair> _controlTypeActions = new List<KeyValuePair>();
-        
+
         //public Dictionary<ControllerInputTypes, InputActionReference> controlTypeActions = new Dictionary<ControllerInputTypes, InputActionReference>();
 
         [SerializeField] private InputIconsSprites _keyboardIcons;
@@ -36,9 +34,8 @@ namespace ScottEwing.Input.DynamicInputIcons{
         [SerializeField] private InputIconsSprites _xboxIcons;
 
         [SerializeField] private Image _image;
-        
-        
-        
+
+
         [Tooltip("This is the control type which will be used in the editor. Does not effect the icon used when the game is run")]
         [SerializeField] private ControllerInputTypes _editorType = ControllerInputTypes.KeyboardMouse;
 #if ODIN_INSPECTOR
@@ -54,7 +51,7 @@ namespace ScottEwing.Input.DynamicInputIcons{
             };
             SetImageSprite(_editorType, inputBindingMask);
         }
-        
+
         private void Awake() {
             _image ??= GetComponent<Image>();
         }
@@ -64,20 +61,21 @@ namespace ScottEwing.Input.DynamicInputIcons{
         /// is using given the current controller type. If an action reference is not found then disable the game object. 
         /// </summary>
         public void SetImageSprite(ControllerInputTypes types, InputBinding mask) {
-
             var actionReference = GetActionReference(types);
             if (actionReference == null) {
                 gameObject.SetActive(false);
                 return;
             }
+
             var displayStringOptions = InputBinding.DisplayStringOptions.DontIncludeInteractions;
             var bindingIndex = actionReference.action.GetBindingIndex(mask);
             if (bindingIndex == -1) {
                 gameObject.SetActive(false);
                 return;
             }
+
             var bindingDisplay = actionReference.action.GetBindingDisplayString(bindingIndex, out var deviceLayoutName, out var controlPath, displayStringOptions);
-            
+
             _image.sprite = types switch {
                 ControllerInputTypes.KeyboardMouse => _keyboardIcons.GetSprite(controlPath),
                 ControllerInputTypes.PS4Controller => _ps4Icons.GetSprite(controlPath),

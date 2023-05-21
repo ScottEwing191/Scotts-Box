@@ -1,6 +1,7 @@
 using UnityEngine;
 
 namespace ScottEwing.Triggers{
+    [AddComponentMenu("ScottEwing/Triggers/CounterTrigger(deprecated)")]
     public class CounterTrigger : Trigger{
         [SerializeField] private int _requiredCount = 1;
         [SerializeField] private bool _decreaseCountOnExit;

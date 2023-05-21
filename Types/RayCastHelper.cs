@@ -28,7 +28,7 @@ namespace ScottEwing{
         [field: SerializeField] public LayerMask CollisionLayers { get; set; }
         [SerializeField] private bool _specifyTargetLayers = false;
 #if ODIN_INSPECTOR
-        [field: ShowIf("_specifyTargetLayers", true)]
+        [ShowIf("_specifyTargetLayers", true)]
 #endif
         [field: SerializeField] public LayerMask TargetLayers { get; set; }
 

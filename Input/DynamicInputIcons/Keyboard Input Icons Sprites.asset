@@ -785,3 +785,120 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
+  InputIcons3:
+  - _input: 0
+    _inputIcon: {fileID: 21300000, guid: 64d72716228488447971f6a4012994cc, type: 3}
+  - _input: 1
+    _inputIcon: {fileID: 21300000, guid: f18a5f8cf5e03c4498e82ba239105853, type: 3}
+  - _input: 2
+    _inputIcon: {fileID: 21300000, guid: faf0b2136bf4f5a478703d8bafc34dde, type: 3}
+  - _input: 3
+    _inputIcon: {fileID: 21300000, guid: 5cc1acdb505faf443a28c79009650406, type: 3}
+  - _input: 4
+    _inputIcon: {fileID: 21300000, guid: 2c344e81bfaed6e4aa56dcffde1cd26f, type: 3}
+  - _input: 5
+    _inputIcon: {fileID: 21300000, guid: 202b2e4ee523bbd478f6435c53980c58, type: 3}
+  - _input: 6
+    _inputIcon: {fileID: 21300000, guid: 4eaf14315a465814fa4539090648764a, type: 3}
+  - _input: 7
+    _inputIcon: {fileID: 21300000, guid: 684c45044097e6241b9d3758718d9728, type: 3}
+  - _input: 8
+    _inputIcon: {fileID: 21300000, guid: bc8e60b3565546e4eb042e846bb9cefd, type: 3}
+  - _input: 9
+    _inputIcon: {fileID: 21300000, guid: 39ba1574024915e44893f74f0602004d, type: 3}
+  - _input: a
+    _inputIcon: {fileID: 21300000, guid: d594efca13c0bc54ebda26f66f9c57dc, type: 3}
+  - _input: b
+    _inputIcon: {fileID: 21300000, guid: e1fadcf44874fe349bce1676da083525, type: 3}
+  - _input: c
+    _inputIcon: {fileID: 21300000, guid: 0c3d8ff553d6d2543862221b25d34128, type: 3}
+  - _input: d
+    _inputIcon: {fileID: 21300000, guid: 7ec187bad50da5d4792f5a075691fd42, type: 3}
+  - _input: e
+    _inputIcon: {fileID: 21300000, guid: 0ebb2c89531c7f641aa1bea7287b92be, type: 3}
+  - _input: f
+    _inputIcon: {fileID: 21300000, guid: e43c24ac0ae4b1749b8d43fe7b893320, type: 3}
+  - _input: g
+    _inputIcon: {fileID: 21300000, guid: d87c867052f993148b59be373196300f, type: 3}
+  - _input: h
+    _inputIcon: {fileID: 21300000, guid: baa468261dcc8f14f850571a89b6b978, type: 3}
+  - _input: i
+    _inputIcon: {fileID: 21300000, guid: 8162af5b5654f9447a87c3ec662d29c5, type: 3}
+  - _input: j
+    _inputIcon: {fileID: 21300000, guid: 1f7b7e8815038e24585572e4e4620f30, type: 3}
+  - _input: k
+    _inputIcon: {fileID: 21300000, guid: 33eea0c673089be45a815b26be558844, type: 3}
+  - _input: m
+    _inputIcon: {fileID: 21300000, guid: f7ae6bc5134d92a41ac8ed7ebb389f04, type: 3}
+  - _input: l
+    _inputIcon: {fileID: 21300000, guid: 718fb79d41404124790a9ca6fd1c78da, type: 3}
+  - _input: n
+    _inputIcon: {fileID: 21300000, guid: 69548d90f6f57d344a438f693bbf0dfb, type: 3}
+  - _input: o
+    _inputIcon: {fileID: 21300000, guid: 18fc617b11b5d924799ddaf23158d1dc, type: 3}
+  - _input: p
+    _inputIcon: {fileID: 21300000, guid: dc11ed597ce02e149aeb87b1d9ab8aa4, type: 3}
+  - _input: q
+    _inputIcon: {fileID: 21300000, guid: bedc06d0a0ff0664689496e6822f6ea8, type: 3}
+  - _input: r
+    _inputIcon: {fileID: 21300000, guid: b8851d4f6e4ec0040b472898670ab4c7, type: 3}
+  - _input: s
+    _inputIcon: {fileID: 21300000, guid: d558d3194fffdf54bb3d6c14871ba3fa, type: 3}
+  - _input: t
+    _inputIcon: {fileID: 21300000, guid: 9287348d576f4d64ab8a4f6f7fd49cd7, type: 3}
+  - _input: u
+    _inputIcon: {fileID: 21300000, guid: 354f01b79920c874abd93e988833ab35, type: 3}
+  - _input: v
+    _inputIcon: {fileID: 21300000, guid: cf91723092689ac45ba60f2e5a18c2b6, type: 3}
+  - _input: w
+    _inputIcon: {fileID: 21300000, guid: f9213c1c9767f14459f053a4e0fa0d31, type: 3}
+  - _input: x
+    _inputIcon: {fileID: 21300000, guid: 334a2f73229363e46b6d0ab27cdfbe19, type: 3}
+  - _input: y
+    _inputIcon: {fileID: 21300000, guid: 64fdc7b43cb0ce741a884bf0939a251b, type: 3}
+  - _input: z
+    _inputIcon: {fileID: 21300000, guid: a9f112f2f0b5f0343bccf76e03a48b85, type: 3}
+  - _input: enter
+    _inputIcon: {fileID: 21300000, guid: 9295416de6ee2724e9a4cb596acb0c20, type: 3}
+  - _input: space
+    _inputIcon: {fileID: 21300000, guid: cde556b955c21c440a1390ef876a7804, type: 3}
+  - _input: baclspace
+    _inputIcon: {fileID: 21300000, guid: a1e7aad2fc140d34788879e01a7adf02, type: 3}
+  - _input: tab
+    _inputIcon: {fileID: 21300000, guid: 70d70dd26e21ada42b37e71fe6a9e81c, type: 3}
+  - _input: shift
+    _inputIcon: {fileID: 21300000, guid: 461b573649f071b45bbf92d5167b8858, type: 3}
+  - _input: leftShift
+    _inputIcon: {fileID: 21300000, guid: 461b573649f071b45bbf92d5167b8858, type: 3}
+  - _input: scroll
+    _inputIcon: {fileID: 21300000, guid: f8e2ebaa0280d9c4897f14cc89e4271d, type: 3}
+  - _input: delta
+    _inputIcon: {fileID: 21300000, guid: 425e75735ffbfc447886aa4ffb1e4fcb, type: 3}
+  - _input: escape
+    _inputIcon: {fileID: 21300000, guid: 828ce449120151142835dcafc49bc1f7, type: 3}
+  - _input: leftButton
+    _inputIcon: {fileID: 21300000, guid: 124b2fff54a5e9d42ad26d15bc8c16c7, type: 3}
+  - _input: rightButton
+    _inputIcon: {fileID: 21300000, guid: 26383f6d9abe6444f9de827ae2e093a3, type: 3}
+  - _input: forwardButton
+    _inputIcon: {fileID: 21300000, guid: eebc9cc52c36f41f2849d2325c077599, type: 3}
+  - _input: backButton
+    _inputIcon: {fileID: 21300000, guid: 747b433eff02d4ee3852e2a3080c89fe, type: 3}
+  - _input: ''''
+    _inputIcon: {fileID: 0}
+  - _input: '['
+    _inputIcon: {fileID: 21300000, guid: ae68d1f125179bb488b22b35b37e1197, type: 3}
+  - _input: ']'
+    _inputIcon: {fileID: 21300000, guid: 675d74e66451a7c4cbe89a718aa0ba6a, type: 3}
+  - _input: \
+    _inputIcon: {fileID: 21300000, guid: ace78f7833922a34fbb61b3a943bc0a5, type: 3}
+  - _input: /
+    _inputIcon: {fileID: 0}
+  - _input: '#'
+    _inputIcon: {fileID: 0}
+  - _input: ','
+    _inputIcon: {fileID: 0}
+  - _input: .
+    _inputIcon: {fileID: 0}
+  - _input: ;
+    _inputIcon: {fileID: 0}
