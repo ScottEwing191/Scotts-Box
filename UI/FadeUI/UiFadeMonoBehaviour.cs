@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 #if ODIN_INSPECTOR
 using Sirenix.OdinInspector;
+#else
+using NaughtyAttributes;
 #endif
 
 namespace ScottEwing.UI.Fade{
@@ -12,22 +14,17 @@ namespace ScottEwing.UI.Fade{
         public UiFade UiFade { get; private set; }
 
         [SerializeField] public FadeObjectType _fadeObjectType = FadeObjectType.CanvasGroup;
-
-#if ODIN_INSPECTOR
+        
         [ShowIf("_fadeObjectType", FadeObjectType.Image)]
-#endif
         [SerializeField] private Image _image;
-#if ODIN_INSPECTOR
+
         [ShowIf("_fadeObjectType", FadeObjectType.CanvasGroup)]
-#endif
         [SerializeField] private CanvasGroup _canvasGroup;
-#if ODIN_INSPECTOR
+
         [ShowIf("_fadeObjectType", FadeObjectType.CanvasGroupArray)]
-#endif
         [SerializeField] private CanvasGroup[] _canvasGroups;        
-#if ODIN_INSPECTOR
+
         [ShowIf("_fadeObjectType", FadeObjectType.ImageArray)]
-#endif
         [SerializeField] private Image[] _images;
         
         

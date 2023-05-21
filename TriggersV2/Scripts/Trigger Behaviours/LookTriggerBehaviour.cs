@@ -8,8 +8,8 @@ namespace ScottEwing.TriggersV2{
     public class LookTriggerBehaviour : BaseTrigger, ILookInteractable{
 #if ODIN_INSPECTOR
         [PropertyOrder(-1)]
-        [SerializeField] private LookTriggerData _lookTriggerData;
 #endif
+        [SerializeField] private LookTriggerData _lookTriggerData;
         protected override void Awake() {
             _trigger = new LookTrigger(this, _lookTriggerData);
             base.Awake();

@@ -7,8 +7,8 @@ namespace ScottEwing.TriggersV2{
     public class ToggleInteractTriggerBehaviour : BaseTrigger{
 #if ODIN_INSPECTOR
         [PropertyOrder(-1)]
-        [SerializeField] private ToggleInteractTriggerData _toggleInteractTriggerData;
 #endif
+        [SerializeField] private ToggleInteractTriggerData _toggleInteractTriggerData;
 
         protected override void Awake() {
             _trigger = new ToggleInteractTrigger(this, _toggleInteractTriggerData);

@@ -10,8 +10,8 @@ namespace ScottEwing.TriggersV2{
     {
 #if ODIN_INSPECTOR
         [PropertyOrder(-1)]
-        [SerializeField] private InteractTriggerData _interactTriggerData;
 #endif
+        [SerializeField] private InteractTriggerData _interactTriggerData;
 
         protected override void Awake() {
             _trigger = new InteractTrigger(this, _interactTriggerData);

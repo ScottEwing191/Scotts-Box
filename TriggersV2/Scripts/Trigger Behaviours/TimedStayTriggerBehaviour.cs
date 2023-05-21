@@ -7,8 +7,8 @@ namespace ScottEwing.TriggersV2{
     public class TimedStayTriggerBehaviour : BaseTrigger{
 #if ODIN_INSPECTOR
         [PropertyOrder(-1)]
-        [SerializeField] private TimedStayTriggerData _timedStayTriggerData;
 #endif
+        [SerializeField] private TimedStayTriggerData _timedStayTriggerData;
 
         protected override void Awake() {
             _trigger = new TimedStayTrigger(this, _timedStayTriggerData);

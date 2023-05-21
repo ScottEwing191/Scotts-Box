@@ -3,6 +3,8 @@ using ScottEwing.ExtensionMethods;
 using ScottEwing.Triggers;
 #if ODIN_INSPECTOR
 using Sirenix.OdinInspector;
+#else
+using NaughtyAttributes;
 #endif
 using UnityEngine;
 
@@ -17,8 +19,8 @@ namespace ScottEwing{
 
         [SerializeField] private CastType _castType = CastType.Raycast;
 #if ODIN_INSPECTOR
-        [ShowIf("_castType", CastType.SphereCast)]
 #endif
+        [ShowIf("_castType", CastType.SphereCast)]
         [SerializeField] private float _sphereCastRadius = 0.1f;
 
         [SerializeField] private float _castDistance = 30;

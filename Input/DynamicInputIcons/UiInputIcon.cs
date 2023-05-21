@@ -38,9 +38,8 @@ namespace ScottEwing.Input.DynamicInputIcons{
 
         [Tooltip("This is the control type which will be used in the editor. Does not effect the icon used when the game is run")]
         [SerializeField] private ControllerInputTypes _editorType = ControllerInputTypes.KeyboardMouse;
-#if ODIN_INSPECTOR
-        [Button(ButtonSizes.Small)]
-#endif
+
+        [Button]
         private void SetIconInEditor() {
             _image ??= GetComponent<Image>();
             var inputBindingMask = _editorType switch {

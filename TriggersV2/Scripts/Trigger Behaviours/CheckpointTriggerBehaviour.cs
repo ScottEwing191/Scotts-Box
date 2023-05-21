@@ -7,8 +7,8 @@ namespace ScottEwing.TriggersV2{
     public class CheckpointTriggerBehaviour : BaseTrigger{
 #if ODIN_INSPECTOR
         [PropertyOrder(-1)]
-        [SerializeField] private CheckpointTouchTriggerData _checkpointTouchTriggerData;
 #endif
+        [SerializeField] private CheckpointTouchTriggerData _checkpointTouchTriggerData;
 
         protected override void Awake() {
             _trigger = new CheckpointTouchTrigger(this, _checkpointTouchTriggerData);

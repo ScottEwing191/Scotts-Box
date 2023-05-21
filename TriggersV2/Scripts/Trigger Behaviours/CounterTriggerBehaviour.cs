@@ -7,8 +7,8 @@ namespace ScottEwing.TriggersV2{
     public class CounterTriggerBehaviour : BaseTrigger{
 #if ODIN_INSPECTOR
         [PropertyOrder(-1)]
-        [SerializeField] private CounterTriggerData _counterTriggerData;
 #endif
+        [SerializeField] private CounterTriggerData _counterTriggerData;
 
         protected override void Awake() {
             _trigger = new CounterTrigger(this, _counterTriggerData);
