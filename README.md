@@ -5,3 +5,4 @@
 1. In GitHub desktop: Repository > Open In Command Prompt
 2. cd to location the submodule should be added i.e "cd Assets"
 3. git submodule add <url>
+git submodule add https://github.com/ScottEwing191/Scotts-Box
