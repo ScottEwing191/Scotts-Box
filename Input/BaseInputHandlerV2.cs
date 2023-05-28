@@ -5,25 +5,38 @@ using ScottEwing.EventSystem;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace ScottEwing.Input{
-    public abstract class BaseInputHandler : MonoBehaviour{
+namespace ScottEwing.Input
+{
+    public abstract class ControlsInputHandler : BaseInputHandlerV2{
+        
+    }
+    
+    public abstract class BaseInputHandlerV2 : MonoBehaviour
+    {
         protected PlayerInput _playerInput;
-        protected InputActionAsset _actions;
         protected InputActionMap _actionMap;
-        [SerializeField] protected string _actionMapName = "";
+        
+        //[SerializeField] protected string _actionMapName = "";
         [SerializeField] protected bool _enableActionMapOnStart = true;
         [SerializeField] private bool _disableOnPause = true;
         private bool _actionMapActiveWhenPaused;
+
+        public static Dictionary<PlayerInput, IInputActionCollection2> inputDictionary = new Dictionary<PlayerInput, IInputActionCollection2>();
+
+
         protected virtual void Awake() {
-            _playerInput = GetComponentInParent<PlayerInput>();
-            _actions = _playerInput.actions;
-            _actionMap = _playerInput.actions.FindActionMap(_actionMapName);
-            if (_enableActionMapOnStart) {
-                _actionMap.Enable();
+            if (_playerInput == null) {
+                _playerInput = GetComponentInParent<PlayerInput>();
             }
+            //_actionMap = _playerInput.actions.FindActionMap(_actionMapName);
         }
+        
+        
 
         protected virtual void Start() {
+            if (_enableActionMapOnStart && _actionMap != null) {
+                _actionMap.Enable();
+            }
 #if SE_EVENTSYSTEM
             EventManager.AddListener<GamePausedEvent>(DisableActionMapOnPause);
             EventManager.AddListener<GameResumedEvent>(EnableActionMapOnResume);
@@ -36,7 +49,7 @@ namespace ScottEwing.Input{
             EventManager.RemoveListener<GameResumedEvent>(EnableActionMapOnResume);
 #endif
         }
-
+        
 #if SE_EVENTSYSTEM
         private void DisableActionMapOnPause(GamePausedEvent obj) {
             _actionMapActiveWhenPaused = _actionMap.enabled;
@@ -51,5 +64,19 @@ namespace ScottEwing.Input{
             }
         }
 #endif
+        
+        
+        #region Static Methods 
+        public static T GetActionsAsset<T>(PlayerInput playerInput) where T : IInputActionCollection2 {
+            if (inputDictionary.ContainsKey(playerInput)) {
+                return (T)inputDictionary[playerInput];
+            }
+            var controls = (T)Activator.CreateInstance(typeof(T));
+            inputDictionary.Add(playerInput, controls);
+            playerInput.user.AssociateActionsWithUser(controls);
+            return controls;
+        }
+        #endregion
+
     }
 }
