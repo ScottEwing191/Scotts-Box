@@ -13,7 +13,7 @@ namespace ScottEwing.Input
     
     public abstract class BaseInputHandlerV2 : MonoBehaviour
     {
-        protected PlayerInput _playerInput;
+        [SerializeField] protected PlayerInput _playerInput;
         protected InputActionMap _actionMap;
         
         //[SerializeField] protected string _actionMapName = "";
