@@ -7,16 +7,11 @@ using UnityEngine.InputSystem;
 
 namespace ScottEwing.Input
 {
-    public abstract class ControlsInputHandler : BaseInputHandlerV2{
-        
-    }
-    
     public abstract class BaseInputHandlerV2 : MonoBehaviour
     {
         [SerializeField] protected PlayerInput _playerInput;
         protected InputActionMap _actionMap;
         
-        //[SerializeField] protected string _actionMapName = "";
         [SerializeField] protected bool _enableActionMapOnStart = true;
         [SerializeField] private bool _disableOnPause = true;
         private bool _actionMapActiveWhenPaused;
@@ -28,7 +23,6 @@ namespace ScottEwing.Input
             if (_playerInput == null) {
                 _playerInput = GetComponentInParent<PlayerInput>();
             }
-            //_actionMap = _playerInput.actions.FindActionMap(_actionMapName);
         }
         
         
