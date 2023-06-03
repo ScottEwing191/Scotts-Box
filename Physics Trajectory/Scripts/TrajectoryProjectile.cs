@@ -3,7 +3,10 @@ using UnityEngine;
 
 namespace ScottEwing.Trajectory{
     
-    public class Projectile : MonoBehaviour{
+    public class TrajectoryProjectile : MonoBehaviour{
+        //-- This calss still needs some work to remove the also harpoon stuff i.e the layer checks in OnCollisionEnter
+        
+        
         private Rigidbody _projectileRb;
         private bool _isProjectileInAir = false;
 
@@ -32,7 +35,7 @@ namespace ScottEwing.Trajectory{
             _isProjectileInAir = true;
         }
 
-        public void ResetHarpoon() {
+        public void Reset() {
             _isProjectileInAir = false;
             _projectileRb.velocity = Vector3.zero;
             _projectileRb.isKinematic = true;
@@ -51,20 +54,12 @@ namespace ScottEwing.Trajectory{
             if (!_isProjectileInAir) {
                 return;
             }
-            //print("Harpoon Collision: " + collision.gameObject.name);
             _isProjectileInAir = false;
             _projectileRb.isKinematic = true;
             if (collision.gameObject.layer == LayerMask.NameToLayer("HarpoonableTrash") ||collision.gameObject.layer == LayerMask.NameToLayer("Default")) {
                 transform.parent = collision.transform;
-                ResetHarpoon();
+                Reset();
             }
-            
-
-            
-
-            /*if (collision.gameObject.layer == harpoonableTrash.value) {
-            print("Hit Trash");
-        }*/
         }
     }
 }

@@ -17,7 +17,7 @@ namespace ScottEwing.Trajectory{
         private PhysicsTrajectory physicsTrajectory;
 
         [FormerlySerializedAs("harpoonObject")] [Tooltip("The Harpoon which is lauched ")] [SerializeField]
-        private Projectile _projectile;
+        private TrajectoryProjectile _projectile;
 
         [Tooltip("Draw a sphere to show the range of the harpoon launcher")]
         [SerializeField] private bool showRange;
@@ -44,7 +44,7 @@ namespace ScottEwing.Trajectory{
             }
 
             if (UnityEngine.Input.GetKeyDown(KeyCode.L)) {
-                _projectile.ResetHarpoon();
+                _projectile.Reset();
             }
         }
 
