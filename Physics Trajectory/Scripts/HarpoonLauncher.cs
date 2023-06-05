@@ -14,13 +14,15 @@ namespace ScottEwing.Trajectory{
         private LayerMask harpoonableTrash;
 
         [Tooltip("The script which does the trajectory calculations for the harpoon")] [SerializeField]
-        private PhysicsTrajectory physicsTrajectory;
+        private PhysicsTrajectoryBehaviour physicsTrajectory;
 
         [FormerlySerializedAs("harpoonObject")] [Tooltip("The Harpoon which is lauched ")] [SerializeField]
         private TrajectoryProjectile _projectile;
 
         [Tooltip("Draw a sphere to show the range of the harpoon launcher")]
         [SerializeField] private bool showRange;
+
+        [SerializeField] private Transform _startPosition;
         
         [Header("Throw Power")]
         [Tooltip("The initial throw power when the player begins holding the throw button (throw power of one will hit the target)")]
@@ -76,11 +78,11 @@ namespace ScottEwing.Trajectory{
                 return;
             }
             //physicsTrajectory.TargetPosition = closestGarbage.transform.position;
-            if (!physicsTrajectory.TryCalculateLaunchData(closestGarbage.transform.position, out var launchData)) {
+            if (!physicsTrajectory.TryCalculateLaunchData(closestGarbage.transform.position, out var launchData, _startPosition.position)) {
                 return;
             }
 
-            var pathPoints = physicsTrajectory.GetPathPoints(launchData * throwPower);
+            var pathPoints = physicsTrajectory.GetPathPoints(launchData * throwPower, _startPosition.position);
             if (pathPoints.Length > 0) {
                 physicsTrajectory.RenderPath(pathPoints);
             }
@@ -119,7 +121,7 @@ namespace ScottEwing.Trajectory{
         /// <param name="trash">The game object the harpoon is going to hit</param>
         private void ThrowHarpoon(GameObject trash) {
             //physicsTrajectory.TargetPosition = trash.transform.position;
-            if (!physicsTrajectory.TryCalculateLaunchData(trash.transform.position, out var launchData)) {
+            if (!physicsTrajectory.TryCalculateLaunchData(trash.transform.position, out var launchData, _startPosition.position)) {
                 //print("Throw Failed: Couldn't Calculate Launch Data");
                 return;
             }
