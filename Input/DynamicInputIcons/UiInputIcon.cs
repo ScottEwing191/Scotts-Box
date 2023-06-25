@@ -60,16 +60,22 @@ namespace ScottEwing.Input.DynamicInputIcons{
         /// is using given the current controller type. If an action reference is not found then disable the game object. 
         /// </summary>
         public void SetImageSprite(ControllerInputTypes types, InputBinding mask) {
+            _image.enabled = true;
+
             var actionReference = GetActionReference(types);
             if (actionReference == null) {
-                gameObject.SetActive(false);
+                //gameObject.SetActive(false);
+                //_image.sprite = null;
+                _image.enabled = false;
                 return;
             }
 
             var displayStringOptions = InputBinding.DisplayStringOptions.DontIncludeInteractions;
             var bindingIndex = actionReference.action.GetBindingIndex(mask);
             if (bindingIndex == -1) {
-                gameObject.SetActive(false);
+                //gameObject.SetActive(false);
+                //_image.sprite = null;
+                _image.enabled = false;
                 return;
             }
 

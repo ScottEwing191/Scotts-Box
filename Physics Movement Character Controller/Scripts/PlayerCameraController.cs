@@ -19,6 +19,9 @@ namespace ScottEwing.PhysicsPlayerController{
         }
 
         private void Start() {
+            if (PlayerPrefs.HasKey("CameraSensitivity")) {
+                _sensitivity = PlayerPrefs.GetFloat("CameraSensitivity");
+            }
 #if SE_EVENTSYSTEM
             EventManager.AddListener<GameResumedEvent>((evt => _sensitivity = evt.cameraSensitivity));
 

@@ -15,12 +15,17 @@ namespace ScottEwing.Input.DynamicInputIcons{
         private InputBinding _inputBindingMask;
         private ControllerInputTypes _types;
 
+        private UiInputIcon[] iconsActiveOnstart; 
+
 
         private void Awake() {
             _playerInput ??= GetComponent<PlayerInput>();
         }
 
         private void Start() {
+
+            var  iconsActiveOnstart = GetComponentsInChildren<UiInputIcon>(true);
+            
             StartCoroutine(SetUpIconsAfterOneFrame());
             _playerInput.onControlsChanged += SetUpIcons;
         }
@@ -56,6 +61,7 @@ namespace ScottEwing.Input.DynamicInputIcons{
             }
 
             foreach (var icon in GetComponentsInChildren<UiInputIcon>(true)) {
+            //foreach (var icon in iconsActiveOnstart) {
                 icon.SetImageSprite(_types, _inputBindingMask);
             }
         }

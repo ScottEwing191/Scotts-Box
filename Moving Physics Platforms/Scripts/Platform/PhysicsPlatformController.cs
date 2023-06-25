@@ -2,6 +2,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+#if ODIN_INSPECTOR
+using Sirenix.OdinInspector;
+#else
+using NaughtyAttributes;
+#endif
 
 
 namespace ScottEwing.MovingPlatforms{
@@ -23,10 +28,10 @@ namespace ScottEwing.MovingPlatforms{
         [SerializeField]
         bool calculateVelocityWithMoveTime = false;
 
-        [ConditionalHide("calculateVelocityWithMoveTime", false, true)] [SerializeField]
+        //[ConditionalHide("calculateVelocityWithMoveTime", false, true)] [SerializeField]
         protected float maxVelocity = 3f;
 
-        [ConditionalHide("calculateVelocityWithMoveTime", true)]
+        //[ConditionalHide("calculateVelocityWithMoveTime", true)]
         [Tooltip("The time the platform takes to move between the start position and first target position")]
         [SerializeField]
         float moveTime = 5f;
@@ -34,7 +39,7 @@ namespace ScottEwing.MovingPlatforms{
         [Space] [SerializeField]
         protected bool useAcceleration = false; // Platforms do not currently work if this is true
 
-        [ConditionalHide("useAcceleration", true)] [SerializeField]
+        //[ConditionalHide("useAcceleration", true)] [SerializeField]
         protected float acceleration = 10f; // not currently working with acceleration
 
         [Space] [Tooltip("An initial delay before the platform starts moving")] [SerializeField]
@@ -46,7 +51,7 @@ namespace ScottEwing.MovingPlatforms{
         [Space] [Tooltip("If true platform will stop once it reaches the last Transform in the array")] [SerializeField]
         private bool singleUse = false;
 
-        [ConditionalHide("singleUse", false, true)] [SerializeField]
+        //[ConditionalHide("singleUse", false, true)] [SerializeField]
         private bool loopDestinations = true; // should the platform go around the destination in a loop or should it go out and back
 
         [field: Tooltip("Should the platform snap to the exact target position once close enough")]

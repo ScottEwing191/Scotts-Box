@@ -23,5 +23,7 @@ namespace ScottEwing.EventSystem{
     public class GameResumedEvent : GameEvent{
         public float cameraSensitivity;
         public bool invertLengthTriggers;
+        public bool invertControllerYAxis;
+
     }
 }

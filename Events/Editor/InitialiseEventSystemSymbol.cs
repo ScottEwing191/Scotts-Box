@@ -4,6 +4,7 @@ using UnityEditor;
 
 namespace ScottEwing.EventSystem
 {
+#if UNITY_EDITOR
     [InitializeOnLoad]
     public class InitialiseEventSystemSymbol
     {
@@ -33,4 +34,6 @@ namespace ScottEwing.EventSystem
             return new List<string>(PlayerSettings.GetScriptingDefineSymbolsForGroup(group).Split(';'));
         }
     }
+#endif
+
 }

@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+﻿/*
+using UnityEngine;
 using UnityEditor;
-using System.Collections.Generic;
 
 //Original version of the ConditionalHideAttribute created by Brecht Lecluyse (www.brechtos.com)
 //Modified by: -
@@ -48,7 +48,7 @@ namespace ScottEwing.MovingPlatforms {
                 while (propEnum.MoveNext())
                     height += EditorGUI.GetPropertyHeight((SerializedProperty)propEnum.Current, GUIContent.none, true);
             }
-            return height;*/
+            return height;#1#
         }
 
         private bool GetConditionalHideAttributeResult(ConditionalHideAttribute condHAtt, SerializedProperty property) {
@@ -172,3 +172,4 @@ namespace ScottEwing.MovingPlatforms {
         }
     }
 }
+*/

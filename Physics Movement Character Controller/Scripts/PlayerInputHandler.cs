@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using ScottEwing.EventSystem;
 using ScottEwing.Input;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -19,6 +20,7 @@ namespace ScottEwing.PhysicsPlayerController{
         public Action brakeOff;
 
         private bool isBrakeOn = false;     // for brake toggle (not being used) 
+        private bool invertControllerYAxis;
 
         protected override void Start() {
             _actionMap["Jump"].performed += OnJump;
@@ -27,6 +29,13 @@ namespace ScottEwing.PhysicsPlayerController{
             _actionMap["Look"].canceled += context => Inputs.look = Vector2.zero;
             _actionMap["Brake"].performed += OnBrake;
             _actionMap["Brake"].canceled += OnBrake;
+
+            if (PlayerPrefs.HasKey("InvertControllerYAxis")) {
+                invertControllerYAxis = PlayerPrefs.GetInt("InvertControllerYAxis") == 1;
+            }
+            
+            EventManager.AddListener<GameResumedEvent>(evt => invertControllerYAxis = evt.invertControllerYAxis);
+         
             base.Start();
         }
 
@@ -37,6 +46,9 @@ namespace ScottEwing.PhysicsPlayerController{
             _actionMap["Look"].canceled -= context => Inputs.look = Vector2.zero;
             _actionMap["Brake"].performed -= OnBrake;
             _actionMap["Brake"].canceled -= OnBrake;
+            
+            EventManager.RemoveListener<GameResumedEvent>(evt => invertControllerYAxis = evt.invertControllerYAxis);
+
             base.OnDestroy();
 
 
@@ -51,9 +63,15 @@ namespace ScottEwing.PhysicsPlayerController{
             Inputs.movement.z = tmp.y;
         }
 
+        
         private void OnLook(InputAction.CallbackContext obj) {
             Inputs.look = obj.ReadValue<Vector2>();
             Inputs.look.y *= -1;
+
+            //Invert Y Axis if using controller and setting is enabled
+            if (_playerInput.currentControlScheme == "Gamepad" && invertControllerYAxis) {
+                Inputs.look.y *= -1;
+            }
         }
         
         private void OnBrake(InputAction.CallbackContext obj) {

@@ -4,6 +4,7 @@ using UnityEditor;
 
 namespace ScottEwing.Checkpoints
 {
+#if UNITY_EDITOR
     [InitializeOnLoad]
     public class InitialiseCheckpointsSymbol
     {
@@ -33,5 +34,6 @@ namespace ScottEwing.Checkpoints
             return new List<string>(PlayerSettings.GetScriptingDefineSymbolsForGroup(group).Split(';'));
         }
     }
+#endif
 }
 

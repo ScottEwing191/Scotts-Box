@@ -4,7 +4,6 @@ using UnityEngine;
 using Sirenix.OdinInspector;
 #endif
 #if SE_EVENTSYSTEM
-using Codice.Client.BaseCommands;
 using ScottEwing.EventSystem;
 #endif
 
