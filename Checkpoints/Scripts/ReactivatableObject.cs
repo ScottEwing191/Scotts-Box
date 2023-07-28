@@ -11,6 +11,12 @@ namespace ScottEwing
 
         [Tooltip("If objects were enabled when checkpoint was reached the objects will be set (back) to enabled when checkpoint is reset and vice versa")]
         [SerializeField] protected GameObject _target;
+
+        [Tooltip("If true the object will be destroyed if the checkpoint is reset before a checkpoint has been reached. Useful if " +
+                 "this object has been instantiated in between checkpoints, and should be destroyed if checkpoint is reloaded " +
+                 "before reaching the next checkpoint")]
+        [SerializeField] private bool _destroyOnReloadIfCheckpointNotReached = true;
+        private bool _checkpointReached;
         private bool _isEnabledOnCheckpointReached;
  
         protected override void Start() {
@@ -22,8 +28,18 @@ namespace ScottEwing
         }
 
 #if SE_EVENTSYSTEM
-        public override void OnCheckpointReached(CheckpointReachedEvent obj) => SaveEnabledStatus();
-        public override void OnCheckpointReload(CheckpointReloadEvent obj) => ReloadEnabledStatus();
+        public override void OnCheckpointReached(CheckpointReachedEvent obj) {
+            _checkpointReached = true;
+            SaveEnabledStatus();
+        }
+
+        public override void OnCheckpointReload(CheckpointReloadEvent obj) {
+            if (_destroyOnReloadIfCheckpointNotReached && !_checkpointReached) {
+                Destroy(_target);
+                return;
+            }
+            ReloadEnabledStatus();
+        }
 
 
 #endif
