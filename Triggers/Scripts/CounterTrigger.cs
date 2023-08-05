@@ -1,29 +1,25 @@
 using UnityEngine;
 
 namespace ScottEwing.Triggers{
-    [AddComponentMenu("ScottEwing/Triggers/CounterTrigger(deprecated)")]
+    [AddComponentMenu("ScottEwing/Triggers/CounterTrigger")]
     public class CounterTrigger : Trigger{
         [SerializeField] private int _requiredCount = 1;
         [SerializeField] private bool _decreaseCountOnExit;
         private int _currentCount;
 
-        protected override void OnTriggerEnter(Collider other) {
-            if (IsColliderValid(other)) {
-                base.OnTriggerEnter(other);
-                _currentCount++;
-                if (_currentCount >= _requiredCount) {
-                    Triggered();
-                }
+        protected override void TriggerEntered(Collider other) {
+            base.TriggerEntered(other);
+            _currentCount++;
+            if (_currentCount >= _requiredCount) {
+                Triggered();
             }
         }
 
-        protected override void OnTriggerExit(Collider other) {
-            if (_decreaseCountOnExit && IsColliderValid(other)) {
+        protected override void TriggerExited(Collider other) {
+            base.TriggerExited(other);
+            if (_decreaseCountOnExit) {
                 _currentCount--;
             }
-
-            base.OnTriggerExit(other);
-
         }
     }
 }
