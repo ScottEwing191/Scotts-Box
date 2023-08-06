@@ -51,5 +51,8 @@ namespace ScottEwing.Input{
             }
         }
 #endif
+
+        public virtual void EnableActionMap() => _actionMap.Enable();
+        public virtual void DisableActionMap() => _actionMap.Disable();
     }
 }

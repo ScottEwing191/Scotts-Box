@@ -2,6 +2,8 @@ using System;
 using System.ComponentModel;
 #if ODIN_INSPECTOR
 using Sirenix.OdinInspector;
+#else
+using NaughtyAttributes;
 #endif
 using UnityEngine;
 

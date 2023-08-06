@@ -18,7 +18,7 @@ namespace ScottEwing.Triggers{
         private void Update() {
             if (shouldCheckForInput) {
                 if (UnityEngine.Input.GetButtonDown("Interact") && IsActivatable) {
-                    Triggered();
+                    Triggered(null);
                 }
             }
         }

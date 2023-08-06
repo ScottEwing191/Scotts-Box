@@ -12,7 +12,7 @@ namespace ScottEwing.Triggers{
         protected override void TriggerEntered(Collider other) {
             //if (!IsColliderValid(other)) return;
             base.TriggerEntered(other);
-            if (playOnTouch) {
+            if (playOnTouch && _audioSource != null) {
                 _audioSource.Play();
             }
         }

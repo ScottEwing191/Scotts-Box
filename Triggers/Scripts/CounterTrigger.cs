@@ -11,7 +11,7 @@ namespace ScottEwing.Triggers{
             base.TriggerEntered(other);
             _currentCount++;
             if (_currentCount >= _requiredCount) {
-                Triggered();
+                Triggered(other);
             }
         }
 

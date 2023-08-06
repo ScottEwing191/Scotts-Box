@@ -16,7 +16,7 @@ namespace ScottEwing.Triggers {
             if (!ShouldCheckInput) return;
             if (InputActionReference.action == null) return;
             if (InputActionReference.action.triggered) {
-                Triggered();
+                Triggered(null);
             }
         }
         protected override void TriggerEntered(Collider other) {

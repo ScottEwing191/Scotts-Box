@@ -18,7 +18,7 @@ namespace ScottEwing.Triggers {
             base.TriggerEntered(other);
             if (_turnOnOnFirstEnter && !_firstEnterComplete) {
                 _firstEnterComplete = true;
-                Triggered();
+                Triggered(other);
             }
         }
 
@@ -29,9 +29,9 @@ namespace ScottEwing.Triggers {
             }
         }
 
-        protected override bool Triggered() {
+        protected override bool Triggered(Collider other) {
             _triggerOn = !_triggerOn;
-            return _triggerOn ? base.Triggered() : TriggerOff();
+            return _triggerOn ? base.Triggered(other) : TriggerOff();
         }
 
         private bool TriggerOff() {

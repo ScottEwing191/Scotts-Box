@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.Events;
 #if ODIN_INSPECTOR
 using Sirenix.OdinInspector;
-
 #else
 using NaughtyAttributes;
 #endif
@@ -55,9 +54,7 @@ namespace ScottEwing.Triggers{
         [SerializeField] private TriggerBy _triggerBy;
 
         [SerializeField] private TriggeredType _triggeredType = TriggeredType.DestroyOnTriggered;
-#if ODIN_INSPECTOR
         [ShowIf("_triggeredType", TriggeredType.CooldownOnTriggered)]
-#endif
         [SerializeField] private float _cooldownTime = 2.0f;
 
         [field: SerializeField] protected bool IsActivatable { get; set; } = true;
@@ -66,7 +63,7 @@ namespace ScottEwing.Triggers{
         private Coroutine _cooldownRoutine;
         protected Collider currentCollider;
 
-        [SerializeField] protected UnityEvent _onTriggered;
+        [SerializeField] protected UnityEvent<Collider> _onTriggered;
 
         //--Trigger Unity Events
         [Header("Trigger Events")]
@@ -223,12 +220,12 @@ namespace ScottEwing.Triggers{
 
         #endregion
 
-        protected virtual bool Triggered() {
+        protected virtual bool Triggered(Collider other) {
             if (!gameObject.activeSelf || !gameObject.activeInHierarchy) return false;
             if (!IsActivatable) return false;
             if (isDebug)
                 Debug.Log("Triggered", this);
-            _onTriggered.Invoke();
+            _onTriggered.Invoke(other);
             switch (_triggeredType) {
                 case TriggeredType.DestroyOnTriggered:
                     Destroy(gameObject);

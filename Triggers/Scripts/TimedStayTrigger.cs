@@ -15,10 +15,10 @@ namespace ScottEwing.Triggers
 
         private Coroutine timerRoutine;
 
-        IEnumerator TimerRoutine() {
+        IEnumerator TimerRoutine(Collider other) {
             yield return new WaitForSeconds(_durationRequiredForTrigger);
             timerRoutine = null;
-            Triggered();
+            Triggered(other);
         }
 
         protected override void TriggerEntered(Collider other) {
@@ -26,7 +26,7 @@ namespace ScottEwing.Triggers
             if (timerRoutine != null) {
                     StopCoroutine(timerRoutine);
                 }
-                timerRoutine = StartCoroutine(TimerRoutine());
+                timerRoutine = StartCoroutine(TimerRoutine(other));
         }
         
         protected override void TriggerExited(Collider other) {

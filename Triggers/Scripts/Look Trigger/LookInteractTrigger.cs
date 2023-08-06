@@ -2,9 +2,9 @@ using ScottEwing.Triggers;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace ScottEwing.Honours
+namespace ScottEwing.Triggers
 {
-    [AddComponentMenu("ScottEwing/Triggers/LookInteractTrigger(deprecated)")]
+    [AddComponentMenu("ScottEwing/Triggers/LookInteractTrigger")]
     public class LookInteractTrigger : LookTrigger, ITakesInput
     {
         [field:SerializeField] public InputActionProperty InputActionReference { get; set; }
@@ -17,7 +17,7 @@ namespace ScottEwing.Honours
             if (!LookingAtTrigger) return;
             if (InputActionReference.action == null) return;
             if (InputActionReference.action.triggered) {
-                Triggered();
+                Triggered(null);
             }
         }
     }
