@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ScottEwing.Triggers
 {
-    [AddComponentMenu("ScottEwing/Triggers/TimedStayTrigger(deprecated)")]
+    [AddComponentMenu("ScottEwing/Triggers/TimedStayTrigger")]
     /// <summary>
     /// This trigger will activate once a valid collider has been inside the trigger for a given period of timew
     /// </summary>
@@ -15,25 +15,23 @@ namespace ScottEwing.Triggers
 
         private Coroutine timerRoutine;
 
-        IEnumerator TimerRoutine() {
+        IEnumerator TimerRoutine(Collider other) {
             yield return new WaitForSeconds(_durationRequiredForTrigger);
             timerRoutine = null;
-            Triggered();
+            Triggered(other);
         }
 
-        protected override void OnTriggerEnter(Collider other) {
-            if (IsColliderValid(other)) {
-                InvokeOnTriggerEnter(other);
-                if (timerRoutine != null) {
+        protected override void TriggerEntered(Collider other) {
+            base.TriggerEntered(other);    
+            if (timerRoutine != null) {
                     StopCoroutine(timerRoutine);
                 }
-                timerRoutine = StartCoroutine(TimerRoutine());
-            }
+                timerRoutine = StartCoroutine(TimerRoutine(other));
         }
         
-        protected override void OnTriggerExit(Collider other) {
-            if (IsColliderValid(other) && _cancelOnTriggerExit) {
-                InvokeOnTriggerExit(other);
+        protected override void TriggerExited(Collider other) {
+            base.TriggerExited(other);
+            if (_cancelOnTriggerExit) {
                 if (timerRoutine != null) {
                     StopCoroutine(timerRoutine);
                 }

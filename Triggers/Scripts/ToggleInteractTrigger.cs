@@ -3,7 +3,7 @@ using UnityEngine.Events;
 
 
 namespace ScottEwing.Triggers {
-    [AddComponentMenu("ScottEwing/Triggers/ToggleInteractTrigger(deprecated)")]
+    [AddComponentMenu("ScottEwing/Triggers/ToggleInteractTrigger")]
     public class ToggleInteractTrigger : InteractTrigger{
         [Tooltip("The Trigger has been toggled off")]
         [SerializeField] protected UnityEvent _onTriggeredOff;
@@ -14,26 +14,24 @@ namespace ScottEwing.Triggers {
         [SerializeField] private bool _turnOffOnTriggerExit = true;
         private bool _firstEnterComplete = false;
 
-        protected override void OnTriggerEnter(Collider other) {
-            if (!IsColliderValid(other)) return;
+        protected override void TriggerEntered(Collider other) {
+            base.TriggerEntered(other);
             if (_turnOnOnFirstEnter && !_firstEnterComplete) {
                 _firstEnterComplete = true;
-                Triggered();
+                Triggered(other);
             }
-            base.OnTriggerEnter(other);
         }
 
-        protected override void OnTriggerExit(Collider other) {
-            if (!IsColliderValid(other)) return;
+        protected override void TriggerExited(Collider other) {
+            base.TriggerExited(other);
             if (_turnOffOnTriggerExit && _triggerOn) {
                 TriggerOff();
             }
-            base.OnTriggerExit(other);
         }
 
-        protected override bool Triggered() {
+        protected override bool Triggered(Collider other) {
             _triggerOn = !_triggerOn;
-            return _triggerOn ? base.Triggered() : TriggerOff();
+            return _triggerOn ? base.Triggered(other) : TriggerOff();
         }
 
         private bool TriggerOff() {

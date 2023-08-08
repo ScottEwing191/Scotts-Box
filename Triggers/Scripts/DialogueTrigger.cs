@@ -1,10 +1,8 @@
 ﻿using UnityEngine;
 
-namespace ScottEwing.Triggers {
+namespace ScottEwing.Triggers{
     [AddComponentMenu("ScottEwing/Triggers/DialogueTrigger(deprecated)")]
-    public class DialogueTrigger : Trigger {
-
-
+    public class DialogueTrigger : Trigger{
         [SerializeField] private string[] interactTextArray;
         private string currentInteractText;
         private bool shouldCheckForInput = false;
@@ -20,31 +18,29 @@ namespace ScottEwing.Triggers {
         private void Update() {
             if (shouldCheckForInput) {
                 if (UnityEngine.Input.GetButtonDown("Interact") && IsActivatable) {
-                    Triggered();
+                    Triggered(null);
                 }
             }
         }
 
         public void NextMessage() {
-            if ((textIndex + 1 < interactTextArray.Length)) {          // < not <=  (does the nex index number exist)
+            if ((textIndex + 1 < interactTextArray.Length)) {
+                // < not <=  (does the nex index number exist)
                 currentInteractText = interactTextArray[textIndex + 1];
                 textIndex++;
             }
         }
 
-        protected override void OnTriggerEnter(Collider other) {               // display the interact text
-            if (other.CompareTag(_triggeredByTag)) {
-                shouldCheckForInput = true;
-                base.OnTriggerEnter(other);
-
-            }
+        protected override void TriggerEntered(Collider other) {
+            base.TriggerEntered(other);
+            // display the interact text
+            shouldCheckForInput = true;
         }
 
-        protected override void OnTriggerExit(Collider other) {                // clear the interact text
-            if (other.CompareTag(_triggeredByTag)) {
-                shouldCheckForInput = false;
-                base.OnTriggerExit(other);
-            }
+        protected override void TriggerExited(Collider other) {
+            base.TriggerExited(other);
+            // clear the interact text
+            shouldCheckForInput = false;
         }
-    } 
+    }
 }

@@ -3,25 +3,23 @@ using UnityEngine;
 using UnityEngine.Serialization;
 
 namespace ScottEwing.Triggers {
-    [AddComponentMenu("ScottEwing/Triggers/TouchTrigger(deprecated)")]
+    [AddComponentMenu("ScottEwing/Triggers/TouchTrigger")]
     public class TouchTrigger : Trigger{
-        [Tooltip("The time between the trigger being entered and the OnTriggered event being invoked")]
-        //[SerializeField] private float _triggerDelay = 0.0f;
+        [Tooltip("The delay before the trigger is activated")]
+        [SerializeField] private float _triggerDelay = 0;
         
-        protected override void OnTriggerEnter(Collider other) {
-            if (!IsColliderValid(other)) return;
-            InvokeOnTriggerEnter(other);
-            Triggered();
-            /*if (_triggerDelay == 0.0f) {
-            }
-            else {
-                StartCoroutine(TriggeredDelayRoutine());
-            }*/
+        //TriggerEnter method that will wait for a delay before triggering if the delay is greater than 0
+        protected override void TriggerEntered(Collider other) {
+            base.TriggerEntered(other);
+            if (_triggerDelay > 0)
+                StartCoroutine(DelayedTrigger(other));
+            else
+                Triggered(other);
         }
 
-        /*private IEnumerator TriggeredDelayRoutine() {
+        private IEnumerator DelayedTrigger(Collider other ) {
             yield return new WaitForSeconds(_triggerDelay);
-            Triggered();
-        }*/
+            Triggered(other);
+        }
     } 
 }

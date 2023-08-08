@@ -1,6 +1,8 @@
 using System;
 #if ODIN_INSPECTOR
 using Sirenix.OdinInspector;
+#else
+using NaughtyAttributes;
 #endif
 using UnityEngine;
 using Debug = UnityEngine.Debug;
@@ -25,15 +27,11 @@ namespace ScottEwing.Checkpoints{
         [Tooltip("Global: The OnCheckpointReached event will be invoked and every respawnable objects listening to this event will save its position Single: Only the respawnable object which touches this trigger will have its position saved ")]
         [SerializeField] private GlobalOrIndividual _globalOrIndividual = GlobalOrIndividual.Global;
 
-#if ODIN_INSPECTOR
         [ShowIf("_globalOrIndividual", GlobalOrIndividual.Individual)]
-#endif
         [Tooltip("Look for the Respawnable Object Component on either the game object of the collider which touch the checkpoint, or on child or parent game objects of that collider. (Only relevant when using the 'Single' Checkpoint Type")]
         [SerializeField] private FindCheckpointListenersIn _findCheckpointListenersIn = FindCheckpointListenersIn.ColliderGameObject;
 
-#if ODIN_INSPECTOR
         [ShowIf("_reachedOrReload", ReachedOrReload.CheckpointReached)]
-#endif
         [SerializeField] private Transform _respawnTransform;
 
         private Vector3 _respawnPosition;

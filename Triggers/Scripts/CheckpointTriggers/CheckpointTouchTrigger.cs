@@ -5,7 +5,7 @@ using ScottEwing.Checkpoints;
 using UnityEngine;
 
 namespace ScottEwing.Triggers{
-    [AddComponentMenu("ScottEwing/Triggers/CheckpointTouchTrigger(deprecated)")]
+    [AddComponentMenu("ScottEwing/Triggers/CheckpointTouchTrigger")]
     public class CheckpointTouchTrigger : TouchTrigger{
         [SerializeField] private CheckpointReachedReloadTrigger _checkpointReachedReload;
         [SerializeField] private float _checkpointDelay = 0.0f;
@@ -14,9 +14,8 @@ namespace ScottEwing.Triggers{
             _checkpointReachedReload.Init(transform);
         }
 
-        protected override void OnTriggerEnter(Collider other) {
-            if (!IsColliderValid(other)) return;
-            base.OnTriggerEnter(other); // this will call on triggered
+        protected override void TriggerEntered(Collider other) {
+            base.TriggerEntered(other); // this will call on triggered
             if (_checkpointDelay == 0.0f) {
                 _checkpointReachedReload.Triggered(other);
             }

@@ -2,12 +2,14 @@ using System;
 using System.ComponentModel;
 #if ODIN_INSPECTOR
 using Sirenix.OdinInspector;
+#else
+using NaughtyAttributes;
 #endif
 using UnityEngine;
 
 
 namespace ScottEwing.Triggers{
-    [AddComponentMenu("ScottEwing/Triggers/LookTrigger(deprecated)")]
+    [AddComponentMenu("ScottEwing/Triggers/LookTrigger")]
 
     /// <summary>
     /// This class works in tandem with the CastInteractor. each frame cast interactor looks for ILookInteractable's (e.g., this class). If this class is found the Look method
@@ -60,19 +62,19 @@ namespace ScottEwing.Triggers{
         }
 
         //-- Dont want base behaviour
-        protected override void OnTriggerEnter(Collider other) {
-            if (IsColliderValid(other)) {       
+        protected override void TriggerEntered(Collider other) {
+            //if (IsColliderValid(other)) {       
                 _castData._castForTrigger = true;
-            }
+            //}
         }
 
-        protected override void OnTriggerStay(Collider other) {
+        protected override void TriggerStay(Collider other) {
         }
 
-        protected override void OnTriggerExit(Collider other) {
-            if (IsColliderValid(other)) {
+        protected override void TriggerExited(Collider other) {
+            //if (IsColliderValid(other)) {
                 _castData._castForTrigger = false;
-            }
+            //}
         }
 
         #endregion

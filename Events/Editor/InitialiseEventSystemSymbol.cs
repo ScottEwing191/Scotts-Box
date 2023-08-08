@@ -12,7 +12,8 @@ namespace ScottEwing.EventSystem
         {
             BuildTargetGroup.Standalone,
             BuildTargetGroup.Android,
-            BuildTargetGroup.iOS
+            BuildTargetGroup.iOS,
+            BuildTargetGroup.WebGL
         };
 
         static InitialiseEventSystemSymbol()
