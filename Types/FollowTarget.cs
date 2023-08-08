@@ -1,4 +1,9 @@
 ﻿using System;
+#if ODIN_INSPECTOR
+using Sirenix.OdinInspector;
+#elif NAUGHTY_ATTRIBUTES
+using NaughtyAttributes;
+#endif
 using UnityEngine;
 
 namespace ScottEwing{
@@ -11,7 +16,8 @@ namespace ScottEwing{
 
         private enum OffsetType{ World, RelativeToTargetRotation }
 
-        [SerializeField] private Transform _positionTarget, _rotationTarget;
+        [field: SerializeField] public Transform PositionTarget { get; set; }
+        [field: SerializeField] public Transform RotationTarget { get; set; }
         [SerializeField] private UpdateOptions _updateOptions = UpdateOptions.LateUpdate;
         [SerializeField] private PositionOptions _positionOption = PositionOptions.Position;
         [SerializeField] private RotationOptions _rotationOptions = RotationOptions.Rotation;
@@ -19,7 +25,10 @@ namespace ScottEwing{
         [Tooltip("If follower is child and is offset from parent, and parent Rotation is not (0,0,0), then parent should be used as pivot, otherwise ignore parent pivot ")]
         [SerializeField] private Transform _parentPivot;
 
-        private Vector3 _offsetPosition;
+        [Tooltip("If true, the follower's offset will be the difference in positions between the follower and target when the game starts, otherwise the follower will start at the same position as the target plus the specified offset")]
+        [SerializeField] private bool _useStartOffset = false;
+        [HideIf("_useStartOffset")]
+        [SerializeField] private Vector3 _offsetPosition;
 
         private void Start() {
             transform.rotation.ToAngleAxis(out float angle, out Vector3 axis);
@@ -33,8 +42,8 @@ namespace ScottEwing{
                 transform.RotateAround(_parentPivot.position, axis, -angle);
             }
 
-            if (_positionTarget) {
-                _offsetPosition = transform.position - _positionTarget.position;
+            if (PositionTarget) {
+                _offsetPosition = _useStartOffset ? transform.position - PositionTarget.position : _offsetPosition;
             }
         }
 
@@ -54,9 +63,34 @@ namespace ScottEwing{
         }
 
         private void Follow() {
+            if (PositionTarget) {
+                SetPosition();
+            }
+            if (RotationTarget) {
+                SetRotation();
+            }
+        }
+
+        private void SetRotation() {
+            switch (_rotationOptions) {
+                case RotationOptions.Rotation:
+                    transform.rotation = RotationTarget.rotation;
+                    break;
+                case RotationOptions.XZRotation:
+                    transform.rotation = Quaternion.Euler(RotationTarget.eulerAngles.x, transform.eulerAngles.y, RotationTarget.eulerAngles.z);
+                    break;
+                case RotationOptions.YRotation:
+                    transform.rotation = Quaternion.Euler(transform.eulerAngles.x, RotationTarget.eulerAngles.y, transform.eulerAngles.z);
+                    break;
+                case RotationOptions.NoRotation:
+                    break;
+            }
+        }
+
+        private void SetPosition() {
             Vector3 newPosition;
-            
-            var thisTransform = transform;      // I think this is more efficient than repeatedly accessing transform
+
+            var thisTransform = transform; // I think this is more efficient than repeatedly accessing transform
             switch (_positionOption) {
                 case PositionOptions.Position:
                     newPosition = GetNewProvisionalPosition();
@@ -76,26 +110,12 @@ namespace ScottEwing{
                 case PositionOptions.NoPosition:
                     break;
             }
-
-            switch (_rotationOptions) {
-                case RotationOptions.Rotation:
-                    transform.rotation = _rotationTarget.rotation;
-                    break;
-                case RotationOptions.XZRotation:
-                    transform.rotation = Quaternion.Euler(_rotationTarget.eulerAngles.x, transform.eulerAngles.y, _rotationTarget.eulerAngles.z);
-                    break;
-                case RotationOptions.YRotation:
-                    transform.rotation = Quaternion.Euler(transform.eulerAngles.x, _rotationTarget.eulerAngles.y, transform.eulerAngles.z);
-                    break;
-                case RotationOptions.NoRotation:
-                    break;
-            }
         }
-        
+
         private Vector3 GetNewProvisionalPosition() {
             return _offsetType switch {
-                OffsetType.World => _positionTarget.position + _offsetPosition,
-                OffsetType.RelativeToTargetRotation => _positionTarget.TransformPoint(_offsetPosition),
+                OffsetType.World => PositionTarget.position + _offsetPosition,
+                OffsetType.RelativeToTargetRotation => PositionTarget.TransformPoint(_offsetPosition),
                 _ => throw new ArgumentOutOfRangeException()
             };
         }
