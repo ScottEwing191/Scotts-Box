@@ -16,6 +16,14 @@ namespace ScottEwing.Triggers {
             else
                 Triggered(other);
         }
+        
+        protected override void CollisionEntered(Collision other) {
+            base.CollisionEntered(other);
+            if (_triggerDelay > 0)
+                StartCoroutine(DelayedTrigger(other.collider));
+            else
+                Triggered(other.collider);
+        }
 
         private IEnumerator DelayedTrigger(Collider other ) {
             yield return new WaitForSeconds(_triggerDelay);
