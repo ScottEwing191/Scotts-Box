@@ -7,7 +7,7 @@ using UnityEngine.InputSystem;
 namespace ScottEwing.Input.DynamicInputIcons{
     
     public enum ControllerInputTypes{
-        KeyboardMouse, PS4Controller, XboxController
+        KeyboardMouse, PS4Controller, XboxController, PS5Controller
     }
     
     public class PlayerInputIcons : MonoBehaviour{
@@ -49,7 +49,11 @@ namespace ScottEwing.Input.DynamicInputIcons{
             if (playerInput.devices.Count == 0) return;
             var controllerName = playerInput.devices[0].name;
 
-            if (InputSystem.IsFirstLayoutBasedOnSecond(controllerName, "DualShockGamepad")) {
+            if (InputSystem.IsFirstLayoutBasedOnSecond(controllerName, "DualSenseGamepad")) {
+                _inputBindingMask = InputBinding.MaskByGroup("GamePad");
+                _types = ControllerInputTypes.PS5Controller;
+            }
+            else if (InputSystem.IsFirstLayoutBasedOnSecond(controllerName, "DualShockGamepad")) {
                 _inputBindingMask = InputBinding.MaskByGroup("GamePad");
                 _types = ControllerInputTypes.PS4Controller;
             }

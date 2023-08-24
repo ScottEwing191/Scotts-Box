@@ -32,12 +32,14 @@ namespace ScottEwing.Input.DynamicInputIcons{
         [SerializeField] private InputIconsSprites _keyboardIcons;
         [SerializeField] private InputIconsSprites _ps4Icons;
         [SerializeField] private InputIconsSprites _xboxIcons;
+        [SerializeField] private InputIconsSprites _ps5Icons;
 
         [SerializeField] private Image _image;
 
 
         [Tooltip("This is the control type which will be used in the editor. Does not effect the icon used when the game is run")]
         [SerializeField] private ControllerInputTypes _editorType = ControllerInputTypes.KeyboardMouse;
+
 
         [Button]
         private void SetIconInEditor() {
@@ -46,6 +48,7 @@ namespace ScottEwing.Input.DynamicInputIcons{
                 ControllerInputTypes.KeyboardMouse => InputBinding.MaskByGroup("Keyboard&Mouse"),
                 ControllerInputTypes.PS4Controller => InputBinding.MaskByGroup("GamePad"),
                 ControllerInputTypes.XboxController => InputBinding.MaskByGroup("GamePad"),
+                ControllerInputTypes.PS5Controller => InputBinding.MaskByGroup("GamePad"),
                 _ => throw new ArgumentOutOfRangeException()
             };
             SetImageSprite(_editorType, inputBindingMask);
@@ -85,6 +88,8 @@ namespace ScottEwing.Input.DynamicInputIcons{
                 ControllerInputTypes.KeyboardMouse => _keyboardIcons.GetSprite(controlPath),
                 ControllerInputTypes.PS4Controller => _ps4Icons.GetSprite(controlPath),
                 ControllerInputTypes.XboxController => _xboxIcons.GetSprite(controlPath),
+                ControllerInputTypes.PS5Controller => _ps5Icons.GetSprite(controlPath),
+
                 _ => throw new ArgumentOutOfRangeException(nameof(types), types, null)
             };
         }
