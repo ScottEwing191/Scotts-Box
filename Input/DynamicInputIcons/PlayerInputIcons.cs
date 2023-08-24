@@ -11,7 +11,7 @@ namespace ScottEwing.Input.DynamicInputIcons{
     }
     
     public class PlayerInputIcons : MonoBehaviour{
-        [SerializeField] private PlayerInput _playerInput;
+        [SerializeField] protected PlayerInput _playerInput;
         private InputBinding _inputBindingMask;
         private ControllerInputTypes _types;
 
@@ -22,16 +22,22 @@ namespace ScottEwing.Input.DynamicInputIcons{
             _playerInput ??= GetComponent<PlayerInput>();
         }
 
-        private void Start() {
+        protected virtual void Start() {
 
             var  iconsActiveOnstart = GetComponentsInChildren<UiInputIcon>(true);
             
             StartCoroutine(SetUpIconsAfterOneFrame());
+        }
+
+        protected virtual void OnEnable() {
             _playerInput.onControlsChanged += SetUpIcons;
         }
 
-        private void OnDestroy() {
+        protected virtual void OnDisable() {
             _playerInput.onControlsChanged -= SetUpIcons;
+        }
+
+        private void OnDestroy() {
         }
 
         private IEnumerator SetUpIconsAfterOneFrame() {
@@ -39,7 +45,7 @@ namespace ScottEwing.Input.DynamicInputIcons{
             SetUpIcons(_playerInput);
         }
 
-        private void SetUpIcons(PlayerInput playerInput) {
+        protected void SetUpIcons(PlayerInput playerInput) {
             if (playerInput.devices.Count == 0) return;
             var controllerName = playerInput.devices[0].name;
 
