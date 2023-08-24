@@ -49,7 +49,7 @@ namespace ScottEwing.Input.DynamicInputIcons{
             if (playerInput.devices.Count == 0) return;
             var controllerName = playerInput.devices[0].name;
 
-            if (InputSystem.IsFirstLayoutBasedOnSecond(controllerName, "DualSenseGamepad")) {
+            if (controllerName == "DualSenseGamepadHID") {
                 _inputBindingMask = InputBinding.MaskByGroup("GamePad");
                 _types = ControllerInputTypes.PS5Controller;
             }
