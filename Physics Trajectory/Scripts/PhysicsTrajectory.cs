@@ -2,8 +2,10 @@
 
 namespace ScottEwing.Trajectory{
     public class PhysicsTrajectory{
-        private static float defaultGravity = -9.81f;
-        private static float defaultTrajectoryHeight = 1;
+        private const float defaultGravity = -9.81f;
+        private const float defaultTrajectoryHeight = 1;
+        private const int defaultResolution = 1;
+
         
         
         public static bool TryCalculateLaunchData(Vector3 targetPosition, out LaunchData data, Vector3 startPosition, float trajectoryHeight, float gravity)
@@ -31,7 +33,7 @@ namespace ScottEwing.Trajectory{
             return true;
         }
         
-        public static Vector3[] GetPathPointsTimeLimit(LaunchData launchData, float timeLimit, Vector3 startPosition, int resolution = 30, float _gravity = -9.81f) {
+        public static Vector3[] GetPathPointsTimeLimit(LaunchData launchData, float timeLimit, Vector3 startPosition, int resolution = 30, float _gravity = defaultGravity) {
             var previousDrawPoint = startPosition;
             //const int resolution = 30; // how many times are we checking the path when drawing the line
             var linePath = new Vector3[resolution + 1];

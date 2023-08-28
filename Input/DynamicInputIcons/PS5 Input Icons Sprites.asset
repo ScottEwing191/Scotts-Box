@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 540b304d9fc132543b986d4b1ed32c32, type: 3}
+  m_Name: PS5 Input Icons Sprites
+  m_EditorClassIdentifier: 
+  InputIcons3:
+  - _input: buttonSouth
+    _inputIcon: {fileID: 21300000, guid: 395fb86c595ead54f9d4b279e85dd8e9, type: 3}
+  - _input: buttonNorth
+    _inputIcon: {fileID: 21300000, guid: 7aac943cdd0223045adceb84506b1925, type: 3}
+  - _input: buttonEast
+    _inputIcon: {fileID: 21300000, guid: 438c14d1833dbc04cabc32eec24e2bb0, type: 3}
+  - _input: buttonWest
+    _inputIcon: {fileID: 21300000, guid: 1626d12c13b6e694cb844b06d6b865fa, type: 3}
+  - _input: start
+    _inputIcon: {fileID: 21300000, guid: 51434b4050aacf24b82a5d4bff64444e, type: 3}
+  - _input: select
+    _inputIcon: {fileID: 21300000, guid: acd8416dce383ad48a4abf9878079b70, type: 3}
+  - _input: leftTrigger
+    _inputIcon: {fileID: 21300000, guid: 3dea0ac07b4e8b5448f8f0f267f81edb, type: 3}
+  - _input: rightTrigger
+    _inputIcon: {fileID: 21300000, guid: 5c0489caea5fc7448ae50cdb895d9e54, type: 3}
+  - _input: leftShoulder
+    _inputIcon: {fileID: 21300000, guid: 2da20bb14bdcbd94cb665d02ee3fc87a, type: 3}
+  - _input: rightShoulder
+    _inputIcon: {fileID: 21300000, guid: 60019fbd85f2d594ea2315a21db5e0ec, type: 3}
+  - _input: dpad
+    _inputIcon: {fileID: 21300000, guid: f64e452523055aa40a144c5ed92e8e22, type: 3}
+  - _input: dpad/up
+    _inputIcon: {fileID: 21300000, guid: 46d6c9bafee62b5409d2c10d76991688, type: 3}
+  - _input: dpad/down
+    _inputIcon: {fileID: 21300000, guid: 2246e3a4b823d9f42a5210491168de4d, type: 3}
+  - _input: dpad/left
+    _inputIcon: {fileID: 21300000, guid: 3a5a416181b11944ba042bbb8881818d, type: 3}
+  - _input: dpad/right
+    _inputIcon: {fileID: 21300000, guid: 92ea806a5da33ef478bfa9d4fe6d9433, type: 3}
+  - _input: leftStick
+    _inputIcon: {fileID: 21300000, guid: 9c897d0b59439e4469937e969605027a, type: 3}
+  - _input: rightStick
+    _inputIcon: {fileID: 21300000, guid: 49696043f9461494fbefd6722d658758, type: 3}
+  - _input: leftStickPress
+    _inputIcon: {fileID: 21300000, guid: a7890a4bba36dec488a7405a9b9c8d41, type: 3}
+  - _input: rightStickPress
+    _inputIcon: {fileID: 21300000, guid: 5b5f0608b470bf74788d88a9320573e0, type: 3}

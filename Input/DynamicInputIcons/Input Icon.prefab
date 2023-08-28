@@ -68,7 +68,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 1c2246ad1694b1e499f4f4409c215a30, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -90,85 +90,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 396b02645665e094b8f919f3971b5ce0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  serializationData:
-    SerializedFormat: 2
-    SerializedBytes: 
-    ReferencedUnityObjects: []
-    SerializedBytesString: 
-    Prefab: {fileID: 0}
-    PrefabModificationsReferencedUnityObjects: []
-    PrefabModifications: []
-    SerializationNodes:
-    - Name: controlTypeActions
-      Entry: 7
-      Data: 0|System.Collections.Generic.Dictionary`2[[ScottEwing.Input.DynamicInputIcons.ControllerInputTypes,
-        Assembly-CSharp],[UnityEngine.InputSystem.InputActionReference, Unity.InputSystem]],
-        mscorlib
-    - Name: comparer
-      Entry: 7
-      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[ScottEwing.Input.DynamicInputIcons.ControllerInputTypes,
-        Assembly-CSharp]], mscorlib
-    - Name: 
-      Entry: 12
-      Data: 0
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 12
-      Data: 3
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
-      Data: 0
-    - Name: $v
-      Entry: 6
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
-      Data: 1
-    - Name: $v
-      Entry: 6
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 7
-      Data: 
-    - Name: $k
-      Entry: 3
-      Data: 2
-    - Name: $v
-      Entry: 6
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
-      Entry: 13
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
   _assignActionPerControlType: 0
-  _actionReference: {fileID: 0}
+  _actionReference: {fileID: 8291368723572058841, guid: a0aa763add876264eabd62e57be629c8,
+    type: 3}
+  _controlTypeActions: []
   _keyboardIcons: {fileID: 11400000, guid: 6f835cba433f48a46af73880d0db4fe2, type: 2}
   _ps4Icons: {fileID: 11400000, guid: 8fe06598492ed304c987ff232a2ea161, type: 2}
   _xboxIcons: {fileID: 11400000, guid: 5eff00b2c6b96d1419e8576763fb21f6, type: 2}
+  _ps5Icons: {fileID: 11400000, guid: 5901d854aac4c4045933313205f0ccb6, type: 2}
   _image: {fileID: 4102914015017757226}
-  _editorType: 0
+  _editorType: 1
 --- !u!1 &4238506017972977964
 GameObject:
   m_ObjectHideFlags: 0
