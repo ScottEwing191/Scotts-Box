@@ -299,7 +299,8 @@ namespace ScottEwing.UI.Fade{
             float time = 0;
             while (time < fadeTime) {
                 SetAlpha(ref fadeObject, Mathf.Lerp(fromAlpha, toAlpha, time / fadeTime));
-                time += Time.deltaTime;
+                //time += Time.deltaTime; 
+                time += Time.unscaledDeltaTime;
                 yield return null;
             }
             SetAlpha(ref fadeObject, toAlpha);
