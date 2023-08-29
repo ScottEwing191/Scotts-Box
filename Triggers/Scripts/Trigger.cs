@@ -65,6 +65,7 @@ namespace ScottEwing.Triggers{
 
         [SerializeField] protected UnityEvent<Collider> _onTriggered;
 
+
         //--Trigger Unity Events
         [Header("Trigger Events")]
         [SerializeField] private bool _useTriggerEvents = true;
@@ -77,6 +78,11 @@ namespace ScottEwing.Triggers{
 
         [ShowIf("_useTriggerEvents")]
         [SerializeField] protected UnityEvent<Collider> _onTriggerExit;
+        public UnityEvent<Collider> OnTriggeredAction => _onTriggered;
+        public UnityEvent<Collider> OnTriggerEnterAction => _onTriggerEnter;
+        public UnityEvent<Collider> OnTriggerStayAction => _onTriggerStay;
+        public UnityEvent<Collider> OnTriggerExitAction => _onTriggerExit;
+
 
         //--Collision Unity Events
         [Header("Collision Events")]
