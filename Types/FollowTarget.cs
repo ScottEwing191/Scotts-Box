@@ -62,6 +62,7 @@ namespace ScottEwing{
                 Follow();
         }
 
+        [Button]
         private void Follow() {
             if (PositionTarget) {
                 SetPosition();
