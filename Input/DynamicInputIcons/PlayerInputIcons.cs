@@ -44,6 +44,9 @@ namespace ScottEwing.Input.DynamicInputIcons{
             SetUpIcons(_playerInput);
         }
 
+        public void SetUpIcons() => SetUpIcons(_playerInput);
+
+
         public void SetUpIcons(PlayerInput playerInput) {
             if (playerInput.devices.Count == 0) return;
             var controllerName = playerInput.devices[0].name;
