@@ -23,7 +23,11 @@ namespace ScottEwing.Input.DynamicInputIcons{
 
         [HideIf("_assignActionPerControlType")]
         [SerializeField] private InputActionReference _actionReference;
-        public InputActionReference ActionReference => _actionReference;
+
+        public InputActionReference ActionReference {
+            get => _actionReference;
+            set => _actionReference = value;
+        }
 
         [ShowIf("_assignActionPerControlType")]
         [SerializeField] private List<KeyValuePair> _controlTypeActions = new List<KeyValuePair>();
