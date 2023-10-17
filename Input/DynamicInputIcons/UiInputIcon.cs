@@ -42,7 +42,7 @@ namespace ScottEwing.Input.DynamicInputIcons{
 
 
         [Button]
-        private void SetIconInEditor() {
+        public void SetIconInEditor() {
             _image ??= GetComponent<Image>();
             var inputBindingMask = _editorType switch {
                 ControllerInputTypes.KeyboardMouse => InputBinding.MaskByGroup("Keyboard&Mouse"),
