@@ -24,6 +24,11 @@ namespace ScottEwing.Input.DynamicInputIcons{
         [HideIf("_assignActionPerControlType")]
         [SerializeField] private InputActionReference _actionReference;
 
+        public InputActionReference ActionReference {
+            get => _actionReference;
+            set => _actionReference = value;
+        }
+
         [ShowIf("_assignActionPerControlType")]
         [SerializeField] private List<KeyValuePair> _controlTypeActions = new List<KeyValuePair>();
 
@@ -42,7 +47,7 @@ namespace ScottEwing.Input.DynamicInputIcons{
 
 
         [Button]
-        private void SetIconInEditor() {
+        public void SetIconInEditor() {
             _image ??= GetComponent<Image>();
             var inputBindingMask = _editorType switch {
                 ControllerInputTypes.KeyboardMouse => InputBinding.MaskByGroup("Keyboard&Mouse"),
