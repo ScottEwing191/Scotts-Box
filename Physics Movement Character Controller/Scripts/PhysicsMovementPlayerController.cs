@@ -37,6 +37,8 @@ namespace ScottEwing.PhysicsPlayerController{
 
         [Header("Brake")]
         [SerializeField] private bool _useBrake = true;
+        [Tooltip("EXPERIMENTAL: If true the brake will be applied automatically when the player is not moving. If false the brake will only be applied when the player presses the brake button")]
+        [SerializeField] private bool _autoBrake = false;
         [SerializeField] private float _brakeStrength = 50;
         [SerializeField] private PhysicMaterial _brakePhysicsMaterial;
 
@@ -132,6 +134,11 @@ namespace ScottEwing.PhysicsPlayerController{
                 }
                 else if(PlayerRigidbody.velocity.magnitude < maxVelocity){
                     PlayerRigidbody.AddForce(movementVector * (speed * Time.deltaTime));
+                    if (_autoBrake && movementVector.magnitude == 0) {
+                        BreakOnImmediate();
+                    }else if (_autoBrake) {
+                        BreakOff();
+                    }
                     //PlayerRigidbody.velocity = Vector3.ClampMagnitude(PlayerRigidbody.velocity, maxVelocity);
                 }
             }
@@ -161,6 +168,14 @@ namespace ScottEwing.PhysicsPlayerController{
                 }
 
             } 
+        }
+
+        public void BreakOnImmediate() {
+            isBrakeOn = true;
+            //_defaultBrakeStrength = PlayerRigidbody.angularDrag;
+            //_defaultBrakePhysicsMaterial = _playerCollider.material;
+            _playerCollider.material = _brakePhysicsMaterial;
+            PlayerRigidbody.angularDrag = _brakeStrength;
         }
 
         public void BreakOff() {
