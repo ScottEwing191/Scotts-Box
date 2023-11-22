@@ -43,7 +43,7 @@ namespace ScottEwing.Triggers
         
         //--is invalid if collision events should not be used or if not colliding with object in layer mask or with target tag
         public bool IsCollisionValid(Collision other, bool isActivatable = true) => IsColliderValid(other.collider, isActivatable);
-        
+        public bool IsCollisionValid(Collision2D other, bool isActivatable = true) => IsColliderValid(other.collider, isActivatable);
         public bool IsColliderValid(Collider2D other, bool isActivatable = true) => IsColliderValid(other.transform, isActivatable);
         public bool IsColliderValid(Transform other, bool isActivatable = true) {
             if (!isActivatable) {
