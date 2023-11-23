@@ -1,16 +1,22 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using ScottEwing.ExtensionMethods;
+
+#if ODIN_INSPECTOR
+using Sirenix.OdinInspector;
+#elif NAUGHTY_ATTRIBUTES
+    using NaughtyAttributes;
+#endif
+
 using UnityEngine;
 
 namespace ScottEwing.PhysicsPlayerController{
     public class PhysicsMovementPlayerController : MonoBehaviour{
         //--Serialized Fields
-        [SerializeField] private float speed = 150;
+        [SerializeField] private float speed = 14;
 
         [Tooltip("If true, this script cannot increase the speed to above the minimum value while grounded, but other things (e.g. explosions) can increase " +
                  "the speed to above the min velocity while grounded. If false nothing can increase speed above max while grounded")]
-        [SerializeField] private bool _onlyLimitControllerVelocity = false;
+        [SerializeField] private bool clampVelocityMagnitude = false;
 
         [SerializeField] private float maxVelocity = 9.0f;
         [SerializeField] private float jumpHeight = 2;
@@ -19,7 +25,7 @@ namespace ScottEwing.PhysicsPlayerController{
         private float jumpInputDirectionScale = 0.1f;
 
         [SerializeField] private float inAirDrag = 0.5f;
-        [SerializeField] private float inAirSpeed = 75f;
+        [SerializeField] private float inAirSpeed = 4f;
 
         [Tooltip("The percentage of the ball radius bellow the centre of the ball to use as the groundCheckOffset")] [SerializeField]
         private float groundCheckOffsetPercentage = 0.457f;
@@ -38,28 +44,43 @@ namespace ScottEwing.PhysicsPlayerController{
         [Tooltip("this is the velocity the ball will be able to get up to if jumping from a stand still")] [SerializeField]
         private float defaultAirVelocityMagnitude = 3f;
 
-        [Header("Brake")]
+        [FoldoutGroup("Brake")]
         [SerializeField] private bool _useBrake = true;
 
-        [SerializeField] public bool _toggleBrake = false;
+        [ShowIf(nameof(_useBrake))] [FoldoutGroup("Brake")] [SerializeField]
+        public bool _toggleBrake = false;
 
-        [Tooltip("EXPERIMENTAL: If true the brake will be applied automatically when the player is not moving. If false the brake will only be applied when the player presses the brake button")]
-        [SerializeField] public bool _autoBrake = false;
-        [SerializeField] private float _autoBrakeStrength = 10.0f;
-        [SerializeField] private bool _autoBrakeOn;
+        [ShowIf(nameof(_useBrake))] [FoldoutGroup("Brake")] [SerializeField]
+        private float _brakeStrength = 50;
+
+        [ShowIf(nameof(_useBrake))] [FoldoutGroup("Brake")] [SerializeField]
+        private float _brakeApplyTime = 0.5f;
+
+        [ShowIf(nameof(_useBrake))] [FoldoutGroup("Brake")] [SerializeField]
+        private PhysicMaterial _brakePhysicsMaterial;
+
+        [FoldoutGroup("Auto Brake")] [SerializeField]
+        [Tooltip("If true the brake will be applied automatically when the player is not moving. If false the brake will only be applied when the player presses the brake button")]
+        public bool _useAutoBrake = false;
+
+        [ShowIf(nameof(_useAutoBrake))] [FoldoutGroup("Auto Brake")] [SerializeField]
+        private float _autoBrakeStrength = 10.0f;
+
+        [FoldoutGroup("Responsive Movement")]
+        public bool _useResponsiveMovement = true;
+
+        [ShowIf(nameof(_useResponsiveMovement))] [FoldoutGroup("Responsive Movement")] [SerializeField]
+        private AnimationCurve _accelerationCurve;
+
+        [ShowIf(nameof(_useResponsiveMovement))] [FoldoutGroup("Responsive Movement")] [SerializeField]
+        private AnimationCurve _inputDirectionCurve;
+
+        [ShowIf(nameof(_useResponsiveMovement))] [FoldoutGroup("Responsive Movement")] [SerializeField]
+        [Tooltip("The acceleration modifier will be applied over this time after input has begun")]
+        private float _accelerateTime = 0.2f;
         
+        [SerializeField] private float _inputDirectionDragModifier = 15.0f;
 
-        [SerializeField] private float _brakeStrength = 50;
-        [SerializeField] private PhysicMaterial _brakePhysicsMaterial;
-
-        [SerializeField] private float _defaultBrakeStrength = 1;
-        [SerializeField] private PhysicMaterial _defaultBrakePhysicsMaterial;
-        [SerializeField] private float _brakeApplyTime = 0.5f;
-
-        [SerializeField] private bool isBrakeOn = false;
-        private Coroutine _applyBrakesRoutine;
-
-        public bool UseResponsiveMovement = true;
         //--Auto Properties
         [SerializeField] private float _groundedBufferSeconds = 0.075f;
         private Coroutine _groundedFalseBufferRoutine;
@@ -67,7 +88,21 @@ namespace ScottEwing.PhysicsPlayerController{
         private bool _jumped;
         private Rigidbody PlayerRigidbody { get; set; }
 
-        //--Private 
+        //-----------------Private--------------------- 
+
+        //--Brake / Auto Brake
+        private bool _isAutoBrakeOn;
+        private bool _isBrakeOn = false;
+        private float _defaultBrakeStrength = 1;
+        private PhysicMaterial _defaultBrakePhysicsMaterial;
+        private Coroutine _applyBrakesRoutine;
+
+        //--Responsive Movement
+        [SerializeField] private float _accelerationModifier = 1.0f;
+        private float _inputDirectionModifier = 1.0f;
+        private Coroutine _accelerationRoutine;
+
+
         private float _defaultDrag = 0.1f;
         private bool _isStillInTheAir; // True if the ball is in the air and was also in the air in the previous frame. (Except first frame in air)
         private bool _hasGroundCheckBeenDoneThisFrame; // keeps track of whether ground check has already been done
@@ -76,41 +111,30 @@ namespace ScottEwing.PhysicsPlayerController{
         private Collider _playerCollider; // the collider attached to the player used to check if player is grounded
         private PlayerInputHandler _playerInputHandler;
 
-        [SerializeField] AnimationCurve _accelerationCurve;
-        private float _accelerationModifier = 1.0f;
-        [SerializeField] AnimationCurve _inputDirectionCurve;
-        private float _inputDirectionModifier = 1.0f;
-
-        private void Awake() {
-            
-        }
 
         void Start() {
             PlayerRigidbody = GetComponent<Rigidbody>();
             _playerCollider = GetComponent<Collider>();
             _defaultDrag = PlayerRigidbody.drag;
             _playerInputHandler = GetComponentInParent<PlayerInputHandler>();
-            _playerInputHandler.jump += DoJump;
+            _playerInputHandler.jump += Jump;
 
             _playerInputHandler.brakeOn += BreakOn;
             _playerInputHandler.brakeOff += OnBrakeOff;
-            
+
             _defaultBrakeStrength = PlayerRigidbody.angularDrag;
             _defaultBrakePhysicsMaterial = _playerCollider.material;
             PlayerRigidbody.maxAngularVelocity = maxAngularVelocity;
-
-            
         }
 
         private void OnDestroy() {
-            _playerInputHandler.jump -= DoJump;
+            _playerInputHandler.jump -= Jump;
             _playerInputHandler.brakeOn -= BreakOn;
             _playerInputHandler.brakeOff -= OnBrakeOff;
         }
 
         void FixedUpdate() {
             if (IsGrounded) {
-                // Regular movement
                 PlayerRigidbody.drag = _defaultDrag;
                 Movement();
             }
@@ -131,7 +155,7 @@ namespace ScottEwing.PhysicsPlayerController{
             _hasGroundCheckBeenDoneThisFrame = false;
         }
 
-        public void DoJump() {
+        public void Jump() {
             Vector3 jumpDirection = GetMovementVectorAdjustedForCamera() * jumpInputDirectionScale;
             //jumpDirection += parallelToGroundTransform.TransformDirection(Vector3.up); // jump in direction of slope
             jumpDirection += Vector3.up; // simple vertical jump
@@ -143,42 +167,15 @@ namespace ScottEwing.PhysicsPlayerController{
         }
 
         void Movement() {
-            //PlayerRigidbody.maxAngularVelocity = maxAngularVelocity;
-            if (!IsGrounded && !hasAirControl) return;
-            
-            // if not in the air (has Air Control is probably redundant here as should get here while ball is in air)
-            //--Version A: This will result in the player getting a force that goes up any slope it is on (i.e will have a Y component to force)
-            //Vector3 movementVector = parallelToGroundTransform.TransformDirection(movementVector);
-
+            if (!IsGrounded) return;
             Vector3 movementVector = GetMovementVectorAdjustedForCamera();
-                
-            //-- Set Responsive Movement Modifiers
+            HandleAutoBreak(movementVector);
             SetResponsiveMovementModifiers(movementVector);
-            
-            
-            //--Version B: This will result in the player only getting a force on the XZ axis. 
-            Vector3 force = movementVector * (speed * Time.deltaTime) * _accelerationModifier * _inputDirectionModifier;
-            if (!_onlyLimitControllerVelocity) {
-                PlayerRigidbody.AddForce(force);
-                PlayerRigidbody.velocity = Vector3.ClampMagnitude(PlayerRigidbody.velocity, maxVelocity);
-            }
-            else if (PlayerRigidbody.velocity.magnitude < maxVelocity) {
-                PlayerRigidbody.AddForce(force);
-                //ClampVelocityDueToInputMagnitude();
-                if (_autoBrake && !isBrakeOn) {
-                    if (movementVector.magnitude == 0) {
-                        if (!isBrakeOn) {
-                            AutoBreakOn();
-                        }
-                    }
-                    else 
-                        AutoBrakeOff();
-                }
-            }
+            ApplyMovementForce(movementVector);
         }
-        
+
         void SetResponsiveMovementModifiers(Vector3 movementVector) {
-            if (UseResponsiveMovement) {
+            if (_useResponsiveMovement) {
                 SetAccelerationModifier(movementVector);
                 SetInputDirectionModifier(movementVector);
             }
@@ -188,11 +185,31 @@ namespace ScottEwing.PhysicsPlayerController{
             }
         }
 
+        void ApplyMovementForce(Vector3 movementVector) {
+            if (PlayerRigidbody.velocity.magnitude < maxVelocity) {
+                print(speed);
+                Vector3 force = movementVector * speed * _accelerationModifier * _inputDirectionModifier;
+                PlayerRigidbody.AddForce(force);
+            }
+
+            if (clampVelocityMagnitude)
+                PlayerRigidbody.velocity = Vector3.ClampMagnitude(PlayerRigidbody.velocity, maxVelocity);
+        }
+
+        private void HandleAutoBreak(Vector3 movementVector) {
+            if (!_useAutoBrake || _isBrakeOn) return;
+            if (movementVector.magnitude == 0 && !_isBrakeOn) {
+                AutoBreakOn();
+            }
+            else if (movementVector.magnitude != 0)
+                AutoBrakeOff();
+        }
+
         private float prevSqrVelocityMagnitude;
-        [SerializeField] private bool acceleration = false;
+
         private Vector3 prevMovementVector;
         /*private void SetAccelerationModifier(Vector3 movementVector) {
-            
+
             if (prevSqrVelocityMagnitude <= PlayerRigidbody.velocity.sqrMagnitude) {
                 acceleration = true;
                 _accelerationModifier = _accelerationCurve.Evaluate(PlayerRigidbody.velocity.magnitude);
@@ -202,46 +219,68 @@ namespace ScottEwing.PhysicsPlayerController{
             }
             prevSqrVelocityMagnitude = PlayerRigidbody.velocity.sqrMagnitude;
         }*/
-        
-        [SerializeField] float accelerateTime = 0.2f;
-        Coroutine _accelerationRoutine;
+
+
         private void SetAccelerationModifier(Vector3 movementVector) {
-            
             if (movementVector.magnitude == 0) {
                 prevMovementVector = Vector3.zero;
                 return;
             }
-            if (prevMovementVector.magnitude > 0 ) {
+
+            if (prevMovementVector.magnitude > 0) {
                 prevMovementVector = movementVector;
                 return;
             }
+
+            if (movementVector.magnitude < 0.5f) {
+                _accelerationModifier = 1.0f;
+                return;
+            }
+
             prevMovementVector = movementVector;
 
             if (_accelerationRoutine != null) {
-                //return;
                 StopCoroutine(_accelerationRoutine);
                 _accelerationRoutine = null;
             }
+
             _accelerationRoutine = StartCoroutine(AccelerateRoutine());
 
             IEnumerator AccelerateRoutine() {
                 var time = 0.0f;
-                
-                while (time < accelerateTime) {
+
+                while (time < _accelerateTime) {
                     time += Time.fixedDeltaTime;
                     _accelerationModifier = _accelerationCurve.Evaluate(PlayerRigidbody.velocity.magnitude);
-                    print("Accelerate");
                     yield return new WaitForFixedUpdate();
                 }
-                _accelerationModifier = _accelerationCurve.Evaluate(PlayerRigidbody.velocity.magnitude);
+
+                _accelerationModifier = 1.0f;
                 _accelerationRoutine = null;
             }
         }
 
         private void SetInputDirectionModifier(Vector3 movementVector) {
+            if (_isBrakeOn) {
+                return;
+            }
+            if (movementVector.magnitude == 0) {
+                _inputDirectionModifier = 1.0f;
+                return;
+            }
             Vector2 inputDirection = new Vector2(movementVector.x, movementVector.z);
             Vector2 velocityDirection = new Vector2(PlayerRigidbody.velocity.x, PlayerRigidbody.velocity.z);
-            _inputDirectionModifier = _inputDirectionCurve.Evaluate(Vector2.Dot(inputDirection.normalized, velocityDirection.normalized));
+            float dot = Vector2.Dot(inputDirection.normalized, velocityDirection.normalized);
+            //print(dot);
+            if (dot < 0.25) {
+                PlayerRigidbody.angularDrag = _inputDirectionDragModifier;
+            }
+            else {
+                PlayerRigidbody.angularDrag = _defaultBrakeStrength;
+                
+            }
+            //_inputDirectionModifier = _inputDirectionCurve.Evaluate(Vector2.Dot(inputDirection.normalized, velocityDirection.normalized));
+            //print(_inputDirectionModifier);
         }
         /*[SerializeField] float minVelocity = 0.1f;
         [SerializeField] float magnitudeOneVelocity = 1f;
@@ -257,12 +296,12 @@ namespace ScottEwing.PhysicsPlayerController{
 
         private void BreakOn() {
             if (!_useBrake) return;
-            if (_toggleBrake && isBrakeOn) {
+            if (_toggleBrake && _isBrakeOn) {
                 BrakeOff();
                 return;
             }
 
-            isBrakeOn = true;
+            _isBrakeOn = true;
             _playerCollider.material = _brakePhysicsMaterial;
             _applyBrakesRoutine = StartCoroutine(ApplyBrakes());
 
@@ -275,18 +314,18 @@ namespace ScottEwing.PhysicsPlayerController{
                     yield return null;
                     time += Time.fixedDeltaTime;
                 }
+
                 PlayerRigidbody.angularDrag = _brakeStrength;
             }
         }
 
         public void AutoBreakOn() {
-            _autoBrakeOn = true;
+            print("Auto Break On");
+            _isAutoBrakeOn = true;
             _playerCollider.material = _brakePhysicsMaterial;
             PlayerRigidbody.angularDrag = _autoBrakeStrength;
         }
 
-
-        
 
         //----------------------------------------------
         //--Brake Off
@@ -294,24 +333,25 @@ namespace ScottEwing.PhysicsPlayerController{
             if (!_useBrake) return;
             if (_toggleBrake) return;
             BrakeOff();
-            if (_autoBrakeOn) 
+            if (_isAutoBrakeOn)
                 AutoBreakOn();
         }
-        
+
         private void BrakeOff() {
-            if (!_useBrake) return;
+            if (!_useBrake && !_useAutoBrake) return;
 
             if (_applyBrakesRoutine != null) {
                 StopCoroutine(_applyBrakesRoutine);
                 _applyBrakesRoutine = null;
             }
-            isBrakeOn = false;
+
+            _isBrakeOn = false;
             PlayerRigidbody.angularDrag = _defaultBrakeStrength;
             _playerCollider.material = _defaultBrakePhysicsMaterial;
         }
-        
+
         private void AutoBrakeOff() {
-            _autoBrakeOn = false;
+            _isAutoBrakeOn = false;
             BrakeOff();
         }
 
@@ -327,7 +367,7 @@ namespace ScottEwing.PhysicsPlayerController{
                 // Ball can maintain speed it had when it went into air and speed up to a minimum speed
                 if (currentVelocityXZ.sqrMagnitude > startVelocityXZ.sqrMagnitude && currentVelocityXZ.magnitude > defaultAirVelocityMagnitude) {
                     //print("Velocity Clamped");
-                    PlayerRigidbody.AddForce(-movementVector * (inAirSpeed * Time.deltaTime));
+                    PlayerRigidbody.AddForce(-movementVector * (inAirSpeed));
                 }
             }
         }
@@ -356,6 +396,7 @@ namespace ScottEwing.PhysicsPlayerController{
                 if (_groundedFalseBufferRoutine != null) {
                     StopCoroutine(_groundedFalseBufferRoutine);
                 }
+
                 _groundedFalseBufferRoutine = StartCoroutine(GroundedFalseBufferRoutine());
                 //IsGrounded = false;
             }
