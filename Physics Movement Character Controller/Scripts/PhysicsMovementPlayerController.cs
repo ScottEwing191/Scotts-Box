@@ -2,7 +2,7 @@
 using ScottEwing.ExtensionMethods;
 
 #if ODIN_INSPECTOR
-using Sirenix.OdinInspector;
+    using Sirenix.OdinInspector;
 #elif NAUGHTY_ATTRIBUTES
     using NaughtyAttributes;
 #endif
@@ -44,42 +44,49 @@ namespace ScottEwing.PhysicsPlayerController{
         [Tooltip("this is the velocity the ball will be able to get up to if jumping from a stand still")] [SerializeField]
         private float defaultAirVelocityMagnitude = 3f;
 
-        [FoldoutGroup("Brake")]
+        [BoxGroup("Brake")]
         [SerializeField] private bool _useBrake = true;
 
-        [ShowIf(nameof(_useBrake))] [FoldoutGroup("Brake")] [SerializeField]
+        [ShowIf(nameof(_useBrake))] [BoxGroup("Brake")] [SerializeField]
         public bool _toggleBrake = false;
 
-        [ShowIf(nameof(_useBrake))] [FoldoutGroup("Brake")] [SerializeField]
+        [ShowIf(nameof(_useBrake))] [BoxGroup("Brake")] [SerializeField]
         private float _brakeStrength = 50;
 
-        [ShowIf(nameof(_useBrake))] [FoldoutGroup("Brake")] [SerializeField]
+        [ShowIf(nameof(_useBrake))] [BoxGroup("Brake")] [SerializeField]
         private float _brakeApplyTime = 0.5f;
 
-        [ShowIf(nameof(_useBrake))] [FoldoutGroup("Brake")] [SerializeField]
+        [ShowIf(nameof(_useBrake))] [BoxGroup("Brake")] [SerializeField]
         private PhysicMaterial _brakePhysicsMaterial;
 
-        [FoldoutGroup("Auto Brake")] [SerializeField]
+        [BoxGroup("Auto Brake")] [SerializeField]
         [Tooltip("If true the brake will be applied automatically when the player is not moving. If false the brake will only be applied when the player presses the brake button")]
         public bool _useAutoBrake = false;
 
-        [ShowIf(nameof(_useAutoBrake))] [FoldoutGroup("Auto Brake")] [SerializeField]
+        [ShowIf(nameof(_useAutoBrake))] [BoxGroup("Auto Brake")] [SerializeField]
         private float _autoBrakeStrength = 10.0f;
 
-        [FoldoutGroup("Responsive Movement")]
+        [BoxGroup("Responsive Movement")]
         public bool _useResponsiveMovement = true;
 
-        [ShowIf(nameof(_useResponsiveMovement))] [FoldoutGroup("Responsive Movement")] [SerializeField]
+        [ShowIf(nameof(_useResponsiveMovement))] [BoxGroup("Responsive Movement")] [SerializeField]
         private AnimationCurve _accelerationCurve;
 
-        [ShowIf(nameof(_useResponsiveMovement))] [FoldoutGroup("Responsive Movement")] [SerializeField]
-        private AnimationCurve _inputDirectionCurve;
-
-        [ShowIf(nameof(_useResponsiveMovement))] [FoldoutGroup("Responsive Movement")] [SerializeField]
+        [ShowIf(nameof(_useResponsiveMovement))] [BoxGroup("Responsive Movement")] [SerializeField]
         [Tooltip("The acceleration modifier will be applied over this time after input has begun")]
         private float _accelerateTime = 0.2f;
-        
-        [SerializeField] private float _inputDirectionDragModifier = 15.0f;
+
+        [ShowIf(nameof(_useResponsiveMovement))] [BoxGroup("Responsive Movement")] [SerializeField]
+        private AnimationCurve _inputDirectionCurve;
+
+        [ShowIf(nameof(_useResponsiveMovement))] [BoxGroup("Responsive Movement")] [SerializeField]
+        [Tooltip("When the Dot product between the input vector and the movement vector is less than this value the angular drag will be increased to make the ball turn faster")]
+        private float _inputVectorMovementVectorDotTarget = 0.25f;
+
+        [ShowIf(nameof(_useResponsiveMovement))] [BoxGroup("Responsive Movement")] [SerializeField]
+        private float _inputDirectionDragModifier = 15.0f;
+
+
 
         //--Auto Properties
         [SerializeField] private float _groundedBufferSeconds = 0.075f;
@@ -98,7 +105,7 @@ namespace ScottEwing.PhysicsPlayerController{
         private Coroutine _applyBrakesRoutine;
 
         //--Responsive Movement
-        [SerializeField] private float _accelerationModifier = 1.0f;
+        private float _accelerationModifier = 1.0f;
         private float _inputDirectionModifier = 1.0f;
         private Coroutine _accelerationRoutine;
 
@@ -187,7 +194,6 @@ namespace ScottEwing.PhysicsPlayerController{
 
         void ApplyMovementForce(Vector3 movementVector) {
             if (PlayerRigidbody.velocity.magnitude < maxVelocity) {
-                print(speed);
                 Vector3 force = movementVector * speed * _accelerationModifier * _inputDirectionModifier;
                 PlayerRigidbody.AddForce(force);
             }
@@ -208,6 +214,7 @@ namespace ScottEwing.PhysicsPlayerController{
         private float prevSqrVelocityMagnitude;
 
         private Vector3 prevMovementVector;
+
         /*private void SetAccelerationModifier(Vector3 movementVector) {
 
             if (prevSqrVelocityMagnitude <= PlayerRigidbody.velocity.sqrMagnitude) {
@@ -264,23 +271,16 @@ namespace ScottEwing.PhysicsPlayerController{
             if (_isBrakeOn) {
                 return;
             }
+
             if (movementVector.magnitude == 0) {
                 _inputDirectionModifier = 1.0f;
                 return;
             }
+
             Vector2 inputDirection = new Vector2(movementVector.x, movementVector.z);
             Vector2 velocityDirection = new Vector2(PlayerRigidbody.velocity.x, PlayerRigidbody.velocity.z);
             float dot = Vector2.Dot(inputDirection.normalized, velocityDirection.normalized);
-            //print(dot);
-            if (dot < 0.25) {
-                PlayerRigidbody.angularDrag = _inputDirectionDragModifier;
-            }
-            else {
-                PlayerRigidbody.angularDrag = _defaultBrakeStrength;
-                
-            }
-            //_inputDirectionModifier = _inputDirectionCurve.Evaluate(Vector2.Dot(inputDirection.normalized, velocityDirection.normalized));
-            //print(_inputDirectionModifier);
+            PlayerRigidbody.angularDrag = dot < _inputVectorMovementVectorDotTarget ? _inputDirectionDragModifier : _defaultBrakeStrength;
         }
         /*[SerializeField] float minVelocity = 0.1f;
         [SerializeField] float magnitudeOneVelocity = 1f;
@@ -320,7 +320,6 @@ namespace ScottEwing.PhysicsPlayerController{
         }
 
         public void AutoBreakOn() {
-            print("Auto Break On");
             _isAutoBrakeOn = true;
             _playerCollider.material = _brakePhysicsMaterial;
             PlayerRigidbody.angularDrag = _autoBrakeStrength;
@@ -360,7 +359,7 @@ namespace ScottEwing.PhysicsPlayerController{
             if (hasAirControl) {
                 var movementVector = GetMovementVectorAdjustedForCamera();
                 // only move ball if not in leap mode
-                PlayerRigidbody.AddForce(movementVector * (inAirSpeed * Time.deltaTime));
+                PlayerRigidbody.AddForce(movementVector * (inAirSpeed));
 
                 // Check if velocity has increased and undo it if it has
                 Vector2 currentVelocityXZ = new Vector2(PlayerRigidbody.velocity.x, PlayerRigidbody.velocity.z);
