@@ -53,7 +53,7 @@ namespace ScottEwing{
 
         // If no other monobehaviour request the instance in an awake function
         // executing before this one, no need to search the object.
-        private void Awake() {
+        protected virtual void Awake() {
             if (_instance == null) {
                 _instance = this as T;
             }
