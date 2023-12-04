@@ -30,6 +30,10 @@ namespace ScottEwing{
         [HideIf("_useStartOffset")]
         [SerializeField] private Vector3 _offsetPosition;
 
+        public bool IsFollowing { get; set; } = true;
+        public void StopFollowing() => IsFollowing = false;
+        public void StartFollowing() => IsFollowing = true;
+
         private void Start() {
             transform.rotation.ToAngleAxis(out float angle, out Vector3 axis);
             //-- This seams to work for child/non child followers as long as the start with the same (world) rotation as the target
@@ -64,6 +68,8 @@ namespace ScottEwing{
 
         [Button]
         private void Follow() {
+            if (!IsFollowing) return;
+            
             if (PositionTarget) {
                 SetPosition();
             }
