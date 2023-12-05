@@ -35,7 +35,7 @@ namespace ScottEwing.PhysicsPlayerController{
         }
 
 
-        void Update() {
+        void LateUpdate() {
             // Horizontal Movement
             transform.position = _player.transform.position;
             //float horizontalMovement = _playerInputs.HorizontalCameraMovement;

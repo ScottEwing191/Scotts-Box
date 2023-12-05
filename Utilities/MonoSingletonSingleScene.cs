@@ -1,21 +1,7 @@
-using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-
-//=== This Code comes from https://gist.github.com/onevcat/6025819
-
-/// <summary>
-/// Mono singleton Class. Extend this class to make singleton component.
-/// Example: 
-/// <code>
-/// public class Foo : MonoSingleton<Foo>
-/// </code>. To get the instance of Foo class, use <code>Foo.instance</code>
-/// Override <code>Init()</code> method instead of using <code>Awake()</code>
-/// from this class.
-/// </summary>
+﻿using UnityEngine;
 
 namespace ScottEwing{
-    public abstract class NewMonoSingleton<T> : MonoBehaviour where T : NewMonoSingleton<T>{
+    public class MonoSingletonSingleScene<T> : MonoBehaviour where T :MonoSingletonSingleScene<T>{
         private static T _instance = null;
 
         public static T Instance {
@@ -53,7 +39,7 @@ namespace ScottEwing{
 
         // If no other monobehaviour request the instance in an awake function
         // executing before this one, no need to search the object.
-        protected virtual void Awake() {
+        private void Awake() {
             if (_instance == null) {
                 _instance = this as T;
             }
@@ -64,7 +50,7 @@ namespace ScottEwing{
             }
 
             if (!_isInitialized) {
-                DontDestroyOnLoad(gameObject);
+                //DontDestroyOnLoad(gameObject);
                 _isInitialized = true;
                 _instance.Init();
             }
