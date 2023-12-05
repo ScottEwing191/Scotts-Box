@@ -74,6 +74,18 @@ namespace ScottEwing.Input
         }
 
         private void LateUpdate() => ResetBeenChecked(_playerInput);
+        
+        public void DisableActionMap() {
+            if (_actionMap != null) {
+                _actionMap.Disable();
+            }
+        }
+        
+        public void EnableActionMap() {
+            if (_actionMap != null) {
+                _actionMap.Enable();
+            }
+        }
 
 #if SE_EVENTSYSTEM
         private void DisableActionMapOnPause(GamePausedEvent obj) {
