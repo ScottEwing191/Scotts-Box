@@ -18,5 +18,10 @@ namespace ScottEwing.Helpers
             WaitDictionary[time] = new WaitForSeconds(time);
             return WaitDictionary[time];
         }
+        
+        public static IEnumerator WaitOneFrame(Action nullRoutine) {
+            yield return null;
+            nullRoutine?.Invoke();
+        }
     }
 }

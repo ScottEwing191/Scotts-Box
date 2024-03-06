@@ -1,4 +1,6 @@
+using PlasticGui.WorkspaceWindow;
 using ScottEwing.Triggers;
+using System;
 using UnityEngine;
 #if ODIN_INSPECTOR
 using Sirenix.OdinInspector;
@@ -40,12 +42,15 @@ namespace ScottEwing.Checkpoints{
                  "UseCheckpointRespawnTransform: When checkpoint is reached, use the respawn transform provided by the checkpoint as the respawn position / rotation")]
         [SerializeField] protected UpdateRespawnTransformType _updateRespawnTransformType = UpdateRespawnTransformType.UseCurrentTransform;
 
+        public Action Respawned { get; set; }
 
         private Vector3 _respawnPosition;
         private Quaternion _respawnRotation;
         private Vector3 _respawnVelocity;
         private Vector3 _respawnAngularVelocity;
         private Rigidbody _rb;
+        
+        public Rigidbody AttachedRigidBody => _rb;
 
         private void Awake() {
             _rb = GetComponent<Rigidbody>();
@@ -134,6 +139,8 @@ namespace ScottEwing.Checkpoints{
                 _rb.velocity = Vector3.zero;
                 _rb.angularVelocity = Vector3.zero;
             }
+            
+            Respawned?.Invoke();
         }
     }
 }
