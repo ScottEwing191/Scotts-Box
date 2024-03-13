@@ -5,8 +5,12 @@ using UnityEngine.InputSystem;
 
 namespace ScottEwing.Input.DynamicInputIcons{
     
+    [Flags]
     public enum ControllerInputTypes{
-        KeyboardMouse, PS4Controller, XboxController, PS5Controller
+        KeyboardMouse,
+        PS4Controller, 
+        XboxController, 
+        PS5Controller
     }
     
     public class PlayerInputIcons : MonoBehaviour{

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
 #if ODIN_INSPECTOR
 using Sirenix.OdinInspector;
 #else
@@ -17,12 +18,35 @@ namespace ScottEwing.Input.DynamicInputIcons{
             public ControllerInputTypes _key;
             public InputActionReference _value;
         }
+        
+        [Serializable]
+        private class InputDeviceScalePair{
+            public ControllerInputTypes _inputType;
+            public float _scale = 1.0f;
+        }
+        
+        [Serializable]
+        private class InputDeviceIsCompositePair{
+            public ControllerInputTypes _inputDevice;
+            public bool _isPartOfComposite;
+        }
+        
+
+        private enum CompositeType{
+            Positive,
+            Negative,
+            Up,
+            Down,
+            Left,
+            Right,
+        }
+        
 
         [SerializeField] private bool _assignActionPerControlType;
 
 
         [HideIf("_assignActionPerControlType")]
-        [SerializeField] private InputActionReference _actionReference;
+        [SerializeField] protected InputActionReference _actionReference;
 
         public InputActionReference ActionReference {
             get => _actionReference;
@@ -32,6 +56,25 @@ namespace ScottEwing.Input.DynamicInputIcons{
         [ShowIf("_assignActionPerControlType")]
         [SerializeField] private List<KeyValuePair> _controlTypeActions = new List<KeyValuePair>();
 
+        [SerializeField] private bool _specifyScale;
+        [ShowIf("_specifyScale")]
+        [SerializeField] private List<InputDeviceScalePair> _inputTypeScale;
+
+        [SerializeField] private bool _textNotImage;
+        [ShowIf("_textNotImage")]
+        [SerializeField] private TextMeshProUGUI _text;
+
+        [Space]
+        [Header("Composite Bindings")]
+        [SerializeField] private bool _usingCompositeBindings;
+        [ShowIf("_isPartOfComposite")]
+        [SerializeField] private CompositeType _compositeType;
+        [ShowIf("_isPartOfComposite")]
+        [SerializeField] private List<InputDeviceIsCompositePair> _inputDeviceIsComposite;
+        
+        
+        
+        
         //public Dictionary<ControllerInputTypes, InputActionReference> controlTypeActions = new Dictionary<ControllerInputTypes, InputActionReference>();
 
         [SerializeField] private InputIconsSprites _keyboardIcons;
@@ -45,6 +88,15 @@ namespace ScottEwing.Input.DynamicInputIcons{
         [Tooltip("This is the control type which will be used in the editor. Does not effect the icon used when the game is run")]
         [SerializeField] private ControllerInputTypes _editorType = ControllerInputTypes.KeyboardMouse;
 
+
+        private Dictionary<CompositeType, string> _compositeTypeNames = new Dictionary<CompositeType, string> {
+            {CompositeType.Positive, "positive"},
+            {CompositeType.Negative, "negative"},
+            {CompositeType.Up, "up"},
+            {CompositeType.Down, "down"},
+            {CompositeType.Left, "left"},
+            {CompositeType.Right, "right"},
+        };
 
         [Button]
         public void SetIconInEditor() {
@@ -68,27 +120,49 @@ namespace ScottEwing.Input.DynamicInputIcons{
         /// is using given the current controller type. If an action reference is not found then disable the game object. 
         /// </summary>
         public void SetImageSprite(ControllerInputTypes types, InputBinding mask) {
+            if (_text) {
+                _text.gameObject.SetActive(false);
+            }
             _image.enabled = true;
 
+            
             var actionReference = GetActionReference(types);
             if (actionReference == null) {
-                //gameObject.SetActive(false);
-                //_image.sprite = null;
                 _image.enabled = false;
                 return;
             }
 
+            
+            
+            
             var displayStringOptions = InputBinding.DisplayStringOptions.DontIncludeInteractions;
-            var bindingIndex = actionReference.action.GetBindingIndex(mask);
+
+            int bindingIndex = -1;
+            
+            
+            if (_usingCompositeBindings && ) {
+                if (_inputDeviceIsComposite. Find(pair => pair._inputDevice == types)._isPartOfComposite) {
+                    
+                }
+                
+                bindingIndex = GetCompositeBindingIndex(actionReference.action, mask, _compositeType);
+            }
+            else {
+                bindingIndex = actionReference.action.GetBindingIndex(mask);
+            }
+            
+            //var bindingIndex = actionReference.action.GetBindingIndex(mask);
             if (bindingIndex == -1) {
-                //gameObject.SetActive(false);
-                //_image.sprite = null;
                 _image.enabled = false;
                 return;
             }
 
             var bindingDisplay = actionReference.action.GetBindingDisplayString(bindingIndex, out var deviceLayoutName, out var controlPath, displayStringOptions);
 
+            if (_textNotImage) {
+                SetTextNotImage(bindingDisplay);
+                return;
+            }
             _image.sprite = types switch {
                 ControllerInputTypes.KeyboardMouse => _keyboardIcons.GetSprite(controlPath),
                 ControllerInputTypes.PS4Controller => _ps4Icons.GetSprite(controlPath),
@@ -97,7 +171,23 @@ namespace ScottEwing.Input.DynamicInputIcons{
 
                 _ => throw new ArgumentOutOfRangeException(nameof(types), types, null)
             };
+
+
+            //-- Set the scale of the image
+            if (_specifyScale) {
+                var scale = _inputTypeScale.Find(pair => pair._inputType == types)._scale;
+                _image.rectTransform.localScale = Vector3.one * scale;
+            }
+
+            
         }
+
+        private void SetTextNotImage(string text) {
+            _image.enabled = false;
+            _text.SetText("" + text + "");
+            _text.gameObject.SetActive(true);
+        }
+
 
         private InputActionReference GetActionReference(ControllerInputTypes types) {
             if (!_assignActionPerControlType) {
@@ -113,5 +203,24 @@ namespace ScottEwing.Input.DynamicInputIcons{
             return null;
             //return controlTypeActions.ContainsKey(types) ? controlTypeActions[types] : null;
         }
+        
+        
+        private int GetCompositeBindingIndex(InputAction action, InputBinding bindingMask, CompositeType direction)
+        {
+            if (action == null)
+                throw new ArgumentNullException(nameof(action));
+
+            var bindings = action.bindings;
+            for (var i = 0; i < bindings.Count; ++i)
+                if (bindingMask.Matches(bindings[i])) {
+                    Debug.Log(bindings[i].name);
+                    if (_compositeTypeNames.TryGetValue(direction,  out var compositeName) && compositeName == bindings[i].name) {
+                        return i;
+                    }
+                }
+
+            return -1;
+        }
+        
     }
 }

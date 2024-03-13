@@ -26,18 +26,13 @@ namespace ScottEwing.Input
                 _playerInput = GetComponentInParent<PlayerInput>();
             }
         }
-
+        
         protected virtual void OnEnable() {
-            //OnControlSchemeChanged += OnControlsChanged;
             controlsChanged[_playerInput].OnControlSchemeChanged += OnControlsChanged;
-
-
         }
 
         protected virtual void OnDisable() {
-            //OnControlSchemeChanged += OnControlsChanged;
             controlsChanged[_playerInput].OnControlSchemeChanged -= OnControlsChanged;
-
         }
         
         private void OnControlsChanged(PlayerInput obj) {
@@ -56,7 +51,20 @@ namespace ScottEwing.Input
             
         }
 
+        //-- If Enter Play Mode Options is ticked in project setting the the Dictionarys' will not be cleared before
+        //-- entering playmode again. This is a workaround to clear the dictionarys' when the application quits and after 
+        //-- any insubscribing happens in On Disable
+        private bool _applicationQuit;
+        private void OnApplicationQuit() {
+            _applicationQuit = true;
+        }
+        
         protected virtual void OnDestroy() {
+            if (_applicationQuit) {
+                inputDictionary.Clear();
+                controlsChanged.Clear();
+            }
+            
 #if SE_EVENTSYSTEM
             EventManager.RemoveListener<GamePausedEvent>(DisableActionMapOnPause);
             EventManager.RemoveListener<GameResumedEvent>(EnableActionMapOnResume);
@@ -65,12 +73,6 @@ namespace ScottEwing.Input
         
         private void Update() {
             CheckIfControlSchemeChanged(_playerInput);
-            /*if (_playerInput.currentControlScheme != _currentControlScheme) {
-                _currentControlScheme = _playerInput.currentControlScheme;
-                OnControlSchemeChanged?.Invoke(_playerInput);
-            }*/
-                
-            
         }
 
         private void LateUpdate() => ResetBeenChecked(_playerInput);
@@ -105,8 +107,8 @@ namespace ScottEwing.Input
         
         #region Static Methods 
         public static T GetActionsAsset<T>(PlayerInput playerInput) where T : IInputActionCollection2 {
-            if (inputDictionary.ContainsKey(playerInput)) {
-                return (T)inputDictionary[playerInput];
+            if (inputDictionary.TryGetValue(playerInput, out var value)) {
+                return (T)value;
             }
             var controls = (T)Activator.CreateInstance(typeof(T));
             inputDictionary.Add(playerInput, controls);

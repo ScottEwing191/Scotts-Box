@@ -15,16 +15,20 @@ namespace ScottEwing.Triggers
         private enum TriggeredBy{
             Tag,
             LayerMask,
-            Either
+            Either,
+            Collider3D
         }
 
         [SerializeField] private TriggeredBy _triggeredBy = TriggeredBy.LayerMask;
         
-        [HideIf("_triggeredBy", TriggeredBy.Tag)]
+        [ShowIf("_triggeredBy", TriggeredBy.LayerMask)]
         [SerializeField] private LayerMask _triggeredByMask = 1;
         
-        [HideIf("_triggeredBy", TriggeredBy.LayerMask )]
+        [ShowIf("_triggeredBy", TriggeredBy.Tag)]
         [SerializeField] protected string _triggeredByTag = "Player";
+
+        [ShowIf("_triggeredBy", TriggeredBy.Collider3D)]
+        [SerializeField] protected Collider _targetCollider;
         
         /// Also checks if trigger is activatable
         public bool IsColliderValid(Collider other, bool isActivatable = true) {
@@ -36,6 +40,7 @@ namespace ScottEwing.Triggers
                 TriggeredBy.Tag => other.CompareTag(_triggeredByTag),
                 TriggeredBy.LayerMask => _triggeredByMask.IsLayerInLayerMask(other.gameObject.layer),
                 TriggeredBy.Either => other.CompareTag(_triggeredByTag) || _triggeredByMask.IsLayerInLayerMask(other.gameObject.layer),
+                TriggeredBy.Collider3D => other == _targetCollider,
                 _ => false
             };
         }
