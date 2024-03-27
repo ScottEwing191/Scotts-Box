@@ -91,22 +91,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 396b02645665e094b8f919f3971b5ce0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _assignActionPerControlType: 0
   _actionReference: {fileID: 8291368723572058841, guid: a0aa763add876264eabd62e57be629c8,
     type: 3}
+  _assignActionPerControlType: 0
   _controlTypeActions: []
-  _specifyScale: 0
-  _inputTypeScale:
-  - _inputType: 0
-    _scale: 1
-  - _inputType: 1
-    _scale: 1
-  - _inputType: 2
-    _scale: 1
-  - _inputType: 3
-    _scale: 1
-  _textNotImage: 0
-  _text: {fileID: 8753311707010060108}
+  _inputTypeScale: []
+  _usingCompositeBindings: 0
+  _compositeType: 0
+  _compositeControlTypes: 
+  _usesTextInsteadOfImage: 
+  _inputText: {fileID: 8753311707010060108}
   _keyboardIcons: {fileID: 11400000, guid: 6f835cba433f48a46af73880d0db4fe2, type: 2}
   _ps4Icons: {fileID: 11400000, guid: 8fe06598492ed304c987ff232a2ea161, type: 2}
   _xboxIcons: {fileID: 11400000, guid: 5eff00b2c6b96d1419e8576763fb21f6, type: 2}
@@ -260,7 +254,7 @@ GameObject:
   - component: {fileID: 4557202546758857513}
   - component: {fileID: 8753311707010060108}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Input Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

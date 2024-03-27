@@ -30,7 +30,7 @@ namespace ScottEwing.Triggers{
             DisableOnTriggered,
             CooldownOnTriggered,
             RemainActive,
-            DisableTriggerComponent
+            NotActivatable
         }
 
         /*private enum TriggeredBy{
@@ -58,6 +58,8 @@ namespace ScottEwing.Triggers{
         [SerializeField] private float _cooldownTime = 2.0f;
 
         [field: SerializeField] protected bool IsActivatable { get; set; } = true;
+        public void SetActivatable(bool activatable) => IsActivatable = activatable;
+        
         [SerializeField] protected bool isDebug;
         [SerializeField] private bool _invokeOnTriggerExitWhenTriggered = false;
         private Coroutine _cooldownRoutine;
@@ -242,8 +244,9 @@ namespace ScottEwing.Triggers{
                 case TriggeredType.CooldownOnTriggered:
                     StartCooldown();
                     break;
-                case TriggeredType.DisableTriggerComponent:
-                    DisableTriggerComponent();
+                case TriggeredType.NotActivatable:
+                    IsActivatable = false;
+                    //DisableTriggerComponent();
                     break;
             }
 
