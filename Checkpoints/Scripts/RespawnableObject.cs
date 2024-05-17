@@ -1,5 +1,3 @@
-using PlasticGui.WorkspaceWindow;
-using ScottEwing.Triggers;
 using System;
 using UnityEngine;
 #if ODIN_INSPECTOR
@@ -51,6 +49,9 @@ namespace ScottEwing.Checkpoints{
         private Rigidbody _rb;
         
         public Rigidbody AttachedRigidBody => _rb;
+        
+        public Vector3 RespawnPosition => _respawnPosition;
+        public Quaternion RespawnRotation => _respawnRotation;
 
         private void Awake() {
             _rb = GetComponent<Rigidbody>();

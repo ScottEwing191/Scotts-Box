@@ -112,10 +112,11 @@ namespace ScottEwing.Input.DynamicInputIcons{
         }
 
         /// <summary>
+        /// NAME SHOULD BE CHANGED TO UPDATE ICON. Dont want to mess up other games using this
         /// Gets the action reference and sets the image to to the sprite which coresponds the the input the the action
         /// is using given the current controller type. If an action reference is not found then disable the game object. 
         /// </summary>
-        public void SetImageSprite(ControllerInputTypes types, InputBinding mask) {
+        public virtual void SetImageSprite(ControllerInputTypes types, InputBinding mask) {
             if (_inputText) {
                 _inputText.gameObject.SetActive(false);
             }

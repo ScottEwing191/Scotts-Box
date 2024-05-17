@@ -11,8 +11,15 @@ using UnityEngine.UI;
 
 namespace ScottEwing
 {
-    public class HoldInputUIIcon : UiInputIcon
-    {
+    public class HoldInputUIIcon : UiInputIcon{
+        
+        
+        [Header("Hold Outline Shape")]
+        [SerializeField] private Sprite _squareSprite;
+        [SerializeField] private Sprite _circleSprite;
+        
+        
+        
         [SerializeField] private Image _filledImage;
         [SerializeField] private UnityEvent _holdComplete;
         
@@ -57,6 +64,21 @@ namespace ScottEwing
                 yield return null;
             }
             
+        }
+
+        public override void SetImageSprite(ControllerInputTypes types, InputBinding mask) {
+            base.SetImageSprite(types, mask);
+
+            switch (types) {
+                case ControllerInputTypes.KeyboardMouse:
+                    _filledImage.sprite = _squareSprite;
+                    break;
+                case ControllerInputTypes.PS4Controller:
+                case ControllerInputTypes.XboxController:
+                case ControllerInputTypes.PS5Controller:
+                    _filledImage.sprite = _circleSprite;
+                    break;
+            }
         }
     }
 }

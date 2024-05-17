@@ -12,6 +12,8 @@ namespace ScottEwing.PhysicsPlayerController{
         public Vector3 movement;
         public Vector2 look;
 
+        
+
     }
     public class PlayerInputHandler : BaseInputHandler{
         public PlayerInputs Inputs { get; set; } = new PlayerInputs();
@@ -26,7 +28,7 @@ namespace ScottEwing.PhysicsPlayerController{
             _actionMap["Jump"].performed += OnJump;
             _actionMap["Move"].performed += OnMove;
             _actionMap["Look"].performed += OnLook;
-            _actionMap["Look"].canceled += context => Inputs.look = Vector2.zero;
+            _actionMap["Look"].canceled += OnLookCancelled;
             _actionMap["Brake"].performed += OnBrake;
             _actionMap["Brake"].canceled += OnBrake;
 
@@ -39,11 +41,15 @@ namespace ScottEwing.PhysicsPlayerController{
             base.Start();
         }
 
+        private void OnLookCancelled(InputAction.CallbackContext context) {
+            Inputs.look = Vector2.zero;
+        }
+
         protected override void OnDestroy() {
             _actionMap["Jump"].performed -= OnJump;
             _actionMap["Move"].performed -= OnMove;
             _actionMap["Look"].performed -= OnLook;
-            _actionMap["Look"].canceled -= context => Inputs.look = Vector2.zero;
+            _actionMap["Look"].canceled -= OnLookCancelled;
             _actionMap["Brake"].performed -= OnBrake;
             _actionMap["Brake"].canceled -= OnBrake;
             
@@ -67,7 +73,6 @@ namespace ScottEwing.PhysicsPlayerController{
         private void OnLook(InputAction.CallbackContext obj) {
             Inputs.look = obj.ReadValue<Vector2>();
             Inputs.look.y *= -1;
-
             //Invert Y Axis if using controller and setting is enabled
             if (_playerInput.currentControlScheme == "Gamepad" && invertControllerYAxis) {
                 Inputs.look.y *= -1;

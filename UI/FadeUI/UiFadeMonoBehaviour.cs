@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -95,9 +96,13 @@ namespace ScottEwing.UI.Fade{
         }
         
         public void FadeIn() => UiFade.FadeIn();
+        public void FadeIn(Action routineFinished) => UiFade.FadeIn(routineFinished: routineFinished);
+
         public void FadeOut() => UiFade.FadeOut();
+        public void FadeOut(Action routineFinished) => UiFade.FadeOut(routineFinished: routineFinished);
+
         public void FadeInAndOut() => UiFade.FadeInAndOut();
-        public void WaitThenFade() => UiFade.WaitThenFade();
+        public void FadeInAndOut(Action fadeOutFinished ) => UiFade.FadeInAndOut(fadeOutFinished:fadeOutFinished);
 
         
     }
