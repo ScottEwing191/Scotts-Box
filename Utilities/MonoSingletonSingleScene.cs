@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 
 namespace ScottEwing{
+    /// <summary>
+    /// This singleton will only exist in the scene it is created in.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class MonoSingletonSingleScene<T> : MonoBehaviour where T :MonoSingletonSingleScene<T>{
         private static T _instance = null;
 
