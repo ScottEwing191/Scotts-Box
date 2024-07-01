@@ -51,11 +51,6 @@ namespace ScottEwing.PhysicsPlayerController{
         private RigidbodyConstraints save;
         private bool on = false;
 
-        private void Update() {
-            if (UnityEngine.Input.GetKeyDown(KeyCode.UpArrow)) {
-                ToggleSpin();
-            }
-        }
 
         void LateUpdate() {
             
