@@ -371,15 +371,32 @@ namespace ScottEwing.PhysicsPlayerController{
             }
         }
 
-        private Vector3 GetMovementVectorAdjustedForCamera() {
+        /*private Vector3 GetMovementVectorAdjustedForCamera() {
             //Vector3 movementVector = _playerInputHandler.MovementVector;
             Vector3 movementVector = _playerInputHandler.Inputs.movement;
 
             movementVector = Camera.main.transform.TransformDirection(movementVector);
             movementVector.Scale(Vector3.right + Vector3.forward); // add force forwards independent of camera pitch (sets y component to 0)
-            return movementVector;
-            //return movementVector.normalized;
+            //return movementVector;
+            return movementVector.normalized;
+        }*/
+        
+        private Vector3 GetMovementVectorAdjustedForCamera() {
+            // Get the movement input from the player
+            Vector3 movementVector = _playerInputHandler.Inputs.movement;
+
+            // Get the y-axis rotation (yaw) of the camera
+            float cameraYaw = Camera.main.transform.eulerAngles.y;
+
+            // Create a new forward direction based on the camera's y-axis rotation
+            Vector3 forward = Quaternion.Euler(0, cameraYaw, 0) * Vector3.forward;
+            Vector3 right = Quaternion.Euler(0, cameraYaw, 0) * Vector3.right;
+
+            // Calculate the adjusted movement vector
+            Vector3 adjustedMovementVector = (movementVector.x * right + movementVector.z * forward);
+            return adjustedMovementVector;
         }
+        
 
         public void StopBall() {
             PlayerRigidbody.AddForce(-PlayerRigidbody.velocity, ForceMode.VelocityChange);
