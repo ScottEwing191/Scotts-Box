@@ -36,10 +36,13 @@ namespace ScottEwing.PhysicsPlayerController{
                 invertControllerYAxis = PlayerPrefs.GetInt("InvertControllerYAxis") == 1;
             }
             
-            EventManager.AddListener<GameResumedEvent>(evt => invertControllerYAxis = evt.invertControllerYAxis);
+            EventManager.AddListener<GameResumedEvent>(OnGameResumedEvent);
+
          
             base.Start();
         }
+
+        
 
         private void OnLookCancelled(InputAction.CallbackContext context) {
             Inputs.look = Vector2.zero;
@@ -53,7 +56,8 @@ namespace ScottEwing.PhysicsPlayerController{
             _actionMap["Brake"].performed -= OnBrake;
             _actionMap["Brake"].canceled -= OnBrake;
             
-            EventManager.RemoveListener<GameResumedEvent>(evt => invertControllerYAxis = evt.invertControllerYAxis);
+            EventManager.RemoveListener<GameResumedEvent>(OnGameResumedEvent);
+            
 
             base.OnDestroy();
 
@@ -110,6 +114,15 @@ namespace ScottEwing.PhysicsPlayerController{
         
         public override void EnableActionMap() {
             base.EnableActionMap();
+        }
+        
+        private void OnGameResumedEvent(GameResumedEvent obj) {
+            invertControllerYAxis = obj.invertControllerYAxis;  // compatible with older way
+            
+            //-- new way of doing this
+            if (PlayerPrefs.HasKey("InvertControllerYAxis")) {
+                invertControllerYAxis = PlayerPrefs.GetInt("InvertControllerYAxis") == 1;
+            }
         }
     }
 }

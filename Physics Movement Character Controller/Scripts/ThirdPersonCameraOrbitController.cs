@@ -33,26 +33,26 @@ namespace ScottEwing.PhysicsPlayerController{
         }
 
         private void Start() {
-            if (PlayerPrefs.HasKey("CameraSensitivity")) {
-                _sensitivity = PlayerPrefs.GetFloat("CameraSensitivity");
-            }
+            SetSensitivity();
 #if SE_EVENTSYSTEM
-            EventManager.AddListener<GameResumedEvent>((evt => _sensitivity = evt.cameraSensitivity));
+            EventManager.AddListener<GameResumedEvent>(OnGameResumed);
 
 #endif
         }
 
         private void OnDestroy() {
 #if SE_EVENTSYSTEM
-            EventManager.RemoveListener<GameResumedEvent>((evt => _sensitivity = evt.cameraSensitivity));
+            EventManager.RemoveListener<GameResumedEvent>(OnGameResumed);
 #endif
         }
+
+        
 
         private RigidbodyConstraints save;
         private bool on = false;
 
         private void Update() {
-            if (UnityEngine.Input.GetKeyDown(KeyCode.L)) {
+            if (UnityEngine.Input.GetKeyDown(KeyCode.UpArrow)) {
                 ToggleSpin();
             }
         }
@@ -76,7 +76,7 @@ namespace ScottEwing.PhysicsPlayerController{
             if (_rotateBody) {
                 body.transform.localRotation = /*_startRotation **/ Quaternion.AngleAxis(_currentYawAngle, Vector3.up);
             }
-            
+            //print(_sensitivity * _pitchRotateSpeed * _playerInputs.Inputs.look.y * Time.deltaTime);
             //--Pitch Rotation
             var pitchAngleDelta = _sensitivity * _pitchRotateSpeed * _playerInputs.Inputs.look.y * Time.deltaTime;
             _currentPitchAngle = Mathf.Clamp(_currentPitchAngle + pitchAngleDelta, _pitchClamp.x, _pitchClamp.y);
@@ -105,5 +105,14 @@ namespace ScottEwing.PhysicsPlayerController{
         void ToggleSpin() {
             spin = !spin;
         }
+
+        private void SetSensitivity() {
+            if (PlayerPrefs.HasKey("CameraSensitivity")) {
+                _sensitivity = PlayerPrefs.GetFloat("CameraSensitivity");
+            }
+        }
+        
+        private void OnGameResumed(GameResumedEvent obj) => SetSensitivity();
+        
     }
 }

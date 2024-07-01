@@ -41,7 +41,8 @@ namespace ScottEwing.Input{
         private void DisableActionMapOnPause(GamePausedEvent obj) {
             _actionMapActiveWhenPaused = _actionMap.enabled;
             if (_actionMap.enabled && _disableOnPause) {
-                _actionMap.Disable();
+                //_actionMap.Disable();
+                DisableActionMap();
             }
         }
 
