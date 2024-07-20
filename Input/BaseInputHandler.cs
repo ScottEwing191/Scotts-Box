@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using ScottEwing.EventSystem;
+using TPUModelerLiteEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -13,6 +15,7 @@ namespace ScottEwing.Input{
         [SerializeField] protected string _actionMapName = "";
         [SerializeField] protected bool _enableActionMapOnStart = true;
         [SerializeField] private bool _disableOnPause = true;
+        [Description("Was the action map active when the game was paused?")]
         private bool _actionMapActiveWhenPaused;
         protected virtual void Awake() {
             _playerInput = GetComponentInParent<PlayerInput>();
