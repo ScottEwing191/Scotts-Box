@@ -1,9 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel;
 using ScottEwing.EventSystem;
-using TPUModelerLiteEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
