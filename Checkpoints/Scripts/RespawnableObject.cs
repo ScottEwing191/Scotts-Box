@@ -34,8 +34,11 @@ namespace ScottEwing.Checkpoints{
         [Tooltip("True: When respawning, velocity is set to value as of when the checkpoint was reached. False: When respawning velocity is set 0.")]
         [SerializeField] private bool _useVelocity;
 
+        [Space]
+        [InfoBox(
+            "If true, the default respawn transform's position / rotation when the object awakes will be used as the respawn position / rotation. If false, the current position / rotation of the transform will be used")]
+        [SerializeField] private bool _useTransformOnAwake = true;
         [SerializeField] private Transform _defaultRespawnTransform;
-
         [Tooltip("UseCurrentTransform: When checkpoint is reached, use the current transform of the object as the respawn position / rotation \n " +
                  "UseCheckpointRespawnTransform: When checkpoint is reached, use the respawn transform provided by the checkpoint as the respawn position / rotation")]
         [SerializeField] protected UpdateRespawnTransformType _updateRespawnTransformType = UpdateRespawnTransformType.UseCurrentTransform;
@@ -56,8 +59,10 @@ namespace ScottEwing.Checkpoints{
         private void Awake() {
             _rb = GetComponent<Rigidbody>();
             var t = _defaultRespawnTransform ? _defaultRespawnTransform : transform;
-            _respawnPosition = t.position;
-            _respawnRotation = t.rotation;
+            if (_useTransformOnAwake) {
+                _respawnPosition = t.position;
+                _respawnRotation = t.rotation;
+            }
             if (_rb != null) {
                 _respawnVelocity = _rb.velocity;
                 _respawnAngularVelocity = _rb.angularVelocity;
@@ -123,8 +128,14 @@ namespace ScottEwing.Checkpoints{
         /// </summary>
         public virtual void Respawn() {
             var t = transform;
-            t.position = _respawnPosition;
-            t.rotation = _respawnRotation;
+            if (_useTransformOnAwake) {
+                t.position = _respawnPosition;
+                t.rotation = _respawnRotation;
+            }
+            else {
+                t.position = _defaultRespawnTransform.position;
+                t.rotation = _defaultRespawnTransform.rotation;
+            }
 #if SE_EVENTSYSTEM
             var evt = new ObjectRespawnedEvent {
                 respawnedObject = gameObject,
