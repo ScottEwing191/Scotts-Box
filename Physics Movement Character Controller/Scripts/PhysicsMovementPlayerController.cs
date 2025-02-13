@@ -98,8 +98,8 @@ namespace ScottEwing.PhysicsPlayerController{
         //-----------------Private--------------------- 
 
         //--Brake / Auto Brake
-        private bool _isAutoBrakeOn;
-        private bool _isBrakeOn = false;
+        [SerializeField] private bool _isAutoBrakeOn;
+        [SerializeField] private bool _isBrakeOn = false;
         private float _defaultBrakeStrength = 1;
         private PhysicMaterial _defaultBrakePhysicsMaterial;
         private Coroutine _applyBrakesRoutine;
@@ -126,7 +126,7 @@ namespace ScottEwing.PhysicsPlayerController{
             _playerInputHandler = GetComponentInParent<PlayerInputHandler>();
             _playerInputHandler.jump += Jump;
 
-            _playerInputHandler.brakeOn += BreakOn;
+            _playerInputHandler.brakeOn += BrakeOn;
             _playerInputHandler.brakeOff += OnBrakeOff;
 
             _defaultBrakeStrength = PlayerRigidbody.angularDrag;
@@ -136,11 +136,13 @@ namespace ScottEwing.PhysicsPlayerController{
 
         private void OnDestroy() {
             _playerInputHandler.jump -= Jump;
-            _playerInputHandler.brakeOn -= BreakOn;
+            _playerInputHandler.brakeOn -= BrakeOn;
             _playerInputHandler.brakeOff -= OnBrakeOff;
         }
 
         void FixedUpdate() {
+            Vector3 movementVector = GetMovementVectorAdjustedForCamera();
+            HandleAutoBreak(movementVector);
             if (IsGrounded) {
                 PlayerRigidbody.drag = _defaultDrag;
                 Movement();
@@ -174,9 +176,9 @@ namespace ScottEwing.PhysicsPlayerController{
         }
 
         void Movement() {
-            if (!IsGrounded) return;
             Vector3 movementVector = GetMovementVectorAdjustedForCamera();
-            HandleAutoBreak(movementVector);
+            //HandleAutoBreak(movementVector);
+            if (!IsGrounded) return;
             SetResponsiveMovementModifiers(movementVector);
             ApplyMovementForce(movementVector);
         }
@@ -204,38 +206,27 @@ namespace ScottEwing.PhysicsPlayerController{
 
         private void HandleAutoBreak(Vector3 movementVector) {
             if (!_useAutoBrake || _isBrakeOn) return;
-            if (movementVector.magnitude == 0 && !_isBrakeOn) {
+            if (movementVector.magnitude == 0 && !_isBrakeOn && !_isAutoBrakeOn && IsGrounded) {
                 AutoBreakOn();
             }
-            else if (movementVector.magnitude != 0)
+            else if (_isAutoBrakeOn && (movementVector.magnitude != 0 || !IsGrounded))
                 AutoBrakeOff();
         }
 
         private float prevSqrVelocityMagnitude;
 
-        private Vector3 prevMovementVector;
+        private Vector3 _prevMovementVector;
 
-        /*private void SetAccelerationModifier(Vector3 movementVector) {
-
-            if (prevSqrVelocityMagnitude <= PlayerRigidbody.velocity.sqrMagnitude) {
-                acceleration = true;
-                _accelerationModifier = _accelerationCurve.Evaluate(PlayerRigidbody.velocity.magnitude);
-            }
-            else {
-                acceleration = false;
-            }
-            prevSqrVelocityMagnitude = PlayerRigidbody.velocity.sqrMagnitude;
-        }*/
 
 
         private void SetAccelerationModifier(Vector3 movementVector) {
             if (movementVector.magnitude == 0) {
-                prevMovementVector = Vector3.zero;
+                _prevMovementVector = Vector3.zero;
                 return;
             }
 
-            if (prevMovementVector.magnitude > 0) {
-                prevMovementVector = movementVector;
+            if (_prevMovementVector.magnitude > 0) {
+                _prevMovementVector = movementVector;
                 return;
             }
 
@@ -244,7 +235,7 @@ namespace ScottEwing.PhysicsPlayerController{
                 return;
             }
 
-            prevMovementVector = movementVector;
+            _prevMovementVector = movementVector;
 
             if (_accelerationRoutine != null) {
                 StopCoroutine(_accelerationRoutine);
@@ -282,19 +273,8 @@ namespace ScottEwing.PhysicsPlayerController{
             float dot = Vector2.Dot(inputDirection.normalized, velocityDirection.normalized);
             PlayerRigidbody.angularDrag = dot < _inputVectorMovementVectorDotTarget ? _inputDirectionDragModifier : _defaultBrakeStrength;
         }
-        /*[SerializeField] float minVelocity = 0.1f;
-        [SerializeField] float magnitudeOneVelocity = 1f;
-        private void ClampVelocityDueToInputMagnitude() {
-                var inputMagnitude = _playerInputHandler.Inputs.movement.magnitude;
-            if (PlayerRigidbody.velocity.magnitude < magnitudeOneVelocity && inputMagnitude > 0) {
-                var movementVector = GetMovementVectorAdjustedForCamera();
-                var velocityMagnitude = Mathf.Lerp(minVelocity, magnitudeOneVelocity, inputMagnitude);
-                PlayerRigidbody.velocity =  movementVector * velocityMagnitude;
 
-            }
-        }*/
-
-        private void BreakOn() {
+        private void BrakeOn() {
             if (!_useBrake) return;
             if (_toggleBrake && _isBrakeOn) {
                 BrakeOff();
@@ -303,26 +283,32 @@ namespace ScottEwing.PhysicsPlayerController{
 
             _isBrakeOn = true;
             _playerCollider.material = _brakePhysicsMaterial;
-            _applyBrakesRoutine = StartCoroutine(ApplyBrakes());
+            _applyBrakesRoutine = StartCoroutine(ApplyBrakes(_brakeStrength));
 
-            IEnumerator ApplyBrakes() {
-                var time = 0.0f;
-                var startDrag = PlayerRigidbody.angularDrag;
-
-                while (time < _brakeApplyTime) {
-                    PlayerRigidbody.angularDrag = Mathf.Lerp(startDrag, _brakeStrength, time / _brakeApplyTime);
-                    yield return null;
-                    time += Time.fixedDeltaTime;
-                }
-
-                PlayerRigidbody.angularDrag = _brakeStrength;
-            }
         }
 
-        public void AutoBreakOn() {
+        private void AutoBreakOn() {
             _isAutoBrakeOn = true;
             _playerCollider.material = _brakePhysicsMaterial;
-            PlayerRigidbody.angularDrag = _autoBrakeStrength;
+            _applyBrakesRoutine = StartCoroutine(ApplyBrakes(_autoBrakeStrength));
+        }
+        
+        IEnumerator ApplyBrakes(float brakeStrength) {
+            var time = 0.0f;
+            var defaultBrakeStrength = _defaultBrakeStrength;
+            var startDrag = PlayerRigidbody.angularDrag;
+
+            // If angular drag is already higher than defaultBrakeStrength, scale down the apply time
+            float timeFactor = startDrag > defaultBrakeStrength ? defaultBrakeStrength / startDrag : 1.0f;
+            float adjustedBrakeApplyTime = _brakeApplyTime * timeFactor;
+            print("Start Drag: " + startDrag);
+            while (time < adjustedBrakeApplyTime) {
+                PlayerRigidbody.angularDrag = Mathf.Lerp(startDrag, brakeStrength, time / adjustedBrakeApplyTime);
+                yield return null;
+                time += Time.fixedDeltaTime;
+            }
+
+            PlayerRigidbody.angularDrag = brakeStrength;
         }
 
 
@@ -331,6 +317,7 @@ namespace ScottEwing.PhysicsPlayerController{
         private void OnBrakeOff() {
             if (!_useBrake) return;
             if (_toggleBrake) return;
+            _isBrakeOn = false;
             BrakeOff();
             if (_isAutoBrakeOn)
                 AutoBreakOn();
@@ -344,7 +331,6 @@ namespace ScottEwing.PhysicsPlayerController{
                 _applyBrakesRoutine = null;
             }
 
-            _isBrakeOn = false;
             PlayerRigidbody.angularDrag = _defaultBrakeStrength;
             _playerCollider.material = _defaultBrakePhysicsMaterial;
         }
