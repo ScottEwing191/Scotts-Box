@@ -98,7 +98,7 @@ MonoBehaviour:
   - _input: leftShift
     _inputIcon: {fileID: 21300000, guid: 461b573649f071b45bbf92d5167b8858, type: 3}
   - _input: scroll
-    _inputIcon: {fileID: 21300000, guid: f8e2ebaa0280d9c4897f14cc89e4271d, type: 3}
+    _inputIcon: {fileID: 21300000, guid: 8698c98c8c40f5a4da6537343a6a97dd, type: 3}
   - _input: delta
     _inputIcon: {fileID: 21300000, guid: 895315c5a0195b24c92c6396461f1305, type: 3}
   - _input: escape
@@ -108,9 +108,9 @@ MonoBehaviour:
   - _input: rightButton
     _inputIcon: {fileID: 21300000, guid: 26383f6d9abe6444f9de827ae2e093a3, type: 3}
   - _input: forwardButton
-    _inputIcon: {fileID: 21300000, guid: eebc9cc52c36f41f2849d2325c077599, type: 3}
+    _inputIcon: {fileID: 21300000, guid: f9aa7d98ae68e304ca918a18a68cee90, type: 3}
   - _input: backButton
-    _inputIcon: {fileID: 21300000, guid: 747b433eff02d4ee3852e2a3080c89fe, type: 3}
+    _inputIcon: {fileID: 21300000, guid: cb572ed51c30a5a43a0b67c441493c51, type: 3}
   - _input: ''''
     _inputIcon: {fileID: 0}
   - _input: '['
