@@ -636,13 +636,15 @@ namespace ScottEwing.PhysicsPlayerController{
             PlayerRigidbody.AddForce(-PlayerRigidbody.velocity, ForceMode.VelocityChange);
             PlayerRigidbody.AddTorque(-PlayerRigidbody.angularVelocity, ForceMode.VelocityChange);
         }
-        
-        public void SetSpeed(float newSpeed) {
-            speed = newSpeed;
+
+        public float Speed {
+            get => speed;
+            set => speed = value;
         }
         
-        public void SetMaxVelocity(float newMaxVelocity) {
-            maxVelocity = newMaxVelocity;
+        public float MaxVelocity {
+            get => maxVelocity;
+            set => maxVelocity = value;
         }
     }
 }
