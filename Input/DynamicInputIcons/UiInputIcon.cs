@@ -120,9 +120,9 @@ namespace ScottEwing.Input.DynamicInputIcons{
                 // Fall back to the default mapping based on the editor type
                 inputBindingMask = _editorType switch {
                     ControllerInputTypes.KeyboardMouse => InputBinding.MaskByGroup("Keyboard&Mouse"),
-                    ControllerInputTypes.PS4Controller => InputBinding.MaskByGroup("GamePad"),
-                    ControllerInputTypes.XboxController => InputBinding.MaskByGroup("GamePad"),
-                    ControllerInputTypes.PS5Controller => InputBinding.MaskByGroup("GamePad"),
+                    ControllerInputTypes.PS4Controller => InputBinding.MaskByGroup("GamePadAlpha"),
+                    ControllerInputTypes.XboxController => InputBinding.MaskByGroup("GamePadAlpha"),
+                    ControllerInputTypes.PS5Controller => InputBinding.MaskByGroup("GamePadAlpha"),
                     _ => throw new ArgumentOutOfRangeException()
                 };
             }
@@ -183,7 +183,7 @@ namespace ScottEwing.Input.DynamicInputIcons{
 
             var actionReference = GetActionReference(types);
             
-            Debug.Log("Interaction: " + actionReference.action.interactions, this);
+            //Debug.Log("Interaction: " + actionReference.action.interactions, this);
             
             if (!actionReference) {
                 //_image.enabled = false;
@@ -292,25 +292,12 @@ namespace ScottEwing.Input.DynamicInputIcons{
             if (string.IsNullOrEmpty(interaction))
                 return;
 
-            _interactionText.SetText(interaction.Split(',')[0]);
+            var text = interaction.Split(',')[0];
+            text = text.Split('(')[0];
+            _interactionText.SetText(text);
             _interactionText.gameObject.SetActive(true);
             
-            /*if (!_interactionTextControlSchemes.Contains(inputBindingMask.groups)) 
-                return;
-            var bindingInteractions = actionReference.action.bindings[bindingIndex].interactions;
-            if (string.IsNullOrEmpty(bindingInteractions)) {
-                bindingInteractions = actionReference.action.interactions;
-            }
-
-            if (string.IsNullOrEmpty(bindingInteractions) ) {
-                return;
-            }
             
-            bindingInteractions = bindingInteractions.Split(',', StringSplitOptions.None)[0];
-            
-            _interactionText.SetText(bindingInteractions);
-            _interactionText.gameObject.SetActive(true);
-            */
             
         }
         
