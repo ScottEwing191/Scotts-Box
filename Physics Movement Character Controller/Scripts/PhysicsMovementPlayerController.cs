@@ -635,6 +635,16 @@ namespace ScottEwing.PhysicsPlayerController{
         public void StopBall() {
             PlayerRigidbody.AddForce(-PlayerRigidbody.velocity, ForceMode.VelocityChange);
             PlayerRigidbody.AddTorque(-PlayerRigidbody.angularVelocity, ForceMode.VelocityChange);
-        }  
+        }
+
+        public float Speed {
+            get => speed;
+            set => speed = value;
+        }
+        
+        public float MaxVelocity {
+            get => maxVelocity;
+            set => maxVelocity = value;
+        }
     }
 }
