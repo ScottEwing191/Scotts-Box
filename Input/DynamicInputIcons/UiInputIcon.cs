@@ -281,6 +281,11 @@ namespace ScottEwing.Input.DynamicInputIcons{
         }
 
         private void SetInteractionText(InputBinding inputBindingMask, InputActionReference actionReference, int bindingIndex) {
+            if (_interactionText == null) {
+                Debug.Log("No Interaction Text Set", this);
+                return;
+                
+            }
             _interactionText.gameObject.SetActive(false);
             
             if (!_interactionTextControlSchemes.Contains(inputBindingMask.groups))

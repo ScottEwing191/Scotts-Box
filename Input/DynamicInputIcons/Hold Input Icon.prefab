@@ -197,12 +197,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _actionReference: {fileID: 0}
+  _noIconFoundBehaviour: 0
   _assignActionPerControlType: 0
   _controlTypeActions: []
   _inputTypeScale: []
   _usingCompositeBindings: 0
   _compositeType: 0
-  _compositeControlTypes: 
+  _nonCompositeControlTypes: 
+  _interactionTextControlSchemes: []
+  _interactionText: {fileID: 6395029885246956209}
   _usesTextInsteadOfImage: 
   _inputText: {fileID: 0}
   _keyboardIcons: {fileID: 11400000, guid: 6f835cba433f48a46af73880d0db4fe2, type: 2}
