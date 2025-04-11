@@ -108,9 +108,11 @@ MonoBehaviour:
   - _input: rightButton
     _inputIcon: {fileID: 21300000, guid: 26383f6d9abe6444f9de827ae2e093a3, type: 3}
   - _input: forwardButton
-    _inputIcon: {fileID: 21300000, guid: f9aa7d98ae68e304ca918a18a68cee90, type: 3}
-  - _input: backButton
     _inputIcon: {fileID: 21300000, guid: cb572ed51c30a5a43a0b67c441493c51, type: 3}
+  - _input: backButton
+    _inputIcon: {fileID: 21300000, guid: f9aa7d98ae68e304ca918a18a68cee90, type: 3}
+  - _input: middleButton
+    _inputIcon: {fileID: 21300000, guid: f8e2ebaa0280d9c4897f14cc89e4271d, type: 3}
   - _input: ''''
     _inputIcon: {fileID: 0}
   - _input: '['
