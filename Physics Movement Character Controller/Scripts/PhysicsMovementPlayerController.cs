@@ -11,117 +11,6 @@ using UnityEngine;
 
 namespace ScottEwing.PhysicsPlayerController{
     public class PhysicsMovementPlayerController : MonoBehaviour{
-        /*//--Serialized Fields
-        [SerializeField] private float speed = 14;
-
-        [Tooltip("If true, this script cannot increase the speed to above the minimum value while grounded, but other things (e.g. explosions) can increase " +
-                 "the speed to above the min velocity while grounded. If false nothing can increase speed above max while grounded")]
-        [SerializeField] private bool clampVelocityMagnitude = false;
-
-        [SerializeField] private float maxVelocity = 9.0f;
-        [SerializeField] private float jumpHeight = 2;
-
-        [Tooltip("Controls the strength the players movement input has on the direction of the players jump. The angle of the ground also affects the direction.")] [Range(0, 1)] [SerializeField]
-        private float jumpInputDirectionScale = 0.1f;
-
-        [SerializeField] private float inAirDrag = 0.5f;
-        [SerializeField] private float inAirSpeed = 4f;
-
-        [Tooltip("The percentage of the ball radius bellow the centre of the ball to use as the groundCheckOffset")] [SerializeField]
-        private float groundCheckOffsetPercentage = 0.457f;
-
-        [SerializeField] private bool hasAirControl = true;
-
-        [Tooltip("Will be grounded if on one of these layers")]
-        [SerializeField] private LayerMask _jumpLayers;
-
-        [Tooltip("A transform whose forward vector is always parallel to the ground")] [SerializeField]
-        private Transform parallelToGroundTransform;
-
-        [Tooltip("affects how fast player can roll down slopes i think.")] [SerializeField]
-        private float maxAngularVelocity = 100;
-
-        [Tooltip("this is the velocity the ball will be able to get up to if jumping from a stand still")] [SerializeField]
-        private float defaultAirVelocityMagnitude = 3f;
-
-        [BoxGroup("Brake")]
-        [SerializeField] private bool _useBrake = true;
-
-        [ShowIf(nameof(_useBrake))] [BoxGroup("Brake")] [SerializeField]
-        public bool _toggleBrake = false;
-
-        [ShowIf(nameof(_useBrake))] [BoxGroup("Brake")] [SerializeField]
-        private float _brakeStrength = 50;
-
-        [ShowIf(nameof(_useBrake))] [BoxGroup("Brake")] [SerializeField]
-        private float _brakeApplyTime = 0.5f;
-
-        [ShowIf(nameof(_useBrake))] [BoxGroup("Brake")] [SerializeField]
-        private PhysicMaterial _brakePhysicsMaterial;
-
-        [BoxGroup("Auto Brake")] [SerializeField]
-        [Tooltip("If true the brake will be applied automatically when the player is not moving. If false the brake will only be applied when the player presses the brake button")]
-        public bool _useAutoBrake = false;
-
-        [ShowIf(nameof(_useAutoBrake))] [BoxGroup("Auto Brake")] [SerializeField]
-        private float _autoBrakeStrength = 10.0f;
-
-        [BoxGroup("Responsive Movement")]
-        public bool _useResponsiveMovement = true;
-
-        [ShowIf(nameof(_useResponsiveMovement))] [BoxGroup("Responsive Movement")] [SerializeField]
-        private AnimationCurve _accelerationCurve;
-
-        [ShowIf(nameof(_useResponsiveMovement))] [BoxGroup("Responsive Movement")] [SerializeField]
-        [Tooltip("The acceleration modifier will be applied over this time after input has begun")]
-        private float _accelerateTime = 0.2f;
-
-        [ShowIf(nameof(_useResponsiveMovement))] [BoxGroup("Responsive Movement")] [SerializeField]
-        private AnimationCurve _inputDirectionCurve;
-
-        [ShowIf(nameof(_useResponsiveMovement))] [BoxGroup("Responsive Movement")] [SerializeField]
-        [Tooltip("When the Dot product between the input vector and the movement vector is less than this value the angular drag will be increased to make the ball turn faster")]
-        private float _inputVectorMovementVectorDotTarget = 0.25f;
-
-        [ShowIf(nameof(_useResponsiveMovement))] [BoxGroup("Responsive Movement")] [SerializeField]
-        private float _inputDirectionDragModifier = 15.0f;
-
-
-
-        //--Auto Properties
-        //-- PRE-JUMP BUFFER (allows a jump input shortly before landing)
-        [SerializeField] private float _preJumpBufferSeconds = 0.1f; // Suggestion: Consider renaming to _preJumpBuffer
-        private float _lastJumpInputTime = -Mathf.Infinity;
-        // End PRE-JUMP BUFFER
-        [SerializeField] private float _coyoteTime = 0.1f;
-        private Coroutine _groundedFalseBufferRoutine;
-        [field: SerializeField] public bool IsGrounded { get; private set; } = true;
-        private bool _jumped;
-        private Rigidbody PlayerRigidbody { get; set; }
-
-        //-----------------Private---------------------
-
-        //--Brake / Auto Brake
-        [SerializeField] private bool _isAutoBrakeOn;
-        [SerializeField] private bool _isBrakeOn = false;
-        private float _defaultBrakeStrength = 1;
-        private PhysicMaterial _defaultBrakePhysicsMaterial;
-        private Coroutine _applyBrakesRoutine;
-
-        //--Responsive Movement
-        private float _accelerationModifier = 1.0f;
-        private float _inputDirectionModifier = 1.0f;
-        private Coroutine _accelerationRoutine;
-
-
-        private float _defaultDrag = 0.1f;
-        private bool _isStillInTheAir; // True if the ball is in the air and was also in the air in the previous frame. (Except first frame in air)
-        private bool _hasGroundCheckBeenDoneThisFrame; // keeps track of whether ground check has already been done
-        private float _groundCheckOffset = 0.4f; // If the the collision point with the ground is bellow this distance relative to the centre of the ball then the ball with be grounded
-        private Vector3 _jumpStartVelocity; // When the ball jumps or is in the air the velocity will be clamped to this amount.
-        private Collider _playerCollider; // the collider attached to the player used to check if player is grounded
-        private PlayerInputHandler _playerInputHandler;
-        */
 
         [BoxGroup("Core Movement")]
         [SerializeField] private float speed = 14;
@@ -160,15 +49,25 @@ namespace ScottEwing.PhysicsPlayerController{
         [SerializeField] private bool hasAirControl = true;
 
         [BoxGroup("Air Control")]
-        [SerializeField] private float inAirDrag = 0.5f;
+        [SerializeField] private float inAirDrag = 0.4f;
 
         [BoxGroup("Air Control")]
-        [SerializeField] private float inAirSpeed = 4f;
+        [SerializeField] private float inAirSpeed = 5f;
+        
+        public float InAirSpeed {
+            get => inAirSpeed;
+            set => inAirSpeed = value;
+        }
 
         [BoxGroup("Air Control")]
         [Tooltip("this is the velocity the ball will be able to get up to if jumping from a stand still")]
-        [SerializeField] private float defaultAirVelocityMagnitude = 3f;
+        [SerializeField] private float defaultAirVelocityMagnitude = 7f;
 
+        public float DefaultAirVelocityMagnitude {
+            get => defaultAirVelocityMagnitude;
+            set => defaultAirVelocityMagnitude = value;
+        }
+        
         [BoxGroup("Ground Detection")]
         [Tooltip("The percentage of the ball radius bellow the centre of the ball to use as the groundCheckOffset")]
         [SerializeField] private float groundCheckOffsetPercentage = 0.457f;
@@ -487,7 +386,7 @@ namespace ScottEwing.PhysicsPlayerController{
             PlayerRigidbody.angularDrag = dot < _inputVectorMovementVectorDotTarget ? _inputDirectionDragModifier : _defaultBrakeStrength;
         }
         
-        void InAirMovement(Vector3 startVelocity) {
+        private void InAirMovement(Vector3 startVelocity) {
             Vector2 startVelocityXZ = new Vector2(startVelocity.x, startVelocity.z); // dont let the player XZ magnitude increase beyond this
             if (hasAirControl) {
                 //var movementVector = GetMovementVectorAdjustedForCamera();
