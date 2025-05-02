@@ -17,7 +17,7 @@ namespace ScottEwing.MovingPlatforms{
         }
 
         public override Vector3 GetPlatformVelocity() {
-            return Rb.velocity;
+            return Rb.linearVelocity;
         }
 
         /*public override bool IsRigidbodyNull() {
@@ -32,17 +32,17 @@ namespace ScottEwing.MovingPlatforms{
         }*/
 
         public override float GetPlatformVelocityMagnitude() {
-            return Rb.velocity.magnitude;
+            return Rb.linearVelocity.magnitude;
         }
 
         
         
         public override void ClampVelocity(float maxLength) {
-            Rb.velocity = Vector3.ClampMagnitude(Rb.velocity, maxLength);       // Set platform velocity to zero
+            Rb.linearVelocity = Vector3.ClampMagnitude(Rb.linearVelocity, maxLength);       // Set platform velocity to zero
         }
 
         public override void SetPlatformVelocity(Vector3 velocity) {
-            Rb.velocity = velocity;
+            Rb.linearVelocity = velocity;
             //Rb.AddForce(velocity, ForceMode.VelocityChange);
         }
     }

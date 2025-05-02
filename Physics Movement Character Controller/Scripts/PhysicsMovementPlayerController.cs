@@ -96,7 +96,7 @@ namespace ScottEwing.PhysicsPlayerController{
 
         [ShowIf(nameof(_useBrake))]
         [BoxGroup("Brake Settings")]
-        [SerializeField] private PhysicMaterial _brakePhysicsMaterial;
+        [SerializeField] private PhysicsMaterial _brakePhysicsMaterial;
 
         [BoxGroup("Auto Brake")]
         [Tooltip("If true the brake will be applied automatically when the player is not moving. If false the brake will only be applied when the player presses the brake button")]
@@ -154,7 +154,7 @@ namespace ScottEwing.PhysicsPlayerController{
         private bool _isAutoBrakeOn;
         private bool _isBrakeOn = false;
         private float _defaultBrakeStrength = 1;
-        private PhysicMaterial _defaultBrakePhysicsMaterial;
+        private PhysicsMaterial _defaultBrakePhysicsMaterial;
         private Coroutine _applyBrakesRoutine;
 
         // Movement Modifiers
@@ -172,14 +172,14 @@ namespace ScottEwing.PhysicsPlayerController{
         void Start() {
             PlayerRigidbody = GetComponent<Rigidbody>();
             _playerCollider = GetComponent<Collider>();
-            _defaultDrag = PlayerRigidbody.drag;
+            _defaultDrag = PlayerRigidbody.linearDamping;
             _playerInputHandler = GetComponentInParent<PlayerInputHandler>();
             _playerInputHandler.jump += Jump;
 
             _playerInputHandler.brakeOn += BrakeOn;
             _playerInputHandler.brakeOff += OnBrakeOff;
 
-            _defaultBrakeStrength = PlayerRigidbody.angularDrag;
+            _defaultBrakeStrength = PlayerRigidbody.angularDamping;
             _defaultBrakePhysicsMaterial = _playerCollider.material;
             PlayerRigidbody.maxAngularVelocity = maxAngularVelocity;
         }
@@ -194,16 +194,16 @@ namespace ScottEwing.PhysicsPlayerController{
             _movementVector = GetMovementVectorAdjustedForCamera();
             HandleAutoBreak(_movementVector);
             if (IsGrounded) {
-                PlayerRigidbody.drag = _defaultDrag;
+                PlayerRigidbody.linearDamping = _defaultDrag;
                 Movement();
             }
             else {
                 // in-air Movement
-                PlayerRigidbody.drag = inAirDrag;
+                PlayerRigidbody.linearDamping = inAirDrag;
                 if (!_isStillInTheAir) {
                     // if this is the first frame off the ground set the velocity of the ball at this point
                     _isStillInTheAir = true;
-                    _jumpStartVelocity = PlayerRigidbody.velocity;
+                    _jumpStartVelocity = PlayerRigidbody.linearVelocity;
                 }
 
                 InAirMovement(_jumpStartVelocity);
@@ -322,13 +322,13 @@ namespace ScottEwing.PhysicsPlayerController{
         }
 
         void ApplyMovementForce(Vector3 movementVector) {
-            if (PlayerRigidbody.velocity.magnitude < maxVelocity) {
+            if (PlayerRigidbody.linearVelocity.magnitude < maxVelocity) {
                 Vector3 force = movementVector * speed * _accelerationModifier * _inputDirectionModifier;
                 PlayerRigidbody.AddForce(force);
             }
 
             if (clampVelocityMagnitude)
-                PlayerRigidbody.velocity = Vector3.ClampMagnitude(PlayerRigidbody.velocity, maxVelocity);
+                PlayerRigidbody.linearVelocity = Vector3.ClampMagnitude(PlayerRigidbody.linearVelocity, maxVelocity);
         }
 
         private void SetAccelerationModifier(Vector3 movementVector) {
@@ -361,7 +361,7 @@ namespace ScottEwing.PhysicsPlayerController{
 
                 while (time < _accelerateTime) {
                     time += Time.fixedDeltaTime;
-                    _accelerationModifier = _accelerationCurve.Evaluate(PlayerRigidbody.velocity.magnitude);
+                    _accelerationModifier = _accelerationCurve.Evaluate(PlayerRigidbody.linearVelocity.magnitude);
                     yield return new WaitForFixedUpdate();
                 }
 
@@ -381,9 +381,9 @@ namespace ScottEwing.PhysicsPlayerController{
             }
 
             Vector2 inputDirection = new Vector2(movementVector.x, movementVector.z);
-            Vector2 velocityDirection = new Vector2(PlayerRigidbody.velocity.x, PlayerRigidbody.velocity.z);
+            Vector2 velocityDirection = new Vector2(PlayerRigidbody.linearVelocity.x, PlayerRigidbody.linearVelocity.z);
             float dot = Vector2.Dot(inputDirection.normalized, velocityDirection.normalized);
-            PlayerRigidbody.angularDrag = dot < _inputVectorMovementVectorDotTarget ? _inputDirectionDragModifier : _defaultBrakeStrength;
+            PlayerRigidbody.angularDamping = dot < _inputVectorMovementVectorDotTarget ? _inputDirectionDragModifier : _defaultBrakeStrength;
         }
         
         private void InAirMovement(Vector3 startVelocity) {
@@ -394,7 +394,7 @@ namespace ScottEwing.PhysicsPlayerController{
                 PlayerRigidbody.AddForce(_movementVector * (inAirSpeed));
 
                 // Check if velocity has increased and undo it if it has
-                Vector2 currentVelocityXZ = new Vector2(PlayerRigidbody.velocity.x, PlayerRigidbody.velocity.z);
+                Vector2 currentVelocityXZ = new Vector2(PlayerRigidbody.linearVelocity.x, PlayerRigidbody.linearVelocity.z);
                 // Ball can maintain speed it had when it went into air and speed up to a minimum speed
                 if (currentVelocityXZ.sqrMagnitude > startVelocityXZ.sqrMagnitude && currentVelocityXZ.magnitude > defaultAirVelocityMagnitude) {
                     //print("Velocity Clamped");
@@ -454,26 +454,26 @@ namespace ScottEwing.PhysicsPlayerController{
         IEnumerator ApplyBrakes(float brakeStrength) {
             var time = 0.0f;
             var defaultBrakeStrength = _defaultBrakeStrength;
-            var startDrag = PlayerRigidbody.angularDrag;
+            var startDrag = PlayerRigidbody.angularDamping;
             
             // If angular drag is already higher than defaultBrakeStrength, scale down the apply time
             float timeFactor = startDrag > defaultBrakeStrength ? defaultBrakeStrength / startDrag : 1.0f;
             float adjustedBrakeApplyTime = _brakeApplyTime * timeFactor;
             print("Start Drag: " + startDrag);
             while (time < adjustedBrakeApplyTime) {
-                PlayerRigidbody.angularDrag = Mathf.Lerp(startDrag, brakeStrength, time / adjustedBrakeApplyTime);
+                PlayerRigidbody.angularDamping = Mathf.Lerp(startDrag, brakeStrength, time / adjustedBrakeApplyTime);
                 yield return null;
                 time += Time.fixedDeltaTime;
             }
 
-            PlayerRigidbody.angularDrag = brakeStrength;
+            PlayerRigidbody.angularDamping = brakeStrength;
         }
 
         private IEnumerator ApplyBrakes(float targetBrakeStrength, AnimationCurve brakeStrengthCurve)
         {
             var time = 0.0f;
             var defaultBrakeStrength = _defaultBrakeStrength;
-            var startDrag = PlayerRigidbody.angularDrag;
+            var startDrag = PlayerRigidbody.angularDamping;
 
             // If angular drag is already higher than defaultBrakeStrength, scale down the apply time
             float timeFactor = startDrag > defaultBrakeStrength ? defaultBrakeStrength / startDrag : 1.0f;
@@ -491,14 +491,14 @@ namespace ScottEwing.PhysicsPlayerController{
                 float currentBrakeStrength = startDrag + (targetBrakeStrength - startDrag) * curveMultiplier;
         
                 // Apply the brake strength
-                PlayerRigidbody.angularDrag = currentBrakeStrength;
+                PlayerRigidbody.angularDamping = currentBrakeStrength;
         
                 yield return null;
                 time += Time.fixedDeltaTime;
             }
 
             // Ensure we end at exactly the target brake strength
-            PlayerRigidbody.angularDrag = targetBrakeStrength;
+            PlayerRigidbody.angularDamping = targetBrakeStrength;
         }
         
         
@@ -519,7 +519,7 @@ namespace ScottEwing.PhysicsPlayerController{
                 _applyBrakesRoutine = null;
             }
 
-            PlayerRigidbody.angularDrag = _defaultBrakeStrength;
+            PlayerRigidbody.angularDamping = _defaultBrakeStrength;
             _playerCollider.material = _defaultBrakePhysicsMaterial;
         }
 
@@ -532,7 +532,7 @@ namespace ScottEwing.PhysicsPlayerController{
 
         
         public void StopBall() {
-            PlayerRigidbody.AddForce(-PlayerRigidbody.velocity, ForceMode.VelocityChange);
+            PlayerRigidbody.AddForce(-PlayerRigidbody.linearVelocity, ForceMode.VelocityChange);
             PlayerRigidbody.AddTorque(-PlayerRigidbody.angularVelocity, ForceMode.VelocityChange);
         }
 

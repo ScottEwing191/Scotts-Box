@@ -129,7 +129,7 @@ namespace ScottEwing.Trajectory{
             var targetVelocity = Vector3.zero;
             var targetRb = trash.GetComponent<Rigidbody>();
             if (targetRb != null) {
-                targetVelocity = targetRb.velocity;
+                targetVelocity = targetRb.linearVelocity;
             }
             var harpoonVelocity = launchData.initialVelocity;
             _projectile.Throw((harpoonVelocity + targetVelocity) * throwPower);     //--Add the velocity of the target to account for the trash moving

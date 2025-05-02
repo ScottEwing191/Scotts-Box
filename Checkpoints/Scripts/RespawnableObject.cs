@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 #if ODIN_INSPECTOR
 using Sirenix.OdinInspector;
@@ -43,6 +44,9 @@ namespace ScottEwing.Checkpoints{
                  "UseCheckpointRespawnTransform: When checkpoint is reached, use the respawn transform provided by the checkpoint as the respawn position / rotation")]
         [SerializeField] protected UpdateRespawnTransformType _updateRespawnTransformType = UpdateRespawnTransformType.UseCurrentTransform;
 
+        [Tooltip("I think this is required in Unity 2022+ otherwise there will be issues when resetting the position")]
+        [SerializeField] private bool _ensureNoInterpolationWhileRespawning = true;
+        
         public Action Respawned { get; set; }
 
         private Vector3 _respawnPosition;
@@ -64,7 +68,7 @@ namespace ScottEwing.Checkpoints{
                 _respawnRotation = t.rotation;
             }
             if (_rb != null) {
-                _respawnVelocity = _rb.velocity;
+                _respawnVelocity = _rb.linearVelocity;
                 _respawnAngularVelocity = _rb.angularVelocity;
             }
             else if (_useVelocity) {
@@ -103,7 +107,7 @@ namespace ScottEwing.Checkpoints{
             }
 
             if (_rb != null) {
-                _respawnVelocity = _rb.velocity;
+                _respawnVelocity = _rb.linearVelocity;
                 _respawnAngularVelocity = _rb.angularVelocity;
             }
         }
@@ -143,16 +147,33 @@ namespace ScottEwing.Checkpoints{
             EventManager.Broadcast(evt);
 #endif
             if (_rb == null) return;
+            
+            if (_ensureNoInterpolationWhileRespawning) {
+                StartCoroutine(ControlInterpolationRoutine());
+            }
+            
             if (_useVelocity) {
-                _rb.velocity = _respawnVelocity;
+                _rb.linearVelocity = _respawnVelocity;
                 _rb.angularVelocity = _respawnAngularVelocity;
             }
             else {
-                _rb.velocity = Vector3.zero;
+                _rb.linearVelocity = Vector3.zero;
                 _rb.angularVelocity = Vector3.zero;
             }
             
             Respawned?.Invoke();
+        }
+        
+        private IEnumerator ControlInterpolationRoutine() {
+            if (_rb == null || _rb.interpolation == RigidbodyInterpolation.None) {
+                yield return null;
+            }
+            var interpolation = _rb.interpolation;
+            _rb.interpolation = RigidbodyInterpolation.None;
+            
+            yield return null;
+
+            _rb.interpolation = interpolation;
         }
     }
 }

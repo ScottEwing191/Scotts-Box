@@ -28,7 +28,7 @@ namespace ScottEwing.Trajectory{
         /// </summary>
         /// <param name="velocity">The initial velocity required to reach the target</param>
         public void Throw(Vector3 velocity) {
-            _projectileRb.velocity = Vector3.zero;
+            _projectileRb.linearVelocity = Vector3.zero;
             _projectileRb.isKinematic = false;
             _projectileRb.AddForce(velocity, ForceMode.VelocityChange);
             _projectileRb.transform.parent = null;
@@ -37,7 +37,7 @@ namespace ScottEwing.Trajectory{
 
         public void Reset() {
             _isProjectileInAir = false;
-            _projectileRb.velocity = Vector3.zero;
+            _projectileRb.linearVelocity = Vector3.zero;
             _projectileRb.isKinematic = true;
             transform.parent = _startParent;
             transform.localPosition = _resetLocalPosition;
@@ -45,8 +45,8 @@ namespace ScottEwing.Trajectory{
         }
 
         private void Update() {
-            if (_isProjectileInAir && _projectileRb.velocity.sqrMagnitude > 0) {
-                transform.rotation = Quaternion.LookRotation(_projectileRb.velocity.normalized);
+            if (_isProjectileInAir && _projectileRb.linearVelocity.sqrMagnitude > 0) {
+                transform.rotation = Quaternion.LookRotation(_projectileRb.linearVelocity.normalized);
             }
         }
 
