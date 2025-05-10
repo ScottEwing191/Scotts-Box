@@ -459,7 +459,7 @@ namespace ScottEwing.PhysicsPlayerController{
             // If angular drag is already higher than defaultBrakeStrength, scale down the apply time
             float timeFactor = startDrag > defaultBrakeStrength ? defaultBrakeStrength / startDrag : 1.0f;
             float adjustedBrakeApplyTime = _brakeApplyTime * timeFactor;
-            print("Start Drag: " + startDrag);
+            //print("Start Drag: " + startDrag);
             while (time < adjustedBrakeApplyTime) {
                 PlayerRigidbody.angularDamping = Mathf.Lerp(startDrag, brakeStrength, time / adjustedBrakeApplyTime);
                 yield return null;
