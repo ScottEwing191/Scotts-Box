@@ -131,6 +131,7 @@ namespace ScottEwing.Checkpoints{
         /// Respawn the object at it's saved position and rotation. Will either return the velocity to its saved value or will set velocity to zero.
         /// </summary>
         public virtual void Respawn() {
+            
             var t = transform;
             if (_useTransformOnAwake) {
                 t.position = _respawnPosition;
@@ -166,12 +167,15 @@ namespace ScottEwing.Checkpoints{
         
         private IEnumerator ControlInterpolationRoutine() {
             if (_rb == null || _rb.interpolation == RigidbodyInterpolation.None) {
-                yield return null;
+                yield break;
             }
             var interpolation = _rb.interpolation;
             _rb.interpolation = RigidbodyInterpolation.None;
             
             yield return null;
+            yield return null;
+
+
 
             _rb.interpolation = interpolation;
         }
