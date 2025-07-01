@@ -52,7 +52,9 @@ namespace ScottEwing.PhysicsPlayerController{
         private bool on = false;
 
 
-        void LateUpdate() {
+        //void LateUpdate() {
+        void FixedUpdate() {
+
             
             //--Yaw Rotation
             //var yawAngleDelta = _sensitivity * _yawRotateSpeed * _playerInputs.Inputs.look.x * Time.deltaTime;
@@ -76,6 +78,11 @@ namespace ScottEwing.PhysicsPlayerController{
             _currentPitchAngle = Mathf.Clamp(_currentPitchAngle + pitchAngleDelta, _pitchClamp.x, _pitchClamp.y);
             _pitchGameObject.transform.localRotation = Quaternion.AngleAxis(_currentPitchAngle, Vector3.right);
             
+            //--Follow Player
+            //transform.position = _player.transform.position;
+        }
+
+        public void LateUpdate() {
             //--Follow Player
             transform.position = _player.transform.position;
         }
