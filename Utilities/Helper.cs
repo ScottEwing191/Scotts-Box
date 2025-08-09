@@ -23,5 +23,15 @@ namespace ScottEwing.Helpers
             yield return null;
             nullRoutine?.Invoke();
         }
+        
+        public static IEnumerator WaitFrames(int framesToWait, Action nullRoutine) {
+            int waitCount = 0;
+            while (waitCount != framesToWait) {
+                waitCount++;
+                yield return null;
+                
+            }
+            nullRoutine?.Invoke();
+        }
     }
 }
