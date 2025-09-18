@@ -16,6 +16,19 @@ namespace ScottEwing{
 
         private enum OffsetType{ World, RelativeToTargetRotation }
 
+        private enum SearchType{ Tag}
+        
+        [SerializeField] private bool _searchPositionTargetOnStart = false;
+        [ShowIf("_searchPositionTargetOnStart")]
+        [SerializeField] private SearchType _positionSearchType = SearchType.Tag;
+        
+        //[ShowIf("_searchPositionTargetOnStart")]
+        //[ShowIf("_positionSearchType", SearchType.Tag)]
+        
+        
+        [ShowIf("@_positionSearchType == SearchType.Tag && _searchPositionTargetOnStart == true")]
+        [SerializeField] private string _positionSearchTag = "Player";
+        
         [field: SerializeField] public Transform PositionTarget { get; set; }
         [field: SerializeField] public Transform RotationTarget { get; set; }
         [SerializeField] private UpdateOptions _updateOptions = UpdateOptions.LateUpdate;
@@ -35,6 +48,16 @@ namespace ScottEwing{
         public void StartFollowing() => IsFollowing = true;
 
         private void Start() {
+            if (_searchPositionTargetOnStart && !PositionTarget) {
+                switch (_positionSearchType) {
+                    case SearchType.Tag:
+                        PositionTarget = GameObject.FindGameObjectWithTag(_positionSearchTag).transform;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+            
             transform.rotation.ToAngleAxis(out float angle, out Vector3 axis);
             //-- This seams to work for child/non child followers as long as the start with the same (world) rotation as the target
             /*if (_parentPivot && _parentPivot.rotation != Quaternion.identity) { 

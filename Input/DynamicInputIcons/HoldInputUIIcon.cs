@@ -22,7 +22,12 @@ namespace ScottEwing
         
         [SerializeField] private Image _filledImage;
         [SerializeField] private UnityEvent _holdComplete;
-        
+
+        public UnityEvent HoldComplete {
+            get => _holdComplete;
+            set => _holdComplete = value;
+        }
+
         private void OnEnable() {
             _actionReference.action.actionMap.Enable();
             _actionReference.action.started += OnHoldStarted;
@@ -53,7 +58,7 @@ namespace ScottEwing
             _filledImage.gameObject.SetActive(false);
         }
         
-        private void OnHoldComplete(InputAction.CallbackContext obj) => _holdComplete?.Invoke();
+        private void OnHoldComplete(InputAction.CallbackContext obj) => HoldComplete?.Invoke();
         
 
         IEnumerator FillImage(float duration) {

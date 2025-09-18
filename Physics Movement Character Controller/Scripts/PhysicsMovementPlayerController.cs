@@ -541,6 +541,13 @@ namespace ScottEwing.PhysicsPlayerController{
             set => speed = value;
         }
         
+        /// <summary>
+        ///  The magnitude of the Rigidbody velocity
+        /// </summary>
+        public float ActualSpeed {
+            get => PlayerRigidbody.linearVelocity.magnitude;
+        }
+        
         public float MaxVelocity {
             get => maxVelocity;
             set => maxVelocity = value;
