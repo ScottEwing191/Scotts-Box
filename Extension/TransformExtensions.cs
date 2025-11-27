@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace ScottEwing.ExtensionMethods{
     public static class TransformExtensions{
@@ -18,6 +19,26 @@ namespace ScottEwing.ExtensionMethods{
         public static void SetParentAndZeroLocalPosition(this Transform transform, Transform parent) {
             transform.SetParent(parent);
             transform.localPosition = Vector3.zero;
+        }
+        
+        /// <summary>
+        /// Finds the first sibling with the given tag.
+        /// </summary>
+        public static Transform FindSiblingWithTag(this Transform transform, string tag) {
+            var parent = transform.parent;
+            if (parent == null) {
+                return null;
+            }
+            
+            for (int i = 0; i < parent.childCount; i++) {
+                var child = parent.GetChild(i);
+                if (child != transform && child.CompareTag(tag)) {
+                    Debug.Log("Found sibling with tag: " + tag, child);
+                    return child;
+                }
+            }
+            Debug.Log("No sibling with tag: " + tag + " found.", transform);
+            return null;
         }
         
     }
