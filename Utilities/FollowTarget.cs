@@ -110,7 +110,9 @@ namespace ScottEwing{
                     transform.rotation = Quaternion.Euler(RotationTarget.eulerAngles.x, transform.eulerAngles.y, RotationTarget.eulerAngles.z);
                     break;
                 case RotationOptions.YRotation:
-                    transform.rotation = Quaternion.Euler(transform.eulerAngles.x, RotationTarget.eulerAngles.y, transform.eulerAngles.z);
+                    //transform.rotation = Quaternion.Euler(transform.eulerAngles.x, RotationTarget.eulerAngles.y, transform.eulerAngles.z);
+                    transform.localRotation = Quaternion.Euler(0, RotationTarget.eulerAngles.y, 0);
+
                     break;
                 case RotationOptions.NoRotation:
                     break;

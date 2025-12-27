@@ -167,6 +167,10 @@ namespace ScottEwing.PhysicsPlayerController{
         private Vector3 _prevMovementVector;
         private Vector3 _movementVector;
 
+        public float DefaultInAirSpeed { get; private set; }
+
+        public float rbSpeed = 0;
+
         #region Unity Methods
 
         void Start() {
@@ -182,6 +186,7 @@ namespace ScottEwing.PhysicsPlayerController{
             _defaultBrakeStrength = PlayerRigidbody.angularDamping;
             _defaultBrakePhysicsMaterial = _playerCollider.material;
             PlayerRigidbody.maxAngularVelocity = maxAngularVelocity;
+            DefaultInAirSpeed = inAirSpeed;
         }
 
         private void OnDestroy() {
@@ -208,6 +213,7 @@ namespace ScottEwing.PhysicsPlayerController{
 
                 InAirMovement(_jumpStartVelocity);
             }
+            rbSpeed = PlayerRigidbody.linearVelocity.magnitude;
         }
 
         private void Update() {
@@ -305,9 +311,9 @@ namespace ScottEwing.PhysicsPlayerController{
         void Movement() {
             //HandleAutoBreak(movementVector);
             if (!IsGrounded) return;
-            //Vector3 movementVector = GetMovementVectorAdjustedForCamera();
             SetResponsiveMovementModifiers(_movementVector);
             ApplyMovementForce(_movementVector);
+            //ApplyMovementTorque(_movementVector);
         }
 
         void SetResponsiveMovementModifiers(Vector3 movementVector) {
@@ -321,15 +327,58 @@ namespace ScottEwing.PhysicsPlayerController{
             }
         }
 
+        [SerializeField] private Transform hand;
+        [SerializeField] private Rigidbody body;
+
         void ApplyMovementForce(Vector3 movementVector) {
             if (PlayerRigidbody.linearVelocity.magnitude < maxVelocity) {
                 Vector3 force = movementVector * speed * _accelerationModifier * _inputDirectionModifier;
                 PlayerRigidbody.AddForce(force);
+                //body.AddForce(force);
+                //Debug.DrawRay(transform.position, hand.position - transform.position, Color.red);
             }
 
             if (clampVelocityMagnitude)
                 PlayerRigidbody.linearVelocity = Vector3.ClampMagnitude(PlayerRigidbody.linearVelocity, maxVelocity);
         }
+        
+        /*void ApplyMovementForce(Vector3 movementVector) {
+            // Check horizontal velocity only
+            Vector3 horizontalVelocity = new Vector3(PlayerRigidbody.linearVelocity.x, 0, PlayerRigidbody.linearVelocity.z);
+    
+            if (horizontalVelocity.magnitude < maxVelocity) {
+                Vector3 force = movementVector * speed * _accelerationModifier * _inputDirectionModifier;
+                PlayerRigidbody.AddForce(force);
+            }
+
+            if (clampVelocityMagnitude) {
+                // Separate Y velocity
+                float yVelocity = PlayerRigidbody.linearVelocity.y;
+        
+                // Clamp only XZ velocity
+                Vector3 clampedHorizontal = Vector3.ClampMagnitude(horizontalVelocity, maxVelocity);
+        
+                // Recombine with original Y velocity
+                PlayerRigidbody.linearVelocity = new Vector3(clampedHorizontal.x, yVelocity, clampedHorizontal.z);
+            }
+        }*/
+        
+        
+        // Does not work well as is, and forwards/ backwards is swapped with left/right
+        /*void ApplyMovementTorque(Vector3 movementVector) {
+            // Fix the input direction for torque
+            movementVector = new Vector3(movementVector.z, movementVector.y, -movementVector.x);
+    
+            if (PlayerRigidbody.linearVelocity.magnitude < maxVelocity) {
+                Vector3 force = movementVector * speed * _accelerationModifier * _inputDirectionModifier;
+                Vector3 torque = new Vector3(force.z, force.y, force.x);
+        
+                PlayerRigidbody.AddTorque(force);
+            }
+
+            if (clampVelocityMagnitude)
+                PlayerRigidbody.linearVelocity = Vector3.ClampMagnitude(PlayerRigidbody.linearVelocity, maxVelocity);
+        }*/
 
         private void SetAccelerationModifier(Vector3 movementVector) {
             if (movementVector.magnitude == 0) {
@@ -371,7 +420,7 @@ namespace ScottEwing.PhysicsPlayerController{
         }
 
         private void SetInputDirectionModifier(Vector3 movementVector) {
-            if (_isBrakeOn) {
+            if (IsBrakeOn) {
                 return;
             }
 
@@ -403,7 +452,7 @@ namespace ScottEwing.PhysicsPlayerController{
             }
         }
 
-        private Vector3 GetMovementVectorAdjustedForCamera() {
+        public Vector3 GetMovementVectorAdjustedForCamera() {
             // Get the movement input from the player
             Vector3 movementVector = _playerInputHandler.Inputs.movement;
 
@@ -425,17 +474,17 @@ namespace ScottEwing.PhysicsPlayerController{
 
         // Called each fixed update
         private void HandleAutoBreak(Vector3 movementVector) {
-            if (!_useAutoBrake || _isBrakeOn) return;
-            if (movementVector.magnitude == 0 && !_isBrakeOn && !_isAutoBrakeOn && IsGrounded) {
+            if (!_useAutoBrake || IsBrakeOn) return;
+            if (movementVector.magnitude == 0 && !IsBrakeOn && !IsAutoBrakeOn && IsGrounded) {
                 AutoBrakeOn();
             }
-            else if (_isAutoBrakeOn && (movementVector.magnitude != 0 || !IsGrounded))
+            else if (IsAutoBrakeOn && (movementVector.magnitude != 0 || !IsGrounded))
                 AutoBrakeOff();
         }
         
         private void BrakeOn() {
             if (!_useBrake) return;
-            if (_toggleBrake && _isBrakeOn) {
+            if (_toggleBrake && IsBrakeOn) {
                 BrakeOff();
                 return;
             }
@@ -507,7 +556,7 @@ namespace ScottEwing.PhysicsPlayerController{
             if (_toggleBrake) return;
             _isBrakeOn = false;
             BrakeOff();
-            if (_isAutoBrakeOn)
+            if (IsAutoBrakeOn)
                 AutoBrakeOn();
         }
 
@@ -552,5 +601,9 @@ namespace ScottEwing.PhysicsPlayerController{
             get => maxVelocity;
             set => maxVelocity = value;
         }
+
+        public bool IsBrakeOn => _isBrakeOn;
+
+        public bool IsAutoBrakeOn => _isAutoBrakeOn;
     }
 }
