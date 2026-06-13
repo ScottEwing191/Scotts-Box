@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace ScottEwing.ExtensionMethods{
@@ -39,6 +40,47 @@ namespace ScottEwing.ExtensionMethods{
             }
             Debug.Log("No sibling with tag: " + tag + " found.", transform);
             return null;
+        }
+
+        /*public static Transform[] GetChildren(this Transform transform, bool recursive) {
+            var childCount = transform.childCount;
+            if (childCount == 0) {
+                return Array.Empty<Transform>();
+                
+            }
+            var childrenArray = new Transform[childCount];
+            
+            for (int i = 0; i < childCount; i++) {
+                childrenArray[i] = transform.GetChild(i);
+            }
+            return childrenArray;
+        }*/
+        
+        public static Transform[] GetChildren(this Transform transform, int depth = 0)
+        {
+            if (transform.childCount == 0)
+                return Array.Empty<Transform>();
+
+            var results = new List<Transform>();
+
+            void Collect(Transform parent, int currentDepth)
+            {
+                for (int i = 0; i < parent.childCount; i++)
+                {
+                    var child = parent.GetChild(i);
+                    results.Add(child);
+
+                    // Stop if we've reached max depth
+                    if (currentDepth == 0)
+                        continue;
+
+                    // Negative depth = unlimited
+                    Collect(child, currentDepth - 1);
+                }
+            }
+
+            Collect(transform, depth);
+            return results.ToArray();
         }
         
         public static Transform FindRecursive(this Transform parent, string childName)

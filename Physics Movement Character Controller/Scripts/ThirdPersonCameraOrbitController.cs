@@ -70,7 +70,7 @@ namespace ScottEwing.PhysicsPlayerController{
             transform.localRotation = /*_startRotation **/ Quaternion.AngleAxis(_currentYawAngle, Vector3.up);
             
             //--Rotate Body
-            if (_rotateBody) {
+            if (_rotateBody && body) {
                 body.transform.localRotation = /*_startRotation **/ Quaternion.AngleAxis(_currentYawAngle, Vector3.up);
             }
             //--Pitch Rotation
