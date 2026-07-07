@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 //==============================================================================================
@@ -16,9 +17,40 @@ namespace ScottEwing.Input {
         private float _holdTime;
 
         //protected Player ThisPlayer;
+        [SerializeField] protected InputActionReference _actionReference;
 
         private void Awake() {
             //ThisPlayer = GetComponentInParent<Player>();
+        }
+        
+        private void OnEnable() {
+            _actionReference.action.actionMap.Enable();
+            _actionReference.action.started += OnHoldStarted;
+            _actionReference.action.canceled += OnHoldCancelled;
+            _actionReference.action.performed += OnHoldComplete;
+
+
+
+        }
+
+        private void OnHoldComplete(InputAction.CallbackContext obj) {
+            
+        }
+
+        private void OnHoldCancelled(InputAction.CallbackContext obj) {
+            throw new System.NotImplementedException();
+        }
+
+        private void OnHoldStarted(InputAction.CallbackContext obj) {
+            throw new System.NotImplementedException();
+        }
+
+
+        private void OnDisable() {
+            _actionReference.action.started -= OnHoldStarted;
+            _actionReference.action.canceled -= OnHoldCancelled;
+            _actionReference.action.performed -= OnHoldComplete;
+            _actionReference.action.actionMap.Disable();
         }
 
         public virtual void StartButtonHold(float holdTime) {
