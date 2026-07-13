@@ -1,5 +1,8 @@
+using ScottEwing.Input.DynamicInputIcons;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Interactions;
 using UnityEngine.UI;
 
 //==============================================================================================
@@ -9,8 +12,8 @@ using UnityEngine.UI;
 //==============================================================================================
 
 
-namespace ScottEwing.Input {
-    public class HoldInputUI : MonoBehaviour {
+namespace ScottEwing.Input{
+    public class HoldInputUI : MonoBehaviour{
         [SerializeField] private Image _filledImage;
         private bool _isButtonHeld;
         private float _timer = 0.0f;
@@ -19,65 +22,118 @@ namespace ScottEwing.Input {
         //protected Player ThisPlayer;
         [SerializeField] protected InputActionReference _actionReference;
 
-        private void Awake() {
-            //ThisPlayer = GetComponentInParent<Player>();
+
+        [Button]
+        private void AssignActionReference() {
+            var uiInputIcon =  transform.parent.GetComponentInChildren<UiInputIcon>();
+            if (uiInputIcon && uiInputIcon.ActionReference){
+                _actionReference = uiInputIcon.ActionReference; 
+            }
         }
         
+        private void Awake() {
+            /*if (_actionReference == null) {
+                AssignActionReference(); 
+            }*/
+        }
+
         private void OnEnable() {
-            _actionReference.action.actionMap.Enable();
+            //_actionReference.action.actionMap.Enable();
+            if (!_actionReference) return;
+            
             _actionReference.action.started += OnHoldStarted;
             _actionReference.action.canceled += OnHoldCancelled;
             _actionReference.action.performed += OnHoldComplete;
-
-
-
-        }
-
-        private void OnHoldComplete(InputAction.CallbackContext obj) {
             
+            IsHoldAlreadyStart();
         }
-
-        private void OnHoldCancelled(InputAction.CallbackContext obj) {
-            throw new System.NotImplementedException();
-        }
-
-        private void OnHoldStarted(InputAction.CallbackContext obj) {
-            throw new System.NotImplementedException();
-        }
-
 
         private void OnDisable() {
+            if (!_actionReference) return;
+            
             _actionReference.action.started -= OnHoldStarted;
             _actionReference.action.canceled -= OnHoldCancelled;
             _actionReference.action.performed -= OnHoldComplete;
-            _actionReference.action.actionMap.Disable();
+            if (_isButtonHeld) {
+                StopButtonHold();
+            }
+            
+            //_actionReference.action.actionMap.Disable();
         }
 
+        private void OnHoldStarted(InputAction.CallbackContext obj) {
+            HoldInteraction interaction = (HoldInteraction)obj.interaction;
+            if (_actionReference != null && interaction != null) {
+                StartButtonHold(interaction.duration);
+            }
+        }
+
+        private void IsHoldAlreadyStart() {
+            if (_actionReference.action.phase == InputActionPhase.Started){
+                _isButtonHeld = true;
+                _filledImage.gameObject.SetActive(true);
+                _filledImage.fillAmount = _actionReference.action.GetTimeoutCompletionPercentage();
+                
+            }
+        }
+
+        private void OnHoldComplete(InputAction.CallbackContext obj) {
+            HoldInteraction interaction = (HoldInteraction)obj.interaction;
+            if (_actionReference != null && interaction != null) {
+                StopButtonHold();
+            }
+        }
+
+        private void OnHoldCancelled(InputAction.CallbackContext obj) {
+            if (_actionReference != null) {
+                StopButtonHold();
+            }
+        }
+
+
         public virtual void StartButtonHold(float holdTime) {
-            _filledImage.gameObject.SetActive(true);
+            //_filledImage.gameObject.SetActive(true);
             _timer = 0;
             _holdTime = holdTime;
             _isButtonHeld = true;
             _filledImage.fillAmount = 0;
         }
+
         public virtual void StopButtonHold() {
             _isButtonHeld = false;
-            _filledImage.gameObject.SetActive(false);
+            _filledImage.fillAmount = 0;
+            //_filledImage.gameObject.SetActive(false);
         }
 
         public virtual void ShowHoldButtonUI() {
             _filledImage.gameObject.SetActive(true);
             _filledImage.fillAmount = 0;
         }
-        public virtual void HideHoldButtonUI() { 
+
+        public virtual void HideHoldButtonUI() {
             _filledImage.gameObject.SetActive(false);
         }
 
-        private void Update() {
-            if (!_isButtonHeld) { return; }
-            if (_timer > _holdTime) { return; }
+        /*private void Update() {
+            if (!_isButtonHeld) {
+                return;
+            }
+
+            if (_timer > _holdTime) {
+                _filledImage.fillAmount = 0;
+                return;
+            }
+
             _timer += Time.deltaTime;
-            _filledImage.fillAmount = Mathf.Lerp(0,1, _timer / _holdTime);
+            _filledImage.fillAmount = Mathf.Lerp(0, 1, _timer / _holdTime);
+        }*/
+        
+        private void Update() {
+            if (!_isButtonHeld) {
+                return;
+            }
+
+            _filledImage.fillAmount = _actionReference.action.GetTimeoutCompletionPercentage();
         }
     }
 }
